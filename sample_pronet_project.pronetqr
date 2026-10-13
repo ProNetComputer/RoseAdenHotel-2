@@ -1,0 +1,69 @@
+{
+  "pronet_signature": "PRO_NET_QR_STUDIO_PROJECT",
+  "version": "2.5.0",
+  "timestamp": "2026-10-13T06:45:00.000Z",
+  "state": {
+    "type": "wifi",
+    "moduleShape": "rounded",
+    "eyeFrame": "rounded",
+    "eyePupil": "rounded",
+    "customEyeColors": true,
+    "eyeFrameColor": "#00a8ff",
+    "eyePupilColor": "#d4af37",
+    "colorMode": "gradient",
+    "colorStart": "#00a8ff",
+    "colorEnd": "#070d1e",
+    "colorBg": "#ffffff",
+    "transparentBg": false,
+    "gradientAngle": 135,
+    "ecLevel": "H",
+    "margin": 2,
+    "logoType": "pronet-official",
+    "logoScale": 0.22,
+    "logoBadgeShape": "circle",
+    "frame": "bottom-banner",
+    "frameText": "اتصل بشبكة الواي فاي | ProNet WiFi-6",
+    "frameColor": "#00a8ff",
+    "exportRes": 2048
+  },
+  "formData": {
+    "wifi": {
+      "ssid": "ProNet-Enterprise-WiFi6",
+      "pass": "ProNetSecure2026@Aden",
+      "type": "WPA",
+      "hidden": false
+    },
+    "url": "https://pronet-tech.com",
+    "vcard": {
+      "name": "م. عمار محمد الأسدي",
+      "org": "برونت كمبيوتر | ProNet Computer",
+      "mobile": "+967775043020",
+      "phone": "+9672241004",
+      "email": "prontech.co@gmail.com",
+      "addr": "اليمن - عدن - المعلا - شارع الشهيد مدرم - أمام بنك الكريمي"
+    },
+    "whatsapp": {
+      "phone": "967775043020",
+      "msg": "مرحباً بكم في برونت كمبيوتر، نود الاستفسار عن الأنظمة والشبكات"
+    },
+    "phone": "+967775043020",
+    "email": {
+      "to": "prontech.co@gmail.com",
+      "sub": "طلب تسعيرة وتواصل",
+      "body": "السلام عليكم ورحمة الله، نرجو التكرم بموافاتنا بعرض سعر..."
+    },
+    "sms": {
+      "phone": "+967775043020",
+      "msg": "مرحباً بكم في برونت كمبيوتر"
+    },
+    "text": "برونت كمبيوتر | ProNet Computer - عدن، المعلا. رواد حلول تكنولوجيا المعلومات والشبكات وكاميرات المراقبة.",
+    "location": {
+      "lat": "12.7885",
+      "lng": "45.0084"
+    },
+    "social": {
+      "platform": "https://instagram.com/",
+      "user": "pronet.computer"
+    }
+  }
+}
