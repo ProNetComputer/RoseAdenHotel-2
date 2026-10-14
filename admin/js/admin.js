@@ -1,6 +1,6 @@
 /**
- * Rose Aden 2 Hotel - Enterprise Admin CMS & GitHub Sync Engine
- * محرك لوحة التحكم المتقدمة: تخصيص الهوية، الألوان، الوسائط، والمزامنة مع GitHub
+ * Rose Aden 2 Hotel - Pro Admin Engine & Pre-Flight Image Optimizer
+ * محرك لوحة التحكم المتقدمة: التحرير المشروط، فحص الصور، والتحسين الآلي عبر المتصفح
  */
 
 (function () {
@@ -14,13 +14,29 @@
     token: localStorage.getItem('rose_gh_token') || 'ghp_brEIi45WzJNmxsEJBUi33tKqJPD2XE2exfUe'
   };
 
-  // Datasets
-  let themeData = null;
+  // Datasets Cache
   let hotelData = null;
   let roomsData = null;
+  let themeData = null;
   let hallData = null;
   let reviewsData = null;
   let galleryData = null;
+
+  // Pre-flight image state for gallery upload
+  let preflightState = {
+    file: null,
+    originalBase64: null,
+    optimizedBase64: null,
+    width: 0,
+    height: 0,
+    originalSize: 0,
+    optimizedSize: 0,
+    isOptimized: false
+  };
+
+  // Room modal editing state
+  let currentEditingRoomIndex = -1;
+  let roomImageUploadBase64 = null;
 
   // 1. Tab Switching
   window.switchTab = function (tabId) {
@@ -33,24 +49,7 @@
     if (navBtn) navBtn.classList.add('active');
   };
 
-  // 2. GitHub Config
-  window.saveGitHubConfig = function (e) {
-    if (e) e.preventDefault();
-    config.owner = document.getElementById('ghOwner').value.trim();
-    config.repo = document.getElementById('ghRepo').value.trim();
-    config.branch = document.getElementById('ghBranch').value.trim() || 'main';
-    config.token = document.getElementById('ghToken').value.trim();
-
-    localStorage.setItem('rose_gh_owner', config.owner);
-    localStorage.setItem('rose_gh_repo', config.repo);
-    localStorage.setItem('rose_gh_branch', config.branch);
-    localStorage.setItem('rose_gh_token', config.token);
-
-    alert('تم حفظ إعدادات GitHub بنجاح!');
-    testGitHubConnection();
-  };
-
-  // Test Connection
+  // 2. GitHub Connection
   window.testGitHubConnection = async function () {
     const statusDot = document.getElementById('statusDot');
     const statusText = document.getElementById('statusText');
@@ -76,7 +75,7 @@
         if (statusText) statusText.textContent = `متصل: ${repoInfo.full_name} (${config.branch})`;
         if (alertBox) {
           alertBox.className = 'alert-box alert-success';
-          alertBox.innerHTML = `✓ متصل بنجاح بمستودع <strong>${repoInfo.full_name}</strong> على الفرع <strong>${config.branch}</strong>. أنت جاهز للنشر المباشر!`;
+          alertBox.innerHTML = `✓ متصل بنجاح بمستودع <strong>${repoInfo.full_name}</strong> على الفرع <strong>${config.branch}</strong>. أنت جاهز للنشر والحفظ المباشر!`;
         }
       } else {
         throw new Error('فشل التحقق من المستودع أو الرمز (Token)');
@@ -91,33 +90,49 @@
     }
   };
 
+  window.saveGitHubConfig = function (e) {
+    if (e) e.preventDefault();
+    config.owner = document.getElementById('ghOwner').value.trim();
+    config.repo = document.getElementById('ghRepo').value.trim();
+    config.branch = document.getElementById('ghBranch').value.trim() || 'main';
+    config.token = document.getElementById('ghToken').value.trim();
+
+    localStorage.setItem('rose_gh_owner', config.owner);
+    localStorage.setItem('rose_gh_repo', config.repo);
+    localStorage.setItem('rose_gh_branch', config.branch);
+    localStorage.setItem('rose_gh_token', config.token);
+
+    alert('تم حفظ إعدادات GitHub بنجاح!');
+    testGitHubConnection();
+  };
+
   // 3. Load Datasets
-  async function loadAllData() {
+  async function loadInitialData() {
     try {
-      const [thRes, hRes, rRes, hlRes, rvRes, gRes] = await Promise.all([
-        fetch('../data/theme.json').catch(() => null),
+      const [hRes, rRes, thRes, hlRes, rvRes, gRes] = await Promise.all([
         fetch('../data/hotel-info.json'),
         fetch('../data/rooms.json'),
+        fetch('../data/theme.json').catch(() => null),
         fetch('../data/hall.json'),
         fetch('../data/reviews.json'),
         fetch('../data/gallery.json')
       ]);
 
-      themeData = thRes ? await thRes.json() : getDefaultTheme();
       hotelData = await hRes.json();
       roomsData = await rRes.json();
+      themeData = thRes ? await thRes.json() : getDefaultTheme();
       hallData = await hlRes.json();
       reviewsData = await rvRes.json();
       galleryData = await gRes.json();
 
-      populateThemeForm();
-      populateHotelForm();
-      populateRoomsList();
-      populateHallForm();
-      populateReviewsList();
-      populateGalleryList();
+      renderHotelInfoView();
+      renderThemeView();
+      renderRoomsGrid();
+      renderHallView();
+      renderReviewsView();
+      renderGalleryGrid();
     } catch (err) {
-      console.warn('Error loading local data:', err);
+      console.warn('Error loading initial data:', err);
     }
   }
 
@@ -131,377 +146,765 @@
       border_radius: "18px",
       announcement: {
         enabled: true,
-        text_ar: "✨ عرض خاص: خصم مميز على أجنحة وطيرمانات VIP بإطلالة ساحل أبين!",
+        text_ar: "✨ عرض خاص بمناسبة الموسم: خصم مميز على أجنحة VIP وطيرمانات ساحل أبين!",
         link: "https://wa.me/967780000656",
-        btn_text: "احجز بالعرض"
+        btn_text: "احجز بالعرض الآن"
       }
     };
   }
 
-  // 4. Populate Forms
-  function populateThemeForm() {
-    if (!themeData) return;
-    setVal('thmPrimary', themeData.rose_primary || '#e22d46');
-    setVal('thmPrimaryText', themeData.rose_primary || '#e22d46');
-    setVal('thmGold', themeData.luxury_gold || '#d4af37');
-    setVal('thmGoldText', themeData.luxury_gold || '#d4af37');
-    setVal('thmFont', themeData.font_arabic || "'Cairo', system-ui, sans-serif");
-    setVal('thmRadius', themeData.border_radius || '18px');
-
-    if (themeData.announcement) {
-      const ann = themeData.announcement;
-      const chk = document.getElementById('annEnabled');
-      if (chk) chk.checked = !!ann.enabled;
-      setVal('annTextAr', ann.text_ar || '');
-      setVal('annLink', ann.link || '');
-      setVal('annBtn', ann.btn_text || '');
-    }
-
-    updateThemePreview();
-  }
-
-  window.syncColorInput = function (pickerId, textId) {
-    const picker = document.getElementById(pickerId);
-    const text = document.getElementById(textId);
-    if (picker && text) {
-      text.value = picker.value;
-      updateThemePreview();
-    }
-  };
-
-  window.syncTextInput = function (textId, pickerId) {
-    const text = document.getElementById(textId);
-    const picker = document.getElementById(pickerId);
-    if (text && picker && /^#[0-9A-Fa-f]{6}$/.test(text.value)) {
-      picker.value = text.value;
-      updateThemePreview();
-    }
-  };
-
-  window.setPresetColor = function (primary, gold) {
-    setVal('thmPrimary', primary);
-    setVal('thmPrimaryText', primary);
-    setVal('thmGold', gold);
-    setVal('thmGoldText', gold);
-    updateThemePreview();
-  };
-
-  function updateThemePreview() {
-    const p = document.getElementById('thmPrimary') ? document.getElementById('thmPrimary').value : '#e22d46';
-    const g = document.getElementById('thmGold') ? document.getElementById('thmGold').value : '#d4af37';
-    const previewBox = document.getElementById('themePreviewBox');
-    if (previewBox) {
-      previewBox.style.setProperty('--prev-primary', p);
-      previewBox.style.setProperty('--prev-gold', g);
-    }
-  }
-
-  function populateHotelForm() {
+  // =========================================================================
+  // 4. Hotel General Info: View Mode vs Edit Mode
+  // =========================================================================
+  function renderHotelInfoView() {
     if (!hotelData) return;
-    setVal('hotelNameAr', hotelData.name_ar || '');
-    setVal('hotelNameEn', hotelData.name_en || '');
-    setVal('hotelSloganAr', hotelData.slogan_ar || '');
-    setVal('hotelAddressAr', hotelData.address_ar || '');
-    setVal('hotelWa', hotelData.whatsapp || '');
-    setVal('hotelPhones', (hotelData.phones || []).join(' | '));
-    setVal('hotelCheckIn', hotelData.check_in || '14:00');
-    setVal('hotelCheckOut', hotelData.check_out || '12:00');
+    const container = document.getElementById('hotelInfoViewContainer');
+    if (!container) return;
+
+    container.innerHTML = `
+      <div class="view-details-grid">
+        <div class="view-item-box">
+          <div class="view-item-label">اسم الفندق (عربي)</div>
+          <div class="view-item-val">${hotelData.name_ar || 'فندق روز عدن 2 السياحي'}</div>
+        </div>
+        <div class="view-item-box">
+          <div class="view-item-label">اسم الفندق (English)</div>
+          <div class="view-item-val">${hotelData.name_en || 'Rose Aden 2 Tourist Hotel'}</div>
+        </div>
+        <div class="view-item-box">
+          <div class="view-item-label">الشعار اللفظي (Slogan)</div>
+          <div class="view-item-val" style="color: var(--adm-gold);">${hotelData.slogan_ar || ''}</div>
+        </div>
+        <div class="view-item-box">
+          <div class="view-item-label">واتساب الحجوزات الرئيسي</div>
+          <div class="view-item-val" style="color: #25d366;">📱 ${hotelData.whatsapp || '780000656'}</div>
+        </div>
+        <div class="view-item-box" style="grid-column: 1 / -1;">
+          <div class="view-item-label">العنوان التفصيلي</div>
+          <div class="view-item-val">📍 ${hotelData.address_ar || ''}</div>
+        </div>
+        <div class="view-item-box">
+          <div class="view-item-label">هواتف الاستقبال الأرضية</div>
+          <div class="view-item-val">☎️ ${(hotelData.phones || []).join(' | ')}</div>
+        </div>
+        <div class="view-item-box">
+          <div class="view-item-label">أوقات تسجيل الدخول والمغادرة</div>
+          <div class="view-item-val">الدخول: ${hotelData.check_in || '14:00'} | المغادرة: ${hotelData.check_out || '12:00'}</div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('hotelInfoViewMode').style.display = 'block';
+    document.getElementById('hotelInfoEditMode').style.display = 'none';
   }
 
-  function populateRoomsList() {
-    const container = document.getElementById('roomsContainer');
+  window.enableHotelInfoEdit = function () {
+    if (!hotelData) return;
+    setVal('editHotelNameAr', hotelData.name_ar || '');
+    setVal('editHotelNameEn', hotelData.name_en || '');
+    setVal('editHotelSloganAr', hotelData.slogan_ar || '');
+    setVal('editHotelAddressAr', hotelData.address_ar || '');
+    setVal('editHotelWa', hotelData.whatsapp || '');
+    setVal('editHotelPhones', (hotelData.phones || []).join(' | '));
+    setVal('editHotelCheckIn', hotelData.check_in || '14:00');
+    setVal('editHotelCheckOut', hotelData.check_out || '12:00');
+
+    document.getElementById('hotelInfoViewMode').style.display = 'none';
+    document.getElementById('hotelInfoEditMode').style.display = 'block';
+  };
+
+  window.cancelHotelInfoEdit = function () {
+    renderHotelInfoView();
+  };
+
+  window.saveHotelInfoToGitHub = async function () {
+    hotelData.name_ar = getVal('editHotelNameAr');
+    hotelData.name_en = getVal('editHotelNameEn');
+    hotelData.slogan_ar = getVal('editHotelSloganAr');
+    hotelData.address_ar = getVal('editHotelAddressAr');
+    hotelData.whatsapp = getVal('editHotelWa');
+    hotelData.phones = (getVal('editHotelPhones') || '').split('|').map(s => s.trim()).filter(Boolean);
+    hotelData.check_in = getVal('editHotelCheckIn');
+    hotelData.check_out = getVal('editHotelCheckOut');
+
+    const statusBox = document.getElementById('hotelSaveStatus');
+    if (statusBox) {
+      statusBox.style.display = 'block';
+      statusBox.className = 'alert-box alert-info';
+      statusBox.innerHTML = 'جاري إرسال التعديل إلى مستودع GitHub...';
+    }
+
+    try {
+      await commitTextFileToGitHub('data/hotel-info.json', JSON.stringify(hotelData, null, 2), 'تحديث بيانات الفندق العامة عبر لوحة التحكم');
+      if (statusBox) {
+        statusBox.className = 'alert-box alert-success';
+        statusBox.innerHTML = '✓ تم حفظ ونشر بيانات الفندق بنجاح على GitHub!';
+      }
+      setTimeout(() => {
+        if (statusBox) statusBox.style.display = 'none';
+        renderHotelInfoView();
+      }, 1500);
+    } catch (err) {
+      if (statusBox) {
+        statusBox.className = 'alert-box alert-info';
+        statusBox.innerHTML = `❌ خطأ أثناء الحفظ: ${err.message}`;
+      }
+    }
+  };
+
+  // =========================================================================
+  // 5. Theme & Styling: View Mode vs Edit Mode
+  // =========================================================================
+  function renderThemeView() {
+    if (!themeData) return;
+    const container = document.getElementById('themeViewContainer');
+    if (!container) return;
+
+    const ann = themeData.announcement || {};
+    container.innerHTML = `
+      <div class="view-details-grid">
+        <div class="view-item-box" style="display: flex; align-items: center; gap: 1rem;">
+          <div style="width: 48px; height: 48px; border-radius: 10px; background: ${themeData.rose_primary || '#e22d46'}; border: 2px solid #fff;"></div>
+          <div>
+            <div class="view-item-label">اللون الأساسي (Primary Rose)</div>
+            <div class="view-item-val" style="direction: ltr; font-family: monospace;">${themeData.rose_primary || '#e22d46'}</div>
+          </div>
+        </div>
+
+        <div class="view-item-box" style="display: flex; align-items: center; gap: 1rem;">
+          <div style="width: 48px; height: 48px; border-radius: 10px; background: ${themeData.luxury_gold || '#d4af37'}; border: 2px solid #fff;"></div>
+          <div>
+            <div class="view-item-label">اللون الذهبي الملكي (Luxury Gold)</div>
+            <div class="view-item-val" style="direction: ltr; font-family: monospace;">${themeData.luxury_gold || '#d4af37'}</div>
+          </div>
+        </div>
+
+        <div class="view-item-box">
+          <div class="view-item-label">الخط العربي المعتمد</div>
+          <div class="view-item-val">${themeData.font_arabic ? themeData.font_arabic.split(',')[0].replace(/['"]/g, '') : 'Cairo'}</div>
+        </div>
+
+        <div class="view-item-box">
+          <div class="view-item-label">شريط العروض الترويجي أعلى الموقع</div>
+          <div class="view-item-val" style="color: ${ann.enabled ? 'var(--adm-success)' : 'var(--adm-muted)'};">
+            ${ann.enabled ? '🟢 مفعل ونشط' : '⚪ معطل'}
+          </div>
+        </div>
+
+        ${ann.enabled ? `
+        <div class="view-item-box" style="grid-column: 1 / -1; background: rgba(226, 45, 70, 0.1); border-color: var(--adm-border);">
+          <div class="view-item-label">نص العرض الترويجي الحالي</div>
+          <div class="view-item-val" style="color: var(--adm-gold-light);">${ann.text_ar || ''}</div>
+        </div>
+        ` : ''}
+      </div>
+    `;
+
+    document.getElementById('themeViewMode').style.display = 'block';
+    document.getElementById('themeEditMode').style.display = 'none';
+  }
+
+  window.enableThemeEdit = function () {
+    if (!themeData) return;
+    setVal('thmPrimaryPicker', themeData.rose_primary || '#e22d46');
+    setVal('thmPrimaryHex', themeData.rose_primary || '#e22d46');
+    setVal('thmGoldPicker', themeData.luxury_gold || '#d4af37');
+    setVal('thmGoldHex', themeData.luxury_gold || '#d4af37');
+    setVal('thmFontSelect', themeData.font_arabic || "'Cairo', system-ui, sans-serif");
+    setVal('thmRadiusSelect', themeData.border_radius || '18px');
+
+    const ann = themeData.announcement || {};
+    const chk = document.getElementById('editAnnEnabled');
+    if (chk) chk.checked = !!ann.enabled;
+    setVal('editAnnTextAr', ann.text_ar || '');
+    setVal('editAnnLink', ann.link || '');
+    setVal('editAnnBtn', ann.btn_text || 'احجز بالعرض الآن');
+
+    document.getElementById('themeViewMode').style.display = 'none';
+    document.getElementById('themeEditMode').style.display = 'block';
+  };
+
+  window.cancelThemeEdit = function () {
+    renderThemeView();
+  };
+
+  window.saveThemeToGitHub = async function () {
+    themeData.rose_primary = getVal('thmPrimaryHex') || '#e22d46';
+    themeData.rose_dark = darkenColor(themeData.rose_primary);
+    themeData.luxury_gold = getVal('thmGoldHex') || '#d4af37';
+    themeData.luxury_gold_light = lightenColor(themeData.luxury_gold);
+    themeData.font_arabic = getVal('thmFontSelect') || "'Cairo', system-ui, sans-serif";
+    themeData.border_radius = getVal('thmRadiusSelect') || '18px';
+
+    themeData.announcement = {
+      enabled: document.getElementById('editAnnEnabled') ? document.getElementById('editAnnEnabled').checked : false,
+      text_ar: getVal('editAnnTextAr'),
+      link: getVal('editAnnLink'),
+      btn_text: getVal('editAnnBtn')
+    };
+
+    const statusBox = document.getElementById('themeSaveStatus');
+    if (statusBox) {
+      statusBox.style.display = 'block';
+      statusBox.className = 'alert-box alert-info';
+      statusBox.innerHTML = 'جاري إرسال إعدادات الألوان إلى GitHub...';
+    }
+
+    try {
+      await commitTextFileToGitHub('data/theme.json', JSON.stringify(themeData, null, 2), 'تحديث هوية وألوان وشريط العروض عبر لوحة التحكم');
+      if (statusBox) {
+        statusBox.className = 'alert-box alert-success';
+        statusBox.innerHTML = '✓ تم حفظ ونشر إعدادات الهوية والألوان بنجاح!';
+      }
+      setTimeout(() => {
+        if (statusBox) statusBox.style.display = 'none';
+        renderThemeView();
+      }, 1500);
+    } catch (err) {
+      if (statusBox) {
+        statusBox.className = 'alert-box alert-info';
+        statusBox.innerHTML = `❌ خطأ أثناء الحفظ: ${err.message}`;
+      }
+    }
+  };
+
+  // =========================================================================
+  // 6. Rooms & Suites: View Grid + Add/Edit Modal with Image Upload
+  // =========================================================================
+  function renderRoomsGrid() {
+    const container = document.getElementById('roomsCardsGrid');
     if (!container || !roomsData) return;
 
     container.innerHTML = roomsData.map((room, idx) => `
-      <div class="room-edit-card" data-idx="${idx}">
-        <div class="room-edit-header">
-          <strong style="color: var(--adm-gold); font-size: 1.15rem;">#${idx + 1} ${room.title_ar}</strong>
-          <div>
-            <button type="button" class="adm-btn adm-btn-danger adm-btn-sm" onclick="deleteRoom(${idx})">حذف الغرفة</button>
-          </div>
+      <div class="adm-room-card" data-idx="${idx}">
+        <div class="adm-room-media">
+          <img src="../${room.image}" alt="${room.title_ar}" onerror="this.src='../assets/images/suite-vip.jpg'">
+          <span class="adm-room-badge">${room.badge_ar || 'مميز'}</span>
         </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label>اسم الغرفة (بالعربية)</label>
-            <input type="text" class="adm-input r-title-ar" value="${room.title_ar || ''}">
+        <div class="adm-room-body">
+          <div class="adm-room-title">${room.title_ar}</div>
+          <div class="adm-room-price">💰 ${room.price_per_night}</div>
+          <div style="font-size: 0.82rem; color: var(--adm-muted); margin-bottom: 0.5rem;">
+            <span>🛏️ ${room.beds_ar || ''}</span> • <span>👥 ${room.capacity_ar || ''}</span>
           </div>
-          <div class="form-group">
-            <label>سعر الليلة</label>
-            <input type="text" class="adm-input r-price" value="${room.price_per_night || ''}">
+          <div class="adm-room-features">
+            ${(room.features_ar || []).slice(0, 4).map(f => `<span class="adm-feature-tag">${f}</span>`).join('')}
+            ${(room.features_ar || []).length > 4 ? `<span class="adm-feature-tag">+${(room.features_ar.length - 4)} أخرى</span>` : ''}
           </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label>الشارة الترويجية (Badge)</label>
-            <input type="text" class="adm-input r-badge" value="${room.badge_ar || ''}">
+          <div class="adm-room-actions">
+            <button type="button" class="adm-btn adm-btn-gold adm-btn-sm" onclick="openRoomModal(${idx})">
+              <span>✏️</span> تعديل الغرفة والصورة
+            </button>
+            <button type="button" class="adm-btn adm-btn-danger adm-btn-sm" onclick="deleteRoomItem(${idx})">
+              <span>🗑️</span> حذف
+            </button>
           </div>
-          <div class="form-group">
-            <label>نوع السرير والسعة</label>
-            <input type="text" class="adm-input r-beds" value="${room.beds_ar || ''}">
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label>مسار الصورة</label>
-            <input type="text" class="adm-input r-img" value="${room.image || ''}">
-          </div>
-          <div class="form-group">
-            <label>السعة (عدد النزلاء)</label>
-            <input type="text" class="adm-input r-cap" value="${room.capacity_ar || ''}">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>المميزات (مفصولة بفاصلة أو سطر جديد)</label>
-          <textarea class="adm-textarea r-features" rows="3">${(room.features_ar || []).join('\n')}</textarea>
         </div>
       </div>
     `).join('');
   }
 
-  window.addNewRoom = function () {
-    if (!roomsData) roomsData = [];
-    roomsData.push({
-      id: `room-custom-${Date.now()}`,
-      category: 'standard',
-      title_ar: 'غرفة فاخرة جديدة',
-      title_en: 'New Deluxe Room',
-      badge_ar: 'جديد',
-      badge_en: 'New',
-      price_per_night: 'حسب الطلب',
-      price_en: 'Special Rate',
-      beds_ar: 'سرير مزدوج مريح',
-      beds_en: 'Double Bed',
-      capacity_ar: '2 أشخاص',
-      capacity_en: '2 Guests',
-      image: 'assets/images/room-twin.jpg',
-      features_ar: ['تكييف صامت', 'شاشة ذكية', 'واي فاي فايبر مجاني']
-    });
-    populateRoomsList();
+  window.openRoomModal = function (idx) {
+    currentEditingRoomIndex = idx;
+    roomImageUploadBase64 = null;
+    const modal = document.getElementById('roomModalBackdrop');
+    const title = document.getElementById('roomModalTitle');
+    const preview = document.getElementById('modalRoomImgPreview');
+    const statusBox = document.getElementById('modalRoomStatus');
+
+    if (statusBox) statusBox.style.display = 'none';
+
+    if (idx === -1) {
+      // New Room
+      title.textContent = '➕ إضافة غرفة أو جناح فندقي جديد';
+      setVal('modalRoomTitleAr', '');
+      setVal('modalRoomPrice', 'أسعار تنافسية');
+      setVal('modalRoomBadge', 'جديد');
+      setVal('modalRoomBeds', 'سرير مزدوج');
+      setVal('modalRoomCap', '2 أشخاص');
+      setVal('modalRoomCategory', 'standard');
+      setVal('modalRoomFeatures', 'تكييف هادئ\nشاشة ذكية\nواي فاي فايبر مجاني');
+      setVal('modalRoomImgPath', 'assets/images/room-twin.jpg');
+      preview.src = '../assets/images/room-twin.jpg';
+    } else {
+      // Edit Existing
+      const room = roomsData[idx];
+      title.textContent = `✏️ تعديل: ${room.title_ar}`;
+      setVal('modalRoomTitleAr', room.title_ar || '');
+      setVal('modalRoomPrice', room.price_per_night || '');
+      setVal('modalRoomBadge', room.badge_ar || '');
+      setVal('modalRoomBeds', room.beds_ar || '');
+      setVal('modalRoomCap', room.capacity_ar || '');
+      setVal('modalRoomCategory', room.category || 'standard');
+      setVal('modalRoomFeatures', (room.features_ar || []).join('\n'));
+      setVal('modalRoomImgPath', room.image || '');
+      preview.src = `../${room.image}`;
+    }
+
+    modal.classList.add('open');
   };
 
-  window.deleteRoom = function (idx) {
-    if (confirm('هل أنت متأكد من رغبتك في حذف هذه الغرفة من القائمة؟')) {
-      roomsData.splice(idx, 1);
-      populateRoomsList();
+  window.closeRoomModal = function () {
+    document.getElementById('roomModalBackdrop').classList.remove('open');
+  };
+
+  // Preview local image selected for room
+  window.handleRoomImageFile = function (e) {
+    const file = e.target.files[0];
+    const preview = document.getElementById('modalRoomImgPreview');
+    if (file && preview) {
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        preview.src = evt.target.result;
+        roomImageUploadBase64 = evt.target.result.split(',')[1];
+      };
+      reader.readAsDataURL(file);
     }
   };
 
-  function populateHallForm() {
-    if (!hallData) return;
-    setVal('hallTitleAr', hallData.title_ar || '');
-    setVal('hallCapacity', hallData.capacity || '');
-    setVal('hallSpecs', (hallData.specs_ar || []).join('\n'));
+  window.saveRoomModalData = async function () {
+    const title = getVal('modalRoomTitleAr').trim();
+    if (!title) {
+      alert('يرجى كتابة اسم الغرفة على الأقل.');
+      return;
+    }
+
+    const saveBtn = document.getElementById('modalRoomSaveBtn');
+    const statusBox = document.getElementById('modalRoomStatus');
+    if (saveBtn) saveBtn.disabled = true;
+    if (statusBox) {
+      statusBox.style.display = 'block';
+      statusBox.className = 'alert-box alert-info';
+      statusBox.innerHTML = 'جاري معالجة بيانات الغرفة ورفع الصورة إن وجدت...';
+    }
+
+    try {
+      let imagePath = getVal('modalRoomImgPath') || 'assets/images/suite-vip.jpg';
+
+      // If user uploaded a new image file from computer
+      if (roomImageUploadBase64) {
+        const fileExt = 'jpg';
+        const newFileName = `room-${Date.now()}.${fileExt}`;
+        imagePath = `assets/images/${newFileName}`;
+        if (statusBox) statusBox.innerHTML = `جاري رفع صورة الغرفة <code>${imagePath}</code> إلى مستودع GitHub...`;
+        await commitBinaryFileToGitHub(imagePath, roomImageUploadBase64, `Upload room photo: ${newFileName}`);
+      }
+
+      const roomPayload = {
+        id: currentEditingRoomIndex === -1 ? `room-${Date.now()}` : roomsData[currentEditingRoomIndex].id,
+        category: getVal('modalRoomCategory') || 'standard',
+        title_ar: title,
+        title_en: currentEditingRoomIndex === -1 ? 'Deluxe Room' : (roomsData[currentEditingRoomIndex].title_en || 'Deluxe Room'),
+        badge_ar: getVal('modalRoomBadge') || 'مميز',
+        badge_en: 'Special',
+        price_per_night: getVal('modalRoomPrice') || 'حسب الطلب',
+        price_en: 'Special Rate',
+        beds_ar: getVal('modalRoomBeds') || 'سرير مريح',
+        beds_en: 'Comfortable Bed',
+        capacity_ar: getVal('modalRoomCap') || '2 أشخاص',
+        capacity_en: '2 Guests',
+        image: imagePath,
+        features_ar: (getVal('modalRoomFeatures') || '').split('\n').map(s => s.trim()).filter(Boolean),
+        features_en: ['Silent Air Conditioning', 'Smart Screen TV', 'Free Fiber Wi-Fi']
+      };
+
+      if (currentEditingRoomIndex === -1) {
+        roomsData.push(roomPayload);
+      } else {
+        roomsData[currentEditingRoomIndex] = roomPayload;
+      }
+
+      if (statusBox) statusBox.innerHTML = 'جاري تحديث ونشر قائمة الغرف على GitHub...';
+      await commitTextFileToGitHub('data/rooms.json', JSON.stringify(roomsData, null, 2), `Update rooms.json: ${title}`);
+
+      if (statusBox) {
+        statusBox.className = 'alert-box alert-success';
+        statusBox.innerHTML = '✓ تم حفظ ونشر الغرفة بنجاح على موقع الفندق!';
+      }
+
+      setTimeout(() => {
+        closeRoomModal();
+        renderRoomsGrid();
+      }, 1200);
+    } catch (err) {
+      if (statusBox) {
+        statusBox.className = 'alert-box alert-info';
+        statusBox.innerHTML = `❌ حدث خطأ: ${err.message}`;
+      }
+    } finally {
+      if (saveBtn) saveBtn.disabled = false;
+    }
+  };
+
+  window.deleteRoomItem = async function (idx) {
+    if (!roomsData || !roomsData[idx]) return;
+    const item = roomsData[idx];
+    if (confirm(`هل أنت متأكد من رغبتك في حذف "${item.title_ar}" نهائياً من الموقع؟`)) {
+      roomsData.splice(idx, 1);
+      renderRoomsGrid();
+      try {
+        await commitTextFileToGitHub('data/rooms.json', JSON.stringify(roomsData, null, 2), `Delete room: ${item.title_ar}`);
+        alert('تم حذف الغرفة وتحديث مستودع GitHub بنجاح.');
+      } catch (e) {
+        alert('تم الحذف محلياً. استخدم زر النشر الشامل لتطبيق التغيير على GitHub.');
+      }
+    }
+  };
+
+  // =========================================================================
+  // 7. Smart Gallery & Pre-Flight Image Optimizer
+  // =========================================================================
+  window.inspectSelectedGalleryFile = function (e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    preflightState.file = file;
+    preflightState.originalSize = file.size;
+    preflightState.isOptimized = false;
+    preflightState.optimizedBase64 = null;
+
+    const panel = document.getElementById('imagePreflightPanel');
+    const thumb = document.getElementById('preflightStageThumb');
+    const dimEl = document.getElementById('metricDimensions');
+    const sizeEl = document.getElementById('metricSize');
+    const ratioEl = document.getElementById('metricRatio');
+    const verdictEl = document.getElementById('metricVerdict');
+    const optBtn = document.getElementById('autoOptimizeBtn');
+
+    panel.style.display = 'block';
+
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      const dataUrl = evt.target.result;
+      preflightState.originalBase64 = dataUrl.split(',')[1];
+      thumb.src = dataUrl;
+
+      // Extract image natural dimensions
+      const img = new Image();
+      img.onload = () => {
+        preflightState.width = img.naturalWidth;
+        preflightState.height = img.naturalHeight;
+
+        dimEl.textContent = `${img.naturalWidth} × ${img.naturalHeight} px`;
+        const sizeMb = (file.size / (1024 * 1024)).toFixed(2);
+        const sizeKb = Math.round(file.size / 1024);
+        sizeEl.textContent = file.size >= 1024 * 1024 ? `${sizeMb} MB` : `${sizeKb} KB`;
+
+        const ratio = (img.naturalWidth / img.naturalHeight).toFixed(2);
+        ratioEl.textContent = ratio > 1.3 ? `${ratio}:1 (عريض Landscape)` : `${ratio}:1 (مربع/طولي)`;
+
+        // Compatibility Verdict
+        if (file.size > 1.2 * 1024 * 1024 || img.naturalWidth > 2400) {
+          verdictEl.className = 'verdict-badge verdict-heavy';
+          verdictEl.innerHTML = '⚠️ حجم وأبعاد كبيرة - يُنصح بالتحسين لتسريع الموقع';
+          optBtn.style.display = 'inline-flex';
+        } else {
+          verdictEl.className = 'verdict-badge verdict-optimal';
+          verdictEl.innerHTML = '✓ أبعاد وحجم مثاليان للعرض السريع على الويب';
+          optBtn.style.display = 'none';
+        }
+      };
+      img.src = dataUrl;
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Client-side auto-optimization using HTML5 Canvas
+  window.autoOptimizeGalleryImage = function () {
+    if (!preflightState.file) return;
+
+    const img = new Image();
+    img.onload = () => {
+      const maxWidth = 1600;
+      let targetWidth = img.naturalWidth;
+      let targetHeight = img.naturalHeight;
+
+      if (targetWidth > maxWidth) {
+        targetHeight = Math.round((maxWidth / targetWidth) * targetHeight);
+        targetWidth = maxWidth;
+      }
+
+      const canvas = document.createElement('canvas');
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
+
+      // Compress to JPEG with 0.84 quality
+      const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.84);
+      preflightState.optimizedBase64 = compressedDataUrl.split(',')[1];
+
+      // Calculate new size
+      const approxBytes = Math.round((preflightState.optimizedBase64.length * 3) / 4);
+      preflightState.optimizedSize = approxBytes;
+      preflightState.isOptimized = true;
+
+      // Update UI
+      document.getElementById('preflightStageThumb').src = compressedDataUrl;
+      document.getElementById('metricDimensions').textContent = `${targetWidth} × ${targetHeight} px (محسّن)`;
+
+      const origKb = Math.round(preflightState.originalSize / 1024);
+      const newKb = Math.round(approxBytes / 1024);
+      const savings = Math.round(((preflightState.originalSize - approxBytes) / preflightState.originalSize) * 100);
+
+      document.getElementById('metricSize').innerHTML = `
+        <span style="color:#6ee7b7; font-weight:800;">${newKb} KB</span> 
+        <small style="color:var(--adm-muted);">(توفير ${savings}%)</small>
+      `;
+
+      const verdictEl = document.getElementById('metricVerdict');
+      verdictEl.className = 'verdict-badge verdict-optimal';
+      verdictEl.innerHTML = `⚡ تم التحسين آلياً بنجاح! تم تقليص ${savings}% من الحجم`;
+
+      document.getElementById('autoOptimizeBtn').style.display = 'none';
+    };
+    img.src = `data:image/jpeg;base64,${preflightState.originalBase64}`;
+  };
+
+  window.uploadAndPublishGalleryPhoto = async function () {
+    if (!preflightState.file && !preflightState.originalBase64) {
+      alert('يرجى اختيار صورة أولاً من جهازك.');
+      return;
+    }
+
+    const titleInput = document.getElementById('proGalleryTitle');
+    const categorySelect = document.getElementById('proGalleryCategory');
+    const statusBox = document.getElementById('proGalleryUploadStatus');
+    const uploadBtn = document.getElementById('proGalleryUploadBtn');
+
+    const title = (titleInput ? titleInput.value.trim() : '') || 'صورة من فندق روز عدن 2';
+    const category = categorySelect ? categorySelect.value : 'rooms';
+
+    const fileName = `gallery-${Date.now()}.jpg`;
+    const targetPath = `assets/images/${fileName}`;
+
+    const base64ToUpload = preflightState.isOptimized ? preflightState.optimizedBase64 : preflightState.originalBase64;
+
+    if (uploadBtn) uploadBtn.disabled = true;
+    if (statusBox) {
+      statusBox.style.display = 'block';
+      statusBox.className = 'alert-box alert-info';
+      statusBox.innerHTML = `جاري رفع الصورة <code>${targetPath}</code> إلى مستودع GitHub...`;
+    }
+
+    try {
+      // 1. Commit image to GitHub repository
+      await commitBinaryFileToGitHub(targetPath, base64ToUpload, `Upload gallery image: ${fileName}`);
+
+      // 2. Insert into galleryData
+      if (!galleryData) galleryData = [];
+      const newPhoto = {
+        title: title,
+        category: category,
+        src: targetPath
+      };
+      galleryData.unshift(newPhoto);
+
+      // 3. Commit updated data/gallery.json
+      if (statusBox) statusBox.innerHTML = 'جاري تحديث ونشر ملف المعرض <code>data/gallery.json</code>...';
+      await commitTextFileToGitHub('data/gallery.json', JSON.stringify(galleryData, null, 2), `Add gallery photo: ${title}`);
+
+      if (statusBox) {
+        statusBox.className = 'alert-box alert-success';
+        statusBox.innerHTML = `✓ تم رفع ونشر الصورة بنجاح في المعرض!<br>المسار: <code>${targetPath}</code> | القسم: <strong>${getCategoryArabic(category)}</strong>`;
+      }
+
+      // Reset file input & preflight panel
+      document.getElementById('proGalleryFileInput').value = '';
+      if (titleInput) titleInput.value = '';
+      setTimeout(() => {
+        document.getElementById('imagePreflightPanel').style.display = 'none';
+        renderGalleryGrid();
+      }, 1800);
+    } catch (err) {
+      if (statusBox) {
+        statusBox.className = 'alert-box alert-info';
+        statusBox.innerHTML = `❌ خطأ أثناء الرفع: ${err.message}`;
+      }
+    } finally {
+      if (uploadBtn) uploadBtn.disabled = false;
+    }
+  };
+
+  function getCategoryArabic(cat) {
+    const map = {
+      'rooms': 'الغرف والأجنحة',
+      'vip': 'طيرمانات VIP',
+      'halls': 'قاعات التدريب والفعاليات',
+      'lobby': 'الاستقبال واللوبي',
+      'exterior': 'الواجهة والمبنى'
+    };
+    return map[cat] || cat;
   }
 
-  function populateReviewsList() {
+  function renderGalleryGrid() {
+    const container = document.getElementById('proGalleryGrid');
+    const badge = document.getElementById('proGalleryCountBadge');
+    if (!galleryData) return;
+
+    if (badge) badge.textContent = `${galleryData.length} صورة`;
+    if (!container) return;
+
+    container.innerHTML = galleryData.map((g, idx) => `
+      <div class="adm-gallery-card" data-gidx="${idx}">
+        <div style="position: relative;">
+          <img src="../${g.src}" alt="${g.title}" onerror="this.src='../assets/images/building-day.jpg'">
+          <span style="position: absolute; top: 0.5rem; right: 0.5rem; background: rgba(0,0,0,0.75); color: var(--adm-gold); padding: 0.2rem 0.6rem; border-radius: 99px; font-size: 0.72rem; font-weight: 700;">
+            ${getCategoryArabic(g.category)}
+          </span>
+        </div>
+        <div class="adm-gallery-card-body">
+          <input type="text" class="adm-input" value="${g.title || ''}" style="padding: 0.35rem 0.6rem; font-size: 0.85rem;" onchange="galleryData[${idx}].title = this.value">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+            <select class="adm-select" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; width: auto;" onchange="galleryData[${idx}].category = this.value">
+              <option value="rooms" ${g.category === 'rooms' ? 'selected' : ''}>غرف</option>
+              <option value="vip" ${g.category === 'vip' ? 'selected' : ''}>VIP</option>
+              <option value="halls" ${g.category === 'halls' ? 'selected' : ''}>قاعات</option>
+              <option value="lobby" ${g.category === 'lobby' ? 'selected' : ''}>لوبي</option>
+              <option value="exterior" ${g.category === 'exterior' ? 'selected' : ''}>واجهة</option>
+            </select>
+            <button type="button" class="adm-btn adm-btn-danger adm-btn-sm" onclick="deleteGalleryItem(${idx})">حذف</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  window.deleteGalleryItem = async function (idx) {
+    if (!galleryData || !galleryData[idx]) return;
+    const item = galleryData[idx];
+    if (confirm(`هل أنت متأكد من حذف صورة "${item.title}" من المعرض؟`)) {
+      galleryData.splice(idx, 1);
+      renderGalleryGrid();
+      try {
+        await commitTextFileToGitHub('data/gallery.json', JSON.stringify(galleryData, null, 2), `Delete gallery photo: ${item.title}`);
+        alert('تم حذف الصورة وتحديث المعرض في GitHub بنجاح.');
+      } catch (e) {
+        alert('تم الحذف محلياً. استخدم زر النشر الشامل لتطبيق التحديث على GitHub.');
+      }
+    }
+  };
+
+  // =========================================================================
+  // 8. Training Hall & Reviews (View & Edit Modes)
+  // =========================================================================
+  function renderHallView() {
+    if (!hallData) return;
+    const container = document.getElementById('hallViewContainer');
+    if (!container) return;
+
+    container.innerHTML = `
+      <div class="view-details-grid">
+        <div class="view-item-box">
+          <div class="view-item-label">عنوان القاعة</div>
+          <div class="view-item-val">${hallData.title_ar || ''}</div>
+        </div>
+        <div class="view-item-box">
+          <div class="view-item-label">السعة الاستيعابية</div>
+          <div class="view-item-val" style="color: var(--adm-gold);">👥 ${hallData.capacity || ''}</div>
+        </div>
+        <div class="view-item-box" style="grid-column: 1 / -1;">
+          <div class="view-item-label">المواصفات والتجهيزات</div>
+          <div class="view-item-val" style="font-size: 0.95rem; font-weight: normal; line-height: 1.8;">
+            ${(hallData.specs_ar || []).map(s => `• ${s}`).join('<br>')}
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('hallViewMode').style.display = 'block';
+    document.getElementById('hallEditMode').style.display = 'none';
+  }
+
+  window.enableHallEdit = function () {
+    if (!hallData) return;
+    setVal('editHallTitleAr', hallData.title_ar || '');
+    setVal('editHallCapacity', hallData.capacity || '');
+    setVal('editHallSpecs', (hallData.specs_ar || []).join('\n'));
+
+    document.getElementById('hallViewMode').style.display = 'none';
+    document.getElementById('hallEditMode').style.display = 'block';
+  };
+
+  window.cancelHallEdit = function () {
+    renderHallView();
+  };
+
+  window.saveHallToGitHub = async function () {
+    hallData.title_ar = getVal('editHallTitleAr');
+    hallData.capacity = getVal('editHallCapacity');
+    hallData.specs_ar = (getVal('editHallSpecs') || '').split('\n').map(s => s.trim()).filter(Boolean);
+
+    const statusBox = document.getElementById('hallSaveStatus');
+    if (statusBox) {
+      statusBox.style.display = 'block';
+      statusBox.className = 'alert-box alert-info';
+      statusBox.innerHTML = 'جاري حفظ بيانات القاعة على GitHub...';
+    }
+
+    try {
+      await commitTextFileToGitHub('data/hall.json', JSON.stringify(hallData, null, 2), 'تحديث قاعة التدريب عبر لوحة التحكم');
+      if (statusBox) {
+        statusBox.className = 'alert-box alert-success';
+        statusBox.innerHTML = '✓ تم حفظ ونشر بيانات القاعة بنجاح!';
+      }
+      setTimeout(() => {
+        if (statusBox) statusBox.style.display = 'none';
+        renderHallView();
+      }, 1500);
+    } catch (e) {
+      if (statusBox) {
+        statusBox.className = 'alert-box alert-info';
+        statusBox.innerHTML = `❌ خطأ أثناء الحفظ: ${e.message}`;
+      }
+    }
+  };
+
+  function renderReviewsView() {
     const container = document.getElementById('reviewsContainer');
     if (!container || !reviewsData) return;
 
     container.innerHTML = reviewsData.map((rev, idx) => `
-      <div class="room-edit-card" data-rev-idx="${idx}">
-        <div class="room-edit-header">
-          <strong>${rev.name} (${'★'.repeat(rev.rating || 5)})</strong>
-          <button type="button" class="adm-btn adm-btn-danger adm-btn-sm" onclick="deleteReview(${idx})">حذف</button>
+      <div class="view-item-box" style="margin-bottom: 1rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <strong style="color: #fff; font-size: 1.05rem;">${rev.name} (${rev.role || ''})</strong>
+          <span style="color: var(--adm-gold);">${'★'.repeat(rev.rating || 5)}</span>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>اسم النزيل</label>
-            <input type="text" class="adm-input rev-name" value="${rev.name || ''}">
-          </div>
-          <div class="form-group">
-            <label>الصفة / الوظيفة</label>
-            <input type="text" class="adm-input rev-role" value="${rev.role || ''}">
-          </div>
-          <div class="form-group" style="max-width: 120px;">
-            <label>التقييم (1-5)</label>
-            <input type="number" min="1" max="5" class="adm-input rev-rating" value="${rev.rating || 5}">
-          </div>
-        </div>
-        <div class="form-group">
-          <label>التعليق</label>
-          <textarea class="adm-textarea rev-comment" rows="2">${rev.comment_ar || ''}</textarea>
-        </div>
+        <p style="color: var(--adm-text-sub); font-size: 0.9rem; margin-bottom: 0.75rem;">"${rev.comment_ar}"</p>
+        <button type="button" class="adm-btn adm-btn-danger adm-btn-sm" onclick="deleteReviewItem(${idx})">حذف التقييم</button>
       </div>
     `).join('');
   }
 
-  window.addNewReview = function () {
+  window.addNewReviewPrompt = function () {
+    const name = prompt('اسم النزيل أو الضيف:');
+    if (!name) return;
+    const role = prompt('الصفة أو العمل (مثال: نزيل جناح VIP):') || 'نزيل';
+    const comment = prompt('نص التقييم:') || 'إقامة ممتازة وخدمة راقية.';
+
     if (!reviewsData) reviewsData = [];
     reviewsData.push({
-      name: 'ضيف كريم',
-      role: 'نزيل في الفندق',
+      name: name,
+      role: role,
       rating: 5,
-      comment_ar: 'إقامة ممتازة وخدمة استثنائية ونظافة عالية.'
+      comment_ar: comment
     });
-    populateReviewsList();
+    renderReviewsView();
+    commitTextFileToGitHub('data/reviews.json', JSON.stringify(reviewsData, null, 2), `Add review: ${name}`);
   };
 
-  window.deleteReview = function (idx) {
-    reviewsData.splice(idx, 1);
-    populateReviewsList();
-  };
-
-  function populateGalleryList() {
-    const container = document.getElementById('galleryContainer');
-    if (!container || !galleryData) return;
-
-    container.innerHTML = galleryData.map((g, idx) => `
-      <div style="display: flex; gap: 1rem; align-items: center; background: rgba(0,0,0,0.3); padding: 0.75rem; border-radius: 8px; margin-bottom: 0.5rem; border: 1px solid var(--adm-border);">
-        <img src="../${g.src}" style="width: 60px; height: 45px; object-fit: cover; border-radius: 6px;" onerror="this.src='../assets/images/logo.jpg'">
-        <div style="flex-grow: 1;">
-          <input type="text" class="adm-input g-title" value="${g.title || ''}" style="padding: 0.35rem 0.6rem; font-size: 0.85rem; margin-bottom: 0.25rem;">
-          <input type="text" class="adm-input g-src" value="${g.src || ''}" style="padding: 0.25rem 0.6rem; font-size: 0.75rem; color: var(--adm-muted);">
-        </div>
-        <button type="button" class="adm-btn adm-btn-danger adm-btn-sm" onclick="deleteGalleryItem(${idx})">&times;</button>
-      </div>
-    `).join('');
-  }
-
-  window.addGalleryItem = function () {
-    if (!galleryData) galleryData = [];
-    galleryData.push({
-      title: 'صورة جديدة',
-      category: 'rooms',
-      src: 'assets/images/suite-vip.jpg'
-    });
-    populateGalleryList();
-  };
-
-  window.deleteGalleryItem = function (idx) {
-    galleryData.splice(idx, 1);
-    populateGalleryList();
-  };
-
-  // 5. Direct Image Upload to GitHub Repository via REST API
-  window.uploadDirectAsset = async function (fileInputId, targetRepoPath, statusBoxId) {
-    const fileInput = document.getElementById(fileInputId);
-    const statusBox = document.getElementById(statusBoxId);
-
-    if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
-      alert('يرجى اختيار ملف صورة أولاً من جهازك.');
-      return;
-    }
-
-    if (!config.owner || !config.repo || !config.token) {
-      alert('يرجى التأكد من حفظ إعدادات GitHub والرمز (Token) أولاً في التبويب الأول.');
-      return;
-    }
-
-    const file = fileInput.files[0];
-    if (statusBox) {
-      statusBox.style.display = 'block';
-      statusBox.innerHTML = `جاري قراءة ورفع <strong>${file.name}</strong> إلى <code>${targetRepoPath}</code>...`;
-    }
-
-    try {
-      const base64Data = await readFileAsBase64(file);
-      await commitBinaryFileToGitHub(targetRepoPath, base64Data, `Upload media asset: ${targetRepoPath} via Admin Panel`);
-
-      if (statusBox) {
-        statusBox.className = 'alert-box alert-success';
-        statusBox.innerHTML = `✓ تم رفع <strong>${targetRepoPath}</strong> بنجاح إلى مستودع GitHub! سيتم تحديث العرض فوراً.`;
-      }
-    } catch (err) {
-      if (statusBox) {
-        statusBox.className = 'alert-box alert-info';
-        statusBox.innerHTML = `❌ خطأ أثناء رفع الصورة: ${err.message}`;
-      }
+  window.deleteReviewItem = async function (idx) {
+    if (!reviewsData || !reviewsData[idx]) return;
+    if (confirm('حذف هذا التقييم؟')) {
+      reviewsData.splice(idx, 1);
+      renderReviewsView();
+      await commitTextFileToGitHub('data/reviews.json', JSON.stringify(reviewsData, null, 2), 'Delete review');
     }
   };
 
-  function readFileAsBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const result = reader.result;
-        const b64 = result.split(',')[1];
-        resolve(b64);
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  }
-
-  // 6. Collect All Data from Forms
-  function collectAllData() {
-    // Theme
-    themeData = {
-      rose_primary: getVal('thmPrimary') || '#e22d46',
-      rose_dark: darkenColor(getVal('thmPrimary') || '#e22d46'),
-      luxury_gold: getVal('thmGold') || '#d4af37',
-      luxury_gold_light: lightenColor(getVal('thmGold') || '#d4af37'),
-      font_arabic: getVal('thmFont') || "'Cairo', system-ui, sans-serif",
-      border_radius: getVal('thmRadius') || '18px',
-      announcement: {
-        enabled: document.getElementById('annEnabled') ? document.getElementById('annEnabled').checked : false,
-        text_ar: getVal('annTextAr') || '',
-        link: getVal('annLink') || '',
-        btn_text: getVal('annBtn') || 'احجز بالعرض'
-      }
-    };
-
-    // Hotel Info
-    if (hotelData) {
-      hotelData.name_ar = getVal('hotelNameAr');
-      hotelData.name_en = getVal('hotelNameEn');
-      hotelData.slogan_ar = getVal('hotelSloganAr');
-      hotelData.address_ar = getVal('hotelAddressAr');
-      hotelData.whatsapp = getVal('hotelWa');
-      hotelData.phones = (getVal('hotelPhones') || '').split('|').map(s => s.trim()).filter(Boolean);
-      hotelData.check_in = getVal('hotelCheckIn');
-      hotelData.check_out = getVal('hotelCheckOut');
-    }
-
-    // Rooms
-    if (roomsData) {
-      document.querySelectorAll('.room-edit-card[data-idx]').forEach((card, idx) => {
-        if (roomsData[idx]) {
-          roomsData[idx].title_ar = card.querySelector('.r-title-ar').value;
-          roomsData[idx].price_per_night = card.querySelector('.r-price').value;
-          roomsData[idx].badge_ar = card.querySelector('.r-badge').value;
-          roomsData[idx].beds_ar = card.querySelector('.r-beds').value;
-          roomsData[idx].image = card.querySelector('.r-img').value;
-          roomsData[idx].capacity_ar = card.querySelector('.r-cap').value;
-          roomsData[idx].features_ar = card.querySelector('.r-features').value.split('\n').map(s => s.trim()).filter(Boolean);
-        }
-      });
-    }
-
-    // Hall
-    if (hallData) {
-      hallData.title_ar = getVal('hallTitleAr');
-      hallData.capacity = getVal('hallCapacity');
-      hallData.specs_ar = (getVal('hallSpecs') || '').split('\n').map(s => s.trim()).filter(Boolean);
-    }
-
-    // Reviews
-    if (reviewsData) {
-      document.querySelectorAll('.room-edit-card[data-rev-idx]').forEach((card, idx) => {
-        if (reviewsData[idx]) {
-          reviewsData[idx].name = card.querySelector('.rev-name').value;
-          reviewsData[idx].role = card.querySelector('.rev-role').value;
-          reviewsData[idx].rating = parseInt(card.querySelector('.rev-rating').value, 10) || 5;
-          reviewsData[idx].comment_ar = card.querySelector('.rev-comment').value;
-        }
-      });
-    }
-
-    // Gallery
-    if (galleryData) {
-      const titles = document.querySelectorAll('.g-title');
-      const srcs = document.querySelectorAll('.g-src');
-      galleryData.forEach((g, idx) => {
-        if (titles[idx]) g.title = titles[idx].value;
-        if (srcs[idx]) g.src = srcs[idx].value;
-      });
-    }
-  }
-
-  // 7. Full Sync & Push to GitHub REST API
+  // =========================================================================
+  // 9. Full Sync & Publish to GitHub
+  // =========================================================================
   window.syncAllToGitHub = async function () {
     if (!config.owner || !config.repo || !config.token) {
       alert('يرجى التأكد من إدخال اسم المستودع ورمز الوصول (Personal Access Token) في تبويب GitHub.');
@@ -509,50 +912,41 @@
       return;
     }
 
-    collectAllData();
-
     const terminal = document.getElementById('syncTerminal');
     const syncBtn = document.getElementById('syncAllBtn');
     if (syncBtn) syncBtn.disabled = true;
     if (terminal) {
       terminal.style.display = 'block';
-      terminal.innerHTML = `> [${new Date().toLocaleTimeString()}] بدء مزامنة التعديلات الشاملة مع GitHub...<br>`;
+      terminal.innerHTML = `> [${new Date().toLocaleTimeString()}] بدء المزامنة والنشر الشامل لكافة ملفات الموقع...<br>`;
     }
 
     try {
-      // 1. theme.json
-      logTerminal('> تحديث data/theme.json (الألوان، الخطوط، وشريط العروض)...');
-      await commitTextFileToGitHub('data/theme.json', JSON.stringify(themeData, null, 2), 'تحديث هوية وألوان وشريط العروض عبر لوحة التحكم');
-      logTerminal('✓ تم تحديث data/theme.json بنجاح.');
+      logTerminal('> نشر data/theme.json (الهوية والألوان)...');
+      await commitTextFileToGitHub('data/theme.json', JSON.stringify(themeData, null, 2), 'Sync theme.json');
+      logTerminal('✓ تم تحديث data/theme.json.');
 
-      // 2. hotel-info.json
-      logTerminal('> تحديث data/hotel-info.json (بيانات الفندق والاتصال)...');
-      await commitTextFileToGitHub('data/hotel-info.json', JSON.stringify(hotelData, null, 2), 'تحديث معلومات الفندق والاتصال عبر لوحة التحكم');
-      logTerminal('✓ تم تحديث data/hotel-info.json بنجاح.');
+      logTerminal('> نشر data/hotel-info.json (بيانات الفندق)...');
+      await commitTextFileToGitHub('data/hotel-info.json', JSON.stringify(hotelData, null, 2), 'Sync hotel-info.json');
+      logTerminal('✓ تم تحديث data/hotel-info.json.');
 
-      // 3. rooms.json
-      logTerminal('> تحديث data/rooms.json (الغرف والأسعار والمميزات)...');
-      await commitTextFileToGitHub('data/rooms.json', JSON.stringify(roomsData, null, 2), 'تحديث قائمة وأسعار ومميزات الغرف عبر لوحة التحكم');
-      logTerminal('✓ تم تحديث data/rooms.json بنجاح.');
+      logTerminal('> نشر data/rooms.json (الغرف والأسعار)...');
+      await commitTextFileToGitHub('data/rooms.json', JSON.stringify(roomsData, null, 2), 'Sync rooms.json');
+      logTerminal('✓ تم تحديث data/rooms.json.');
 
-      // 4. hall.json
-      logTerminal('> تحديث data/hall.json (قاعة التدريب)...');
-      await commitTextFileToGitHub('data/hall.json', JSON.stringify(hallData, null, 2), 'تحديث قاعة التدريب والمؤتمرات عبر لوحة التحكم');
-      logTerminal('✓ تم تحديث data/hall.json بنجاح.');
+      logTerminal('> نشر data/hall.json (قاعة المؤتمرات)...');
+      await commitTextFileToGitHub('data/hall.json', JSON.stringify(hallData, null, 2), 'Sync hall.json');
+      logTerminal('✓ تم تحديث data/hall.json.');
 
-      // 5. reviews.json
-      logTerminal('> تحديث data/reviews.json (تقييمات النزلاء)...');
-      await commitTextFileToGitHub('data/reviews.json', JSON.stringify(reviewsData, null, 2), 'تحديث آراء النزلاء والتقييمات عبر لوحة التحكم');
-      logTerminal('✓ تم تحديث data/reviews.json بنجاح.');
+      logTerminal('> نشر data/reviews.json (التقييمات)...');
+      await commitTextFileToGitHub('data/reviews.json', JSON.stringify(reviewsData, null, 2), 'Sync reviews.json');
+      logTerminal('✓ تم تحديث data/reviews.json.');
 
-      // 6. gallery.json
-      logTerminal('> تحديث data/gallery.json (معرض الصور)...');
-      await commitTextFileToGitHub('data/gallery.json', JSON.stringify(galleryData, null, 2), 'تحديث قائمة صور المعرض عبر لوحة التحكم');
-      logTerminal('✓ تم تحديث data/gallery.json بنجاح.');
+      logTerminal('> نشر data/gallery.json (صور المعرض)...');
+      await commitTextFileToGitHub('data/gallery.json', JSON.stringify(galleryData, null, 2), 'Sync gallery.json');
+      logTerminal('✓ تم تحديث data/gallery.json.');
 
-      logTerminal(`<br><span style="color:#10b981; font-weight:bold;">🎉 اكتملت المزامنة بنجاح بنسبة 100%!</span>`);
-      logTerminal(`> يقوم GitHub Pages الآن بإعادة بناء ونشر الموقع الحي في أقل من 40 ثانية.`);
-      logTerminal(`> رابط الموقع الحي: <a href="https://${config.owner.toLowerCase()}.github.io/${config.repo}/" target="_blank" style="color:#d4af37;">https://${config.owner.toLowerCase()}.github.io/${config.repo}/</a>`);
+      logTerminal(`<br><span style="color:#10b981; font-weight:bold;">🎉 اكتملت المزامنة بنجاح 100%!</span>`);
+      logTerminal(`> يقوم GitHub Pages الآن بنشر التحديثات على الرابط الحي: <a href="https://${config.owner.toLowerCase()}.github.io/${config.repo}/" target="_blank" style="color:#d4af37;">https://${config.owner.toLowerCase()}.github.io/${config.repo}/</a>`);
     } catch (err) {
       logTerminal(`<br><span style="color:#ef4444; font-weight:bold;">❌ حدث خطأ: ${err.message}</span>`);
     } finally {
@@ -568,7 +962,7 @@
     }
   }
 
-  // GitHub API Helpers
+  // GitHub API Binary & Text Committer
   async function commitTextFileToGitHub(path, content, message) {
     const base64 = btoa(unescape(encodeURIComponent(content)));
     return commitBinaryFileToGitHub(path, base64, message);
@@ -590,7 +984,7 @@
         sha = fileJson.sha;
       }
     } catch (e) {
-      // file might be new
+      // file may be new
     }
 
     const body = {
@@ -612,7 +1006,7 @@
 
     if (!putRes.ok) {
       const err = await putRes.json();
-      throw new Error(err.message || 'فشل رفع الملف إلى GitHub');
+      throw new Error(err.message || 'فشل إرسال الملف إلى GitHub');
     }
     return await putRes.json();
   }
@@ -638,9 +1032,8 @@
     } catch (e) { return hex; }
   }
 
-  // Backup Export
+  // Backup Download
   window.downloadBackupPackage = function () {
-    collectAllData();
     downloadFile('theme.json', themeData);
     downloadFile('hotel-info.json', hotelData);
     downloadFile('rooms.json', roomsData);
@@ -678,6 +1071,6 @@
     setVal('ghToken', config.token);
 
     testGitHubConnection();
-    loadAllData();
+    loadInitialData();
   });
 })();
