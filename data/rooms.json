@@ -5,14 +5,14 @@
     "title_ar": "أجنحة VIP الفاخرة",
     "title_en": "Royal VIP Suites",
     "badge_ar": "الأكثر فخامة",
-    "badge_en": "Special",
+    "badge_en": "Most Luxurious",
     "price_per_night": "حسب الطلب / أسعار خاصة",
-    "price_en": "Special Rate",
-    "beds_ar": "غرفة سرير عائلي + مجلس عربي و ضيوف ",
-    "beds_en": "Comfortable Bed",
+    "price_en": "Upon Request / Special Rate",
+    "beds_ar": "سرير ملكي ماستر كينج (King Bed)",
+    "beds_en": "Master King Bed",
     "capacity_ar": "2 - 3 أشخاص",
-    "capacity_en": "2 Guests",
-    "image": "assets/images/room-1791953613541.jpg",
+    "capacity_en": "2 - 3 Guests",
+    "image": "assets/images/suite-vip.jpg",
     "features_ar": [
       "صالون استقبال فاخر ومستقل",
       "إطلالة بانورامية بحرية ساحرة",
@@ -23,9 +23,13 @@
       "تكييف مركزي متطور فائق الهدوء"
     ],
     "features_en": [
-      "Silent Air Conditioning",
-      "Smart Screen TV",
-      "Free Fiber Wi-Fi"
+      "Private luxury living room & salon",
+      "Stunning panoramic sea view",
+      "Royal modern furniture & warm ambient lighting",
+      "4K Smart TV + High-speed fiber Wi-Fi",
+      "Marble bathroom with luxury toiletries",
+      "Mini bar, kettle, and complimentary coffee/tea",
+      "Ultra-quiet advanced climate control"
     ]
   },
   {
@@ -34,14 +38,14 @@
     "title_ar": "الغرف العائلية الفاخرة",
     "title_en": "Luxury Family Rooms",
     "badge_ar": "مثالية للعائلات",
-    "badge_en": "Special",
+    "badge_en": "Family Choice",
     "price_per_night": "أسعار تنافسية",
-    "price_en": "Special Rate",
+    "price_en": "Competitive Rates",
     "beds_ar": "سرير مزدوج كبير + أسرة إضافية",
-    "beds_en": "Comfortable Bed",
+    "beds_en": "Large Double Bed + Extra Beds",
     "capacity_ar": "4 - 5 أشخاص",
-    "capacity_en": "2 Guests",
-    "image": "assets/images/room-1791953434235.jpg",
+    "capacity_en": "4 - 5 Guests",
+    "image": "assets/images/room-family.jpg",
     "features_ar": [
       "مساحات رحبة وتوزيع ذكي للخصوصية العائلية",
       "منطقة جلوس مريحة للأطفال والعائلة",
@@ -51,9 +55,12 @@
       "ثلاجة، غلاية ومشروبات ترحيبية"
     ],
     "features_en": [
-      "Silent Air Conditioning",
-      "Smart Screen TV",
-      "Free Fiber Wi-Fi"
+      "Spacious layout ensuring family privacy",
+      "Comfortable sitting area for families",
+      "Flat-screen TVs with kids & satellite channels",
+      "Unlimited high-speed fiber internet",
+      "24/7 dedicated room service & housekeeping",
+      "Refrigerator, electric kettle, and welcome amenities"
     ]
   },
   {
@@ -118,14 +125,14 @@
     "title_ar": "طيرمانات V I P واستقبال الضيوف",
     "title_en": "VIP Penthouse & Hospitality Lounge",
     "badge_ar": "أعلى إطلالة بحرية في العريش",
-    "badge_en": "Top Sea View & Traditional Luxury",
+    "badge_en": "Special",
     "price_per_night": "حسب الحجز والمناسبة",
-    "price_en": "Upon Reservation",
+    "price_en": "Special Rate",
     "beds_ar": "مجلس يمني ملكي أصيل مع جلسات راقية",
-    "beds_en": "Royal Heritage Lounge & Salon",
+    "beds_en": "Comfortable Bed",
     "capacity_ar": "استقبال ومجالس ضيوف خاصة",
-    "capacity_en": "Exclusive Private Hospitality",
-    "image": "assets/images/tirmanah-vip.jpg",
+    "capacity_en": "2 Guests",
+    "image": "assets/images/room-1791954116119.jpg",
     "features_ar": [
       "إطلالة بانورامية خيالية مفتوحة على شاطئ أبين ومدينة عدن",
       "طراز معماري أصيل يمزج بين التراث اليمني والأناقة العصرية",
@@ -133,10 +140,9 @@
       "مخصصة للشخصيات الهامة، كبار الضيوف، واللقاءات الخاصة"
     ],
     "features_en": [
-      "Breathtaking open panoramic view of Abyan coast & Aden",
-      "Authentic architectural design blending heritage with modern luxury",
-      "Equipped with entertainment displays and hospitality services",
-      "Designed for VIP guests, executives, and exclusive gatherings"
+      "Silent Air Conditioning",
+      "Smart Screen TV",
+      "Free Fiber Wi-Fi"
     ]
   }
 ]
