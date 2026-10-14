@@ -1,1 +1,19 @@
-null
+{
+  "rose_primary": "#e22d46",
+  "rose_dark": "#be123c",
+  "rose_glow": "rgba(226, 45, 70, 0.35)",
+  "luxury_gold": "#d4af37",
+  "luxury_gold_light": "#f5cd5f",
+  "font_arabic": "'Cairo', system-ui, sans-serif",
+  "border_radius": "18px",
+  "hotel_logo": "assets/images/logo.jpg",
+  "favicon": "assets/images/favicon.jpg",
+  "hero_bg": "assets/images/building-day.jpg",
+  "announcement": {
+    "enabled": true,
+    "text_ar": "✨ عرض خاص بمناسبة الموسم: خصم مميز على أجنحة VIP وطيرمانات ساحل أبين!",
+    "text_en": "Seasonal Offer: Special discounts on luxury VIP suites and sea-view lounges!",
+    "link": "https://wa.me/967780000656?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%B9%D8%B1%D9%88%D8%B6%20%D9%81%D9%86%D8%AF%D9%82%20%D8%B1%D9%88%D8%B2%20%D8%B9%D8%AF%D9%86%202",
+    "btn_text": "احجز بالعرض الآن"
+  }
+}

@@ -1,57 +1,128 @@
 [
   {
-    "title": "مبنى فندق روز عدن 2 السياحي ليلاً",
+    "title": "إضاءة واجهة مبنى فندق روز عدن 2 السياحي ليلاً",
     "category": "exterior",
+    "group_ar": "الواجهة والمبنى الخارجي",
+    "src": "assets/images/ros2-exterior-night-neon.jpg"
+  },
+  {
+    "title": "مبنى فندق روز عدن 2 السياحي بالأقواس المعمارية ليلاً",
+    "category": "exterior",
+    "group_ar": "الواجهة والمبنى الخارجي",
     "src": "assets/images/building-night.jpg"
   },
   {
-    "title": "صالة الاستقبال واللوبي الفاخر",
+    "title": "صرح فندق روز عدن 2 السياحي في العريش نهاراً",
+    "category": "exterior",
+    "group_ar": "الواجهة والمبنى الخارجي",
+    "src": "assets/images/building-day.jpg"
+  },
+  {
+    "title": "بهو المدخل الرئيسي الفخم بتصميم الرخام الهندسي",
     "category": "lobby",
+    "group_ar": "صالة الاستقبال واللوبي",
+    "src": "assets/images/ros2-lobby-grand-entrance.jpg"
+  },
+  {
+    "title": "صالة الاستقبال واللوبي الفاخر بالثريات الكريستالية",
+    "category": "lobby",
+    "group_ar": "صالة الاستقبال واللوبي",
+    "src": "assets/images/ros2-lobby-chandeliers.jpg"
+  },
+  {
+    "title": "ركن الضيافة والاستقبال بشعار فندق روز عدن 2 الملكي",
+    "category": "lobby",
+    "group_ar": "صالة الاستقبال واللوبي",
+    "src": "assets/images/ros2-lobby-lounge-emblem.jpg"
+  },
+  {
+    "title": "كاونتر الاستقبال وخدمة الضيوف على مدار الساعة",
+    "category": "lobby",
+    "group_ar": "صالة الاستقبال واللوبي",
     "src": "assets/images/lobby-reception.jpg"
   },
   {
-    "title": "أجنحة VIP الفاخرة",
-    "category": "rooms",
-    "src": "assets/images/suite-vip.jpg"
+    "title": "جناح VIP ملكي بسرير ماستر كينج وتصميم مخملي فاخر",
+    "category": "vip",
+    "group_ar": "أجنحة وطيرمانات VIP",
+    "src": "assets/images/ros2-suite-king-blue.jpg"
   },
   {
-    "title": "طيرمانات VIP واستقبال الضيوف",
+    "title": "مجلس وطيرمانة VIP عربية واسعة للضيافة والاستقبال",
     "category": "vip",
+    "group_ar": "أجنحة وطيرمانات VIP",
+    "src": "assets/images/ros2-vip-majlis.jpg"
+  },
+  {
+    "title": "طيرمانات VIP الملكية ومجالس كبار الشخصيات",
+    "category": "vip",
+    "group_ar": "أجنحة وطيرمانات VIP",
     "src": "assets/images/tirmanah-vip.jpg"
   },
   {
-    "title": "قاعة التدريب الحديثة الكبرى",
-    "category": "halls",
-    "src": "assets/images/training-hall.jpg"
+    "title": "أجنحة VIP الرئاسية متكاملة التجهيزات",
+    "category": "vip",
+    "group_ar": "أجنحة وطيرمانات VIP",
+    "src": "assets/images/suite-vip.jpg"
   },
   {
-    "title": "الشاشة الذكية العملاقة للتدريب",
-    "category": "halls",
-    "src": "assets/images/smart-screen.jpg"
-  },
-  {
-    "title": "قاعة الوجبات والضيافة",
-    "category": "halls",
-    "src": "assets/images/dining-hall.jpg"
-  },
-  {
-    "title": "الغرف العائلية الفاخرة",
+    "title": "جناح إقامة فاخر متكامل مع ركن التسريحة والمكتب",
     "category": "rooms",
+    "group_ar": "الغرف والأجنحة الفندقية",
+    "src": "assets/images/ros2-suite-vanity-angle.jpg"
+  },
+  {
+    "title": "غرفة سريرين ديلوكس مع أريكة استرخاء جانبية",
+    "category": "rooms",
+    "group_ar": "الغرف والأجنحة الفندقية",
+    "src": "assets/images/ros2-room-twin-blue.jpg"
+  },
+  {
+    "title": "غرفة سريرين فاخرة مع ركن جلوس وشاشة ذكية",
+    "category": "rooms",
+    "group_ar": "الغرف والأجنحة الفندقية",
+    "src": "assets/images/ros2-room-twin-grey.jpg"
+  },
+  {
+    "title": "غرفة 3 أسرة واسعة بتصميم ملكي أزرق",
+    "category": "rooms",
+    "group_ar": "الغرف والأجنحة الفندقية",
+    "src": "assets/images/ros2-room-triple-blue.jpg"
+  },
+  {
+    "title": "الغرف العائلية الفاخرة والواسعة",
+    "category": "rooms",
+    "group_ar": "الغرف والأجنحة الفندقية",
     "src": "assets/images/room-family.jpg"
   },
   {
-    "title": "غرف سريرين (Twin Room)",
+    "title": "غرف سريرين مزدوجة (Twin Room)",
     "category": "rooms",
+    "group_ar": "الغرف والأجنحة الفندقية",
     "src": "assets/images/room-twin.jpg"
   },
   {
-    "title": "غرف 3 أسرة واسعة",
+    "title": "غرف 3 أسرة مريحة (Triple Room)",
     "category": "rooms",
+    "group_ar": "الغرف والأجنحة الفندقية",
     "src": "assets/images/room-triple.jpg"
   },
   {
-    "title": "مبنى فندق روز عدن 2 نهاراً",
-    "category": "exterior",
-    "src": "assets/images/building-day.jpg"
+    "title": "قاعة التدريب الحديثة الكبرى والمؤتمرات",
+    "category": "halls",
+    "group_ar": "قاعات التدريب والفعاليات",
+    "src": "assets/images/training-hall.jpg"
+  },
+  {
+    "title": "الشاشة الذكية العملاقة للتدريب وورش العمل",
+    "category": "halls",
+    "group_ar": "قاعات التدريب والفعاليات",
+    "src": "assets/images/smart-screen.jpg"
+  },
+  {
+    "title": "قاعة الوجبات والضيافة واستراحات القهوة",
+    "category": "halls",
+    "group_ar": "قاعات التدريب والفعاليات",
+    "src": "assets/images/dining-hall.jpg"
   }
 ]

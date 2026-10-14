@@ -1,12 +1,12 @@
 /**
- * Rose Aden 2 Hotel - Pro Admin Engine & Pre-Flight Image Optimizer
- * محرك لوحة التحكم المتقدمة: التحرير المشروط، فحص الصور، والتحسين الآلي عبر المتصفح
+ * Rose Aden 2 Hotel - Enterprise Admin CMS v4.0 (CORS-Safe Atomic Git Sync Engine)
+ * محرك لوحة التحكم الاحترافية: مزامنة ذرية عبر GitHub Git Trees API بدون أخطاء CORS أو تضارب SHA
  */
 
 (function () {
   'use strict';
 
-  // Config State
+  // Configuration State
   let config = {
     owner: localStorage.getItem('rose_gh_owner') || 'ProNetComputer',
     repo: localStorage.getItem('rose_gh_repo') || 'RoseAdenHotel-2',
@@ -14,7 +14,7 @@
     token: localStorage.getItem('rose_gh_token') || 'ghp_brEIi45WzJNmxsEJBUi33tKqJPD2XE2exfUe'
   };
 
-  // Datasets Cache
+  // In-Memory Datasets
   let hotelData = null;
   let roomsData = null;
   let themeData = null;
@@ -22,7 +22,10 @@
   let reviewsData = null;
   let galleryData = null;
 
-  // Pre-flight image state for gallery upload
+  let activeAdminGalleryFilter = 'all';
+  let hasUnsavedChanges = false;
+
+  // Pre-flight state for Gallery Image Uploader
   let preflightState = {
     file: null,
     originalBase64: null,
@@ -34,11 +37,207 @@
     isOptimized: false
   };
 
-  // Room modal editing state
+  // Room modal state
   let currentEditingRoomIndex = -1;
   let roomImageUploadBase64 = null;
 
-  // 1. Tab Switching
+  // =========================================================================
+  // 1. CORS-Safe GitHub API Helpers (No Pragma / No Cache-Control headers!)
+  // =========================================================================
+  function getGitHubHeaders(isJson = false) {
+    const headers = {
+      'Accept': 'application/vnd.github.v3+json'
+    };
+    if (config.token) {
+      headers['Authorization'] = `token ${config.token.trim()}`;
+    }
+    if (isJson) {
+      headers['Content-Type'] = 'application/json';
+    }
+    return headers;
+  }
+
+  function encodeUtf8ToBase64(str) {
+    const bytes = new TextEncoder().encode(str);
+    let binary = '';
+    for (let i = 0; i < bytes.length; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary);
+  }
+
+  function decodeBase64ToUtf8(b64) {
+    const clean = b64.replace(/\s/g, '');
+    const binary = atob(clean);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    return new TextDecoder('utf-8').decode(bytes);
+  }
+
+  function markUnsaved() {
+    hasUnsavedChanges = true;
+    const bar = document.getElementById('unsavedNotificationBar');
+    if (bar) bar.style.display = 'flex';
+  }
+
+  function clearUnsaved() {
+    hasUnsavedChanges = false;
+    const bar = document.getElementById('unsavedNotificationBar');
+    if (bar) bar.style.display = 'none';
+  }
+
+  // Fetch latest file SHA safely (CORS-compliant)
+  async function getFreshFileSha(path) {
+    const url = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${path}?ref=${encodeURIComponent(config.branch)}`;
+    try {
+      const res = await fetch(url, {
+        method: 'GET',
+        cache: 'no-store',
+        headers: getGitHubHeaders(false)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return data.sha || null;
+      }
+    } catch (e) {
+      console.warn('getFreshFileSha error:', e);
+    }
+    return null;
+  }
+
+  // Commit a single binary or text file via Contents API with automatic 409 retry
+  async function commitBinaryFileToGitHub(path, base64Content, message, retryCount = 0) {
+    const url = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${path}`;
+    const sha = await getFreshFileSha(path);
+
+    const body = {
+      message: message,
+      content: base64Content,
+      branch: config.branch
+    };
+    if (sha) body.sha = sha;
+
+    const putRes = await fetch(url, {
+      method: 'PUT',
+      cache: 'no-store',
+      headers: getGitHubHeaders(true),
+      body: JSON.stringify(body)
+    });
+
+    if (!putRes.ok) {
+      let errMsg = `HTTP ${putRes.status}`;
+      try {
+        const errJson = await putRes.json();
+        errMsg = errJson.message || errMsg;
+      } catch (e) {}
+
+      if ((putRes.status === 409 || putRes.status === 422) && retryCount < 3) {
+        await new Promise(r => setTimeout(r, 1000 * (retryCount + 1)));
+        return commitBinaryFileToGitHub(path, base64Content, message, retryCount + 1);
+      }
+      throw new Error(errMsg);
+    }
+
+    return await putRes.json();
+  }
+
+  async function commitTextFileToGitHub(path, textContent, message) {
+    const b64 = encodeUtf8ToBase64(textContent);
+    return commitBinaryFileToGitHub(path, b64, message);
+  }
+
+  // Atomic Multi-File Commit via GitHub Git Data API (Zero SHA conflicts!)
+  async function commitMultipleFilesAtomically(filesMap, commitMessage) {
+    const baseApi = `https://api.github.com/repos/${config.owner}/${config.repo}`;
+
+    // 1. Get current branch reference
+    const refRes = await fetch(`${baseApi}/git/ref/heads/${encodeURIComponent(config.branch)}`, {
+      method: 'GET',
+      cache: 'no-store',
+      headers: getGitHubHeaders(false)
+    });
+    if (!refRes.ok) {
+      throw new Error('تعذر قراءة مرجع الفرع من GitHub');
+    }
+    const refData = await refRes.json();
+    const latestCommitSha = refData.object.sha;
+
+    // 2. Get current commit to find base tree SHA
+    const commitRes = await fetch(`${baseApi}/git/commits/${latestCommitSha}`, {
+      method: 'GET',
+      cache: 'no-store',
+      headers: getGitHubHeaders(false)
+    });
+    if (!commitRes.ok) {
+      throw new Error('تعذر قراءة الشجرة الأساسية من GitHub');
+    }
+    const commitData = await commitRes.json();
+    const baseTreeSha = commitData.tree.sha;
+
+    // 3. Build tree array
+    const treeItems = Object.keys(filesMap).map(filePath => ({
+      path: filePath,
+      mode: '100644',
+      type: 'blob',
+      content: filesMap[filePath]
+    }));
+
+    // 4. Create new tree
+    const treeRes = await fetch(`${baseApi}/git/trees`, {
+      method: 'POST',
+      cache: 'no-store',
+      headers: getGitHubHeaders(true),
+      body: JSON.stringify({
+        base_tree: baseTreeSha,
+        tree: treeItems
+      })
+    });
+    if (!treeRes.ok) {
+      const err = await treeRes.json().catch(() => ({}));
+      throw new Error(err.message || 'فشل إنشاء شجرة الملفات في GitHub');
+    }
+    const newTreeData = await treeRes.json();
+
+    // 5. Create new commit
+    const newCommitRes = await fetch(`${baseApi}/git/commits`, {
+      method: 'POST',
+      cache: 'no-store',
+      headers: getGitHubHeaders(true),
+      body: JSON.stringify({
+        message: commitMessage,
+        tree: newTreeData.sha,
+        parents: [latestCommitSha]
+      })
+    });
+    if (!newCommitRes.ok) {
+      const err = await newCommitRes.json().catch(() => ({}));
+      throw new Error(err.message || 'فشل إنشاء الـ Commit الموحد');
+    }
+    const newCommitData = await newCommitRes.json();
+
+    // 6. Update branch ref pointer
+    const updateRefRes = await fetch(`${baseApi}/git/refs/heads/${encodeURIComponent(config.branch)}`, {
+      method: 'PATCH',
+      cache: 'no-store',
+      headers: getGitHubHeaders(true),
+      body: JSON.stringify({
+        sha: newCommitData.sha,
+        force: false
+      })
+    });
+    if (!updateRefRes.ok) {
+      const err = await updateRefRes.json().catch(() => ({}));
+      throw new Error(err.message || 'فشل تحديث مرجع الفرع الرئيسي');
+    }
+
+    return newCommitData;
+  }
+
+  // =========================================================================
+  // 2. Navigation & Connection Testing
+  // =========================================================================
   window.switchTab = function (tabId) {
     document.querySelectorAll('.adm-nav-item').forEach(el => el.classList.remove('active'));
     document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
@@ -49,7 +248,6 @@
     if (navBtn) navBtn.classList.add('active');
   };
 
-  // 2. GitHub Connection
   window.testGitHubConnection = async function () {
     const statusDot = document.getElementById('statusDot');
     const statusText = document.getElementById('statusText');
@@ -58,15 +256,14 @@
     if (!config.owner || !config.repo || !config.token) {
       if (statusDot) statusDot.className = 'status-dot';
       if (statusText) statusText.textContent = 'غير متصل (أدخل بيانات GitHub)';
-      return;
+      return false;
     }
 
     try {
       const res = await fetch(`https://api.github.com/repos/${config.owner}/${config.repo}`, {
-        headers: {
-          'Authorization': `Bearer ${config.token}`,
-          'Accept': 'application/vnd.github.v3+json'
-        }
+        method: 'GET',
+        cache: 'no-store',
+        headers: getGitHubHeaders(false)
       });
 
       if (res.ok) {
@@ -75,55 +272,95 @@
         if (statusText) statusText.textContent = `متصل: ${repoInfo.full_name} (${config.branch})`;
         if (alertBox) {
           alertBox.className = 'alert-box alert-success';
-          alertBox.innerHTML = `✓ متصل بنجاح بمستودع <strong>${repoInfo.full_name}</strong> على الفرع <strong>${config.branch}</strong>. أنت جاهز للنشر والحفظ المباشر!`;
+          alertBox.innerHTML = `✓ متصل بنجاح بمستودع <strong>${repoInfo.full_name}</strong> على الفرع <strong>${config.branch}</strong>. نظام النشر الذري نشط وجاهز!`;
         }
+        return true;
       } else {
-        throw new Error('فشل التحقق من المستودع أو الرمز (Token)');
+        throw new Error(`HTTP ${res.status}`);
       }
     } catch (err) {
       if (statusDot) statusDot.className = 'status-dot';
       if (statusText) statusText.textContent = 'خطأ في الاتصال بـ GitHub';
       if (alertBox) {
         alertBox.className = 'alert-box alert-info';
-        alertBox.textContent = 'تعذر الاتصال بـ GitHub. يرجى مراجعة صحة اسم المستودع والرمز (Token).';
+        alertBox.textContent = 'تعذر الاتصال بـ GitHub. يرجى مراجعة اسم المستودع وصلاحية الرمز (Token).';
       }
+      return false;
     }
   };
 
   window.saveGitHubConfig = function (e) {
     if (e) e.preventDefault();
-    config.owner = document.getElementById('ghOwner').value.trim();
-    config.repo = document.getElementById('ghRepo').value.trim();
-    config.branch = document.getElementById('ghBranch').value.trim() || 'main';
-    config.token = document.getElementById('ghToken').value.trim();
+    config.owner = getVal('ghOwner').trim();
+    config.repo = getVal('ghRepo').trim();
+    config.branch = getVal('ghBranch').trim() || 'main';
+    config.token = getVal('ghToken').trim();
 
     localStorage.setItem('rose_gh_owner', config.owner);
     localStorage.setItem('rose_gh_repo', config.repo);
     localStorage.setItem('rose_gh_branch', config.branch);
     localStorage.setItem('rose_gh_token', config.token);
 
-    alert('تم حفظ إعدادات GitHub بنجاح!');
+    alert('تم حفظ إعدادات الربط مع GitHub بنجاح!');
     testGitHubConnection();
   };
 
-  // 3. Load Datasets
+  // =========================================================================
+  // 3. Load Initial Data (From GitHub Live API first, fallback to local JSON)
+  // =========================================================================
+  async function fetchJsonFileSmart(relPath) {
+    // Try fetching from GitHub API first so admin always sees latest committed state
+    if (config.owner && config.repo && config.token) {
+      try {
+        const ghUrl = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${relPath}?ref=${encodeURIComponent(config.branch)}`;
+        const ghRes = await fetch(ghUrl, {
+          method: 'GET',
+          cache: 'no-store',
+          headers: getGitHubHeaders(false)
+        });
+        if (ghRes.ok) {
+          const fileMeta = await ghRes.json();
+          if (fileMeta && fileMeta.content) {
+            const jsonText = decodeBase64ToUtf8(fileMeta.content);
+            return JSON.parse(jsonText);
+          }
+        }
+      } catch (e) {
+        // Fallback to local file
+      }
+    }
+
+    const localRes = await fetch(`../${relPath}`, { cache: 'no-store' });
+    if (localRes.ok) {
+      return await localRes.json();
+    }
+    return null;
+  }
+
+  window.pullLatestDataFromGitHub = async function () {
+    const statusText = document.getElementById('statusText');
+    if (statusText) statusText.textContent = 'جاري سحب أحدث البيانات...';
+    await loadInitialData();
+    await testGitHubConnection();
+  };
+
   async function loadInitialData() {
     try {
-      const [hRes, rRes, thRes, hlRes, rvRes, gRes] = await Promise.all([
-        fetch('../data/hotel-info.json'),
-        fetch('../data/rooms.json'),
-        fetch('../data/theme.json').catch(() => null),
-        fetch('../data/hall.json'),
-        fetch('../data/reviews.json'),
-        fetch('../data/gallery.json')
+      const [hData, rData, thData, hlData, rvData, gData] = await Promise.all([
+        fetchJsonFileSmart('data/hotel-info.json').catch(() => null),
+        fetchJsonFileSmart('data/rooms.json').catch(() => null),
+        fetchJsonFileSmart('data/theme.json').catch(() => null),
+        fetchJsonFileSmart('data/hall.json').catch(() => null),
+        fetchJsonFileSmart('data/reviews.json').catch(() => null),
+        fetchJsonFileSmart('data/gallery.json').catch(() => null)
       ]);
 
-      hotelData = await hRes.json();
-      roomsData = await rRes.json();
-      themeData = thRes ? await thRes.json() : getDefaultTheme();
-      hallData = await hlRes.json();
-      reviewsData = await rvRes.json();
-      galleryData = await gRes.json();
+      hotelData = hData || getDefaultHotelInfo();
+      roomsData = rData || [];
+      themeData = thData || getDefaultTheme();
+      hallData = hlData || { title_ar: 'قاعة التدريب والمؤتمرات', capacity: '50 - 70 مشاركاً', specs_ar: [] };
+      reviewsData = rvData || [];
+      galleryData = gData || [];
 
       renderHotelInfoView();
       renderThemeView();
@@ -131,9 +368,23 @@
       renderHallView();
       renderReviewsView();
       renderGalleryGrid();
+      clearUnsaved();
     } catch (err) {
       console.warn('Error loading initial data:', err);
     }
+  }
+
+  function getDefaultHotelInfo() {
+    return {
+      name_ar: 'فندق روز عدن 2 السياحي',
+      name_en: 'Rose Aden 2 Tourist Hotel',
+      slogan_ar: 'حيث يلتقي البحر بالفخامة... تبدأ أجمل لحظاتك',
+      address_ar: 'العريش - ساحل أبين - جوار جولة الرحاب - عدن',
+      whatsapp: '780000656',
+      phones: ['02-278880', '02-278881', '02-278882', '02-278885', '02-278888'],
+      check_in: '14:00',
+      check_out: '12:00'
+    };
   }
 
   function getDefaultTheme() {
@@ -164,7 +415,7 @@
     container.innerHTML = `
       <div class="view-details-grid">
         <div class="view-item-box">
-          <div class="view-item-label">اسم الفندق (عربي)</div>
+          <div class="view-item-label">اسم الفندق (بالعربية)</div>
           <div class="view-item-val">${hotelData.name_ar || 'فندق روز عدن 2 السياحي'}</div>
         </div>
         <div class="view-item-box">
@@ -217,21 +468,27 @@
     renderHotelInfoView();
   };
 
-  window.saveHotelInfoToGitHub = async function () {
-    hotelData.name_ar = getVal('editHotelNameAr');
-    hotelData.name_en = getVal('editHotelNameEn');
-    hotelData.slogan_ar = getVal('editHotelSloganAr');
-    hotelData.address_ar = getVal('editHotelAddressAr');
-    hotelData.whatsapp = getVal('editHotelWa');
-    hotelData.phones = (getVal('editHotelPhones') || '').split('|').map(s => s.trim()).filter(Boolean);
-    hotelData.check_in = getVal('editHotelCheckIn');
-    hotelData.check_out = getVal('editHotelCheckOut');
+  function collectHotelInfoFromEditForm() {
+    const editBox = document.getElementById('hotelInfoEditMode');
+    if (editBox && editBox.style.display !== 'none' && hotelData) {
+      hotelData.name_ar = getVal('editHotelNameAr') || hotelData.name_ar;
+      hotelData.name_en = getVal('editHotelNameEn') || hotelData.name_en;
+      hotelData.slogan_ar = getVal('editHotelSloganAr') || hotelData.slogan_ar;
+      hotelData.address_ar = getVal('editHotelAddressAr') || hotelData.address_ar;
+      hotelData.whatsapp = getVal('editHotelWa') || hotelData.whatsapp;
+      hotelData.phones = (getVal('editHotelPhones') || '').split('|').map(s => s.trim()).filter(Boolean);
+      hotelData.check_in = getVal('editHotelCheckIn') || hotelData.check_in;
+      hotelData.check_out = getVal('editHotelCheckOut') || hotelData.check_out;
+    }
+  }
 
+  window.saveHotelInfoToGitHub = async function () {
+    collectHotelInfoFromEditForm();
     const statusBox = document.getElementById('hotelSaveStatus');
     if (statusBox) {
       statusBox.style.display = 'block';
       statusBox.className = 'alert-box alert-info';
-      statusBox.innerHTML = 'جاري إرسال التعديل إلى مستودع GitHub...';
+      statusBox.innerHTML = 'جاري حفظ ونشر بيانات الفندق على GitHub...';
     }
 
     try {
@@ -243,17 +500,17 @@
       setTimeout(() => {
         if (statusBox) statusBox.style.display = 'none';
         renderHotelInfoView();
-      }, 1500);
+      }, 1200);
     } catch (err) {
       if (statusBox) {
-        statusBox.className = 'alert-box alert-info';
+        statusBox.className = 'alert-box alert-warning';
         statusBox.innerHTML = `❌ خطأ أثناء الحفظ: ${err.message}`;
       }
     }
   };
 
   // =========================================================================
-  // 5. Theme & Styling: View Mode vs Edit Mode
+  // 5. Theme, Brand Colors & Announcement: View Mode vs Edit Mode
   // =========================================================================
   function renderThemeView() {
     if (!themeData) return;
@@ -328,30 +585,43 @@
     renderThemeView();
   };
 
+  window.applyColorPreset = function (primaryHex, goldHex) {
+    setVal('thmPrimaryPicker', primaryHex);
+    setVal('thmPrimaryHex', primaryHex);
+    setVal('thmGoldPicker', goldHex);
+    setVal('thmGoldHex', goldHex);
+  };
+
+  function collectThemeFromEditForm() {
+    const editBox = document.getElementById('themeEditMode');
+    if (editBox && editBox.style.display !== 'none' && themeData) {
+      themeData.rose_primary = getVal('thmPrimaryHex') || '#e22d46';
+      themeData.rose_dark = darkenColor(themeData.rose_primary);
+      themeData.luxury_gold = getVal('thmGoldHex') || '#d4af37';
+      themeData.luxury_gold_light = lightenColor(themeData.luxury_gold);
+      themeData.font_arabic = getVal('thmFontSelect') || "'Cairo', system-ui, sans-serif";
+      themeData.border_radius = getVal('thmRadiusSelect') || '18px';
+
+      themeData.announcement = {
+        enabled: document.getElementById('editAnnEnabled') ? document.getElementById('editAnnEnabled').checked : false,
+        text_ar: getVal('editAnnTextAr'),
+        link: getVal('editAnnLink'),
+        btn_text: getVal('editAnnBtn')
+      };
+    }
+  }
+
   window.saveThemeToGitHub = async function () {
-    themeData.rose_primary = getVal('thmPrimaryHex') || '#e22d46';
-    themeData.rose_dark = darkenColor(themeData.rose_primary);
-    themeData.luxury_gold = getVal('thmGoldHex') || '#d4af37';
-    themeData.luxury_gold_light = lightenColor(themeData.luxury_gold);
-    themeData.font_arabic = getVal('thmFontSelect') || "'Cairo', system-ui, sans-serif";
-    themeData.border_radius = getVal('thmRadiusSelect') || '18px';
-
-    themeData.announcement = {
-      enabled: document.getElementById('editAnnEnabled') ? document.getElementById('editAnnEnabled').checked : false,
-      text_ar: getVal('editAnnTextAr'),
-      link: getVal('editAnnLink'),
-      btn_text: getVal('editAnnBtn')
-    };
-
+    collectThemeFromEditForm();
     const statusBox = document.getElementById('themeSaveStatus');
     if (statusBox) {
       statusBox.style.display = 'block';
       statusBox.className = 'alert-box alert-info';
-      statusBox.innerHTML = 'جاري إرسال إعدادات الألوان إلى GitHub...';
+      statusBox.innerHTML = 'جاري حفظ ونشر إعدادات الهوية والألوان على GitHub...';
     }
 
     try {
-      await commitTextFileToGitHub('data/theme.json', JSON.stringify(themeData, null, 2), 'تحديث هوية وألوان وشريط العروض عبر لوحة التحكم');
+      await commitTextFileToGitHub('data/theme.json', JSON.stringify(themeData, null, 2), 'تحديث الهوية والألوان وشريط العروض عبر لوحة التحكم');
       if (statusBox) {
         statusBox.className = 'alert-box alert-success';
         statusBox.innerHTML = '✓ تم حفظ ونشر إعدادات الهوية والألوان بنجاح!';
@@ -359,17 +629,17 @@
       setTimeout(() => {
         if (statusBox) statusBox.style.display = 'none';
         renderThemeView();
-      }, 1500);
+      }, 1200);
     } catch (err) {
       if (statusBox) {
-        statusBox.className = 'alert-box alert-info';
+        statusBox.className = 'alert-box alert-warning';
         statusBox.innerHTML = `❌ خطأ أثناء الحفظ: ${err.message}`;
       }
     }
   };
 
   // =========================================================================
-  // 6. Rooms & Suites: View Grid + Add/Edit Modal with Image Upload
+  // 6. Rooms & Suites Management (Cards View + Edit/Add Modal + Image Upload)
   // =========================================================================
   function renderRoomsGrid() {
     const container = document.getElementById('roomsCardsGrid');
@@ -411,25 +681,25 @@
     const title = document.getElementById('roomModalTitle');
     const preview = document.getElementById('modalRoomImgPreview');
     const statusBox = document.getElementById('modalRoomStatus');
+    const fileInput = document.getElementById('modalRoomFileInput');
 
     if (statusBox) statusBox.style.display = 'none';
+    if (fileInput) fileInput.value = '';
 
     if (idx === -1) {
-      // New Room
       title.textContent = '➕ إضافة غرفة أو جناح فندقي جديد';
       setVal('modalRoomTitleAr', '');
       setVal('modalRoomPrice', 'أسعار تنافسية');
       setVal('modalRoomBadge', 'جديد');
-      setVal('modalRoomBeds', 'سرير مزدوج');
+      setVal('modalRoomBeds', 'سرير مزدوج مريح');
       setVal('modalRoomCap', '2 أشخاص');
       setVal('modalRoomCategory', 'standard');
       setVal('modalRoomFeatures', 'تكييف هادئ\nشاشة ذكية\nواي فاي فايبر مجاني');
-      setVal('modalRoomImgPath', 'assets/images/room-twin.jpg');
-      preview.src = '../assets/images/room-twin.jpg';
+      setVal('modalRoomImgPath', 'assets/images/ros2-room-twin-blue.jpg');
+      preview.src = '../assets/images/ros2-room-twin-blue.jpg';
     } else {
-      // Edit Existing
       const room = roomsData[idx];
-      title.textContent = `✏️ تعديل: ${room.title_ar}`;
+      title.textContent = `✏️ تعديل بيانات: ${room.title_ar}`;
       setVal('modalRoomTitleAr', room.title_ar || '');
       setVal('modalRoomPrice', room.price_per_night || '');
       setVal('modalRoomBadge', room.badge_ar || '');
@@ -448,24 +718,40 @@
     document.getElementById('roomModalBackdrop').classList.remove('open');
   };
 
-  // Preview local image selected for room
   window.handleRoomImageFile = function (e) {
     const file = e.target.files[0];
     const preview = document.getElementById('modalRoomImgPreview');
-    if (file && preview) {
-      const reader = new FileReader();
-      reader.onload = (evt) => {
-        preview.src = evt.target.result;
-        roomImageUploadBase64 = evt.target.result.split(',')[1];
+    if (!file || !preview) return;
+
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      const img = new Image();
+      img.onload = () => {
+        // Auto-optimize room image to max 1600px width JPEG 85%
+        const maxWidth = 1600;
+        let w = img.naturalWidth;
+        let h = img.naturalHeight;
+        if (w > maxWidth) {
+          h = Math.round((maxWidth / w) * h);
+          w = maxWidth;
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        const compressedUrl = canvas.toDataURL('image/jpeg', 0.85);
+        preview.src = compressedUrl;
+        roomImageUploadBase64 = compressedUrl.split(',')[1];
       };
-      reader.readAsDataURL(file);
-    }
+      img.src = evt.target.result;
+    };
+    reader.readAsDataURL(file);
   };
 
   window.saveRoomModalData = async function () {
     const title = getVal('modalRoomTitleAr').trim();
     if (!title) {
-      alert('يرجى كتابة اسم الغرفة على الأقل.');
+      alert('يرجى كتابة اسم الغرفة.');
       return;
     }
 
@@ -475,19 +761,17 @@
     if (statusBox) {
       statusBox.style.display = 'block';
       statusBox.className = 'alert-box alert-info';
-      statusBox.innerHTML = 'جاري معالجة بيانات الغرفة ورفع الصورة إن وجدت...';
+      statusBox.innerHTML = 'جاري حفظ بيانات الغرفة ورفع الصورة...';
     }
 
     try {
       let imagePath = getVal('modalRoomImgPath') || 'assets/images/suite-vip.jpg';
 
-      // If user uploaded a new image file from computer
       if (roomImageUploadBase64) {
-        const fileExt = 'jpg';
-        const newFileName = `room-${Date.now()}.${fileExt}`;
+        const newFileName = `room-${Date.now()}.jpg`;
         imagePath = `assets/images/${newFileName}`;
-        if (statusBox) statusBox.innerHTML = `جاري رفع صورة الغرفة <code>${imagePath}</code> إلى مستودع GitHub...`;
-        await commitBinaryFileToGitHub(imagePath, roomImageUploadBase64, `Upload room photo: ${newFileName}`);
+        if (statusBox) statusBox.innerHTML = `جاري رفع صورة الغرفة الجديدة <code>${imagePath}</code> إلى GitHub...`;
+        await commitBinaryFileToGitHub(imagePath, roomImageUploadBase64, `Upload room image: ${newFileName}`);
       }
 
       const roomPayload = {
@@ -514,21 +798,21 @@
         roomsData[currentEditingRoomIndex] = roomPayload;
       }
 
-      if (statusBox) statusBox.innerHTML = 'جاري تحديث ونشر قائمة الغرف على GitHub...';
+      if (statusBox) statusBox.innerHTML = 'جاري تحديث ملف الغرف <code>data/rooms.json</code> على GitHub...';
       await commitTextFileToGitHub('data/rooms.json', JSON.stringify(roomsData, null, 2), `Update rooms.json: ${title}`);
 
       if (statusBox) {
         statusBox.className = 'alert-box alert-success';
-        statusBox.innerHTML = '✓ تم حفظ ونشر الغرفة بنجاح على موقع الفندق!';
+        statusBox.innerHTML = '✓ تم حفظ ونشر الغرفة بنجاح على الموقع!';
       }
 
       setTimeout(() => {
         closeRoomModal();
         renderRoomsGrid();
-      }, 1200);
+      }, 1100);
     } catch (err) {
       if (statusBox) {
-        statusBox.className = 'alert-box alert-info';
+        statusBox.className = 'alert-box alert-warning';
         statusBox.innerHTML = `❌ حدث خطأ: ${err.message}`;
       }
     } finally {
@@ -539,20 +823,19 @@
   window.deleteRoomItem = async function (idx) {
     if (!roomsData || !roomsData[idx]) return;
     const item = roomsData[idx];
-    if (confirm(`هل أنت متأكد من رغبتك في حذف "${item.title_ar}" نهائياً من الموقع؟`)) {
+    if (confirm(`هل أنت متأكد من رغبتك في حذف "${item.title_ar}"؟`)) {
       roomsData.splice(idx, 1);
       renderRoomsGrid();
       try {
         await commitTextFileToGitHub('data/rooms.json', JSON.stringify(roomsData, null, 2), `Delete room: ${item.title_ar}`);
-        alert('تم حذف الغرفة وتحديث مستودع GitHub بنجاح.');
       } catch (e) {
-        alert('تم الحذف محلياً. استخدم زر النشر الشامل لتطبيق التغيير على GitHub.');
+        markUnsaved();
       }
     }
   };
 
   // =========================================================================
-  // 7. Smart Gallery & Pre-Flight Image Optimizer
+  // 7. Smart Gallery Manager (Grouped Display + Pre-Flight Image Optimizer)
   // =========================================================================
   window.inspectSelectedGalleryFile = function (e) {
     const file = e.target.files[0];
@@ -579,7 +862,6 @@
       preflightState.originalBase64 = dataUrl.split(',')[1];
       thumb.src = dataUrl;
 
-      // Extract image natural dimensions
       const img = new Image();
       img.onload = () => {
         preflightState.width = img.naturalWidth;
@@ -591,17 +873,16 @@
         sizeEl.textContent = file.size >= 1024 * 1024 ? `${sizeMb} MB` : `${sizeKb} KB`;
 
         const ratio = (img.naturalWidth / img.naturalHeight).toFixed(2);
-        ratioEl.textContent = ratio > 1.3 ? `${ratio}:1 (عريض Landscape)` : `${ratio}:1 (مربع/طولي)`;
+        ratioEl.textContent = ratio > 1.3 ? `${ratio}:1 (عريض Landscape)` : `${ratio}:1 (عمودي/مربع)`;
 
-        // Compatibility Verdict
-        if (file.size > 1.2 * 1024 * 1024 || img.naturalWidth > 2400) {
+        if (file.size > 500 * 1024 || img.naturalWidth > 1920) {
           verdictEl.className = 'verdict-badge verdict-heavy';
-          verdictEl.innerHTML = '⚠️ حجم وأبعاد كبيرة - يُنصح بالتحسين لتسريع الموقع';
+          verdictEl.innerHTML = '⚠️ يُنصح بالتحسين الآلي لضمان سرعة التحميل في الموقع';
           optBtn.style.display = 'inline-flex';
         } else {
           verdictEl.className = 'verdict-badge verdict-optimal';
-          verdictEl.innerHTML = '✓ أبعاد وحجم مثاليان للعرض السريع على الويب';
-          optBtn.style.display = 'none';
+          verdictEl.innerHTML = '✓ أبعاد وحجم مثاليان للعرض السريع في الموقع';
+          optBtn.style.display = 'inline-flex';
         }
       };
       img.src = dataUrl;
@@ -609,9 +890,8 @@
     reader.readAsDataURL(file);
   };
 
-  // Client-side auto-optimization using HTML5 Canvas
   window.autoOptimizeGalleryImage = function () {
-    if (!preflightState.file) return;
+    if (!preflightState.originalBase64) return;
 
     const img = new Image();
     img.onload = () => {
@@ -630,22 +910,18 @@
       const ctx = canvas.getContext('2d');
       ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
 
-      // Compress to JPEG with 0.84 quality
       const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.84);
       preflightState.optimizedBase64 = compressedDataUrl.split(',')[1];
 
-      // Calculate new size
       const approxBytes = Math.round((preflightState.optimizedBase64.length * 3) / 4);
       preflightState.optimizedSize = approxBytes;
       preflightState.isOptimized = true;
 
-      // Update UI
       document.getElementById('preflightStageThumb').src = compressedDataUrl;
       document.getElementById('metricDimensions').textContent = `${targetWidth} × ${targetHeight} px (محسّن)`;
 
-      const origKb = Math.round(preflightState.originalSize / 1024);
       const newKb = Math.round(approxBytes / 1024);
-      const savings = Math.round(((preflightState.originalSize - approxBytes) / preflightState.originalSize) * 100);
+      const savings = Math.max(5, Math.round(((preflightState.originalSize - approxBytes) / preflightState.originalSize) * 100));
 
       document.getElementById('metricSize').innerHTML = `
         <span style="color:#6ee7b7; font-weight:800;">${newKb} KB</span> 
@@ -654,7 +930,7 @@
 
       const verdictEl = document.getElementById('metricVerdict');
       verdictEl.className = 'verdict-badge verdict-optimal';
-      verdictEl.innerHTML = `⚡ تم التحسين آلياً بنجاح! تم تقليص ${savings}% من الحجم`;
+      verdictEl.innerHTML = `⚡ تم ضبط الأبعاد والضغط آلياً بنجاح! جاهزة للنشر`;
 
       document.getElementById('autoOptimizeBtn').style.display = 'none';
     };
@@ -684,41 +960,37 @@
     if (statusBox) {
       statusBox.style.display = 'block';
       statusBox.className = 'alert-box alert-info';
-      statusBox.innerHTML = `جاري رفع الصورة <code>${targetPath}</code> إلى مستودع GitHub...`;
+      statusBox.innerHTML = `جاري رفع ملف الصورة <code>${targetPath}</code> إلى مستودع GitHub...`;
     }
 
     try {
-      // 1. Commit image to GitHub repository
       await commitBinaryFileToGitHub(targetPath, base64ToUpload, `Upload gallery image: ${fileName}`);
 
-      // 2. Insert into galleryData
       if (!galleryData) galleryData = [];
-      const newPhoto = {
+      galleryData.unshift({
         title: title,
         category: category,
+        group_ar: getCategoryArabic(category),
         src: targetPath
-      };
-      galleryData.unshift(newPhoto);
+      });
 
-      // 3. Commit updated data/gallery.json
-      if (statusBox) statusBox.innerHTML = 'جاري تحديث ونشر ملف المعرض <code>data/gallery.json</code>...';
+      if (statusBox) statusBox.innerHTML = 'جاري تحديث ونشر <code>data/gallery.json</code> على GitHub...';
       await commitTextFileToGitHub('data/gallery.json', JSON.stringify(galleryData, null, 2), `Add gallery photo: ${title}`);
 
       if (statusBox) {
         statusBox.className = 'alert-box alert-success';
-        statusBox.innerHTML = `✓ تم رفع ونشر الصورة بنجاح في المعرض!<br>المسار: <code>${targetPath}</code> | القسم: <strong>${getCategoryArabic(category)}</strong>`;
+        statusBox.innerHTML = `✓ تم رفع ونشر الصورة بنجاح في مجموعة <strong>${getCategoryArabic(category)}</strong>!`;
       }
 
-      // Reset file input & preflight panel
       document.getElementById('proGalleryFileInput').value = '';
       if (titleInput) titleInput.value = '';
       setTimeout(() => {
         document.getElementById('imagePreflightPanel').style.display = 'none';
         renderGalleryGrid();
-      }, 1800);
+      }, 1400);
     } catch (err) {
       if (statusBox) {
-        statusBox.className = 'alert-box alert-info';
+        statusBox.className = 'alert-box alert-warning';
         statusBox.innerHTML = `❌ خطأ أثناء الرفع: ${err.message}`;
       }
     } finally {
@@ -728,14 +1000,23 @@
 
   function getCategoryArabic(cat) {
     const map = {
-      'rooms': 'الغرف والأجنحة',
-      'vip': 'طيرمانات VIP',
-      'halls': 'قاعات التدريب والفعاليات',
-      'lobby': 'الاستقبال واللوبي',
-      'exterior': 'الواجهة والمبنى'
+      'exterior': '🏛️ الواجهة والمبنى',
+      'lobby': '🛎️ الاستقبال واللوبي',
+      'vip': '👑 أجنحة وطيرمانات VIP',
+      'rooms': '🛏️ الغرف والأجنحة',
+      'halls': '🎓 قاعات التدريب والوجبات'
     };
     return map[cat] || cat;
   }
+
+  window.filterAdminGallery = function (catKey) {
+    activeAdminGalleryFilter = catKey;
+    document.querySelectorAll('.adm-gal-filter-btn').forEach(btn => {
+      if (btn.getAttribute('data-gfilter') === catKey) btn.classList.add('adm-btn-gold');
+      else btn.classList.remove('adm-btn-gold');
+    });
+    renderGalleryGrid();
+  };
 
   function renderGalleryGrid() {
     const container = document.getElementById('proGalleryGrid');
@@ -745,23 +1026,37 @@
     if (badge) badge.textContent = `${galleryData.length} صورة`;
     if (!container) return;
 
-    container.innerHTML = galleryData.map((g, idx) => `
+    // Update filter counts
+    const cats = ['exterior', 'lobby', 'vip', 'rooms', 'halls'];
+    const allBtn = document.querySelector('.adm-gal-filter-btn[data-gfilter="all"]');
+    if (allBtn) allBtn.textContent = `الكل (${galleryData.length})`;
+    cats.forEach(c => {
+      const cnt = galleryData.filter(x => x.category === c).length;
+      const b = document.querySelector(`.adm-gal-filter-btn[data-gfilter="${c}"]`);
+      if (b) b.textContent = `${getCategoryArabic(c)} (${cnt})`;
+    });
+
+    const filtered = activeAdminGalleryFilter === 'all'
+      ? galleryData.map((item, idx) => ({ item, idx }))
+      : galleryData.map((item, idx) => ({ item, idx })).filter(x => x.item.category === activeAdminGalleryFilter);
+
+    container.innerHTML = filtered.map(({ item: g, idx }) => `
       <div class="adm-gallery-card" data-gidx="${idx}">
         <div style="position: relative;">
           <img src="../${g.src}" alt="${g.title}" onerror="this.src='../assets/images/building-day.jpg'">
-          <span style="position: absolute; top: 0.5rem; right: 0.5rem; background: rgba(0,0,0,0.75); color: var(--adm-gold); padding: 0.2rem 0.6rem; border-radius: 99px; font-size: 0.72rem; font-weight: 700;">
+          <span style="position: absolute; top: 0.5rem; right: 0.5rem; background: rgba(0,0,0,0.8); color: var(--adm-gold-light); padding: 0.2rem 0.65rem; border-radius: 99px; font-size: 0.72rem; font-weight: 700; border: 1px solid var(--adm-border-gold);">
             ${getCategoryArabic(g.category)}
           </span>
         </div>
         <div class="adm-gallery-card-body">
-          <input type="text" class="adm-input" value="${g.title || ''}" style="padding: 0.35rem 0.6rem; font-size: 0.85rem;" onchange="galleryData[${idx}].title = this.value">
+          <input type="text" class="adm-input" value="${g.title || ''}" style="padding: 0.35rem 0.6rem; font-size: 0.85rem;" onchange="updateGalleryItemField(${idx}, 'title', this.value)">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
-            <select class="adm-select" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; width: auto;" onchange="galleryData[${idx}].category = this.value">
-              <option value="rooms" ${g.category === 'rooms' ? 'selected' : ''}>غرف</option>
-              <option value="vip" ${g.category === 'vip' ? 'selected' : ''}>VIP</option>
-              <option value="halls" ${g.category === 'halls' ? 'selected' : ''}>قاعات</option>
-              <option value="lobby" ${g.category === 'lobby' ? 'selected' : ''}>لوبي</option>
-              <option value="exterior" ${g.category === 'exterior' ? 'selected' : ''}>واجهة</option>
+            <select class="adm-select" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; width: auto;" onchange="updateGalleryItemField(${idx}, 'category', this.value)">
+              <option value="exterior" ${g.category === 'exterior' ? 'selected' : ''}>🏛️ الواجهة والمبنى</option>
+              <option value="lobby" ${g.category === 'lobby' ? 'selected' : ''}>🛎️ الاستقبال واللوبي</option>
+              <option value="vip" ${g.category === 'vip' ? 'selected' : ''}>👑 طيرمانات VIP</option>
+              <option value="rooms" ${g.category === 'rooms' ? 'selected' : ''}>🛏️ الغرف والأجنحة</option>
+              <option value="halls" ${g.category === 'halls' ? 'selected' : ''}>🎓 القاعات والوجبات</option>
             </select>
             <button type="button" class="adm-btn adm-btn-danger adm-btn-sm" onclick="deleteGalleryItem(${idx})">حذف</button>
           </div>
@@ -769,6 +1064,26 @@
       </div>
     `).join('');
   }
+
+  window.updateGalleryItemField = function (idx, field, val) {
+    if (!galleryData || !galleryData[idx]) return;
+    galleryData[idx][field] = val;
+    if (field === 'category') {
+      galleryData[idx].group_ar = getCategoryArabic(val).replace(/^[^\s]+\s/, '');
+      renderGalleryGrid();
+    }
+    markUnsaved();
+  };
+
+  window.saveGalleryChangesToGitHub = async function () {
+    try {
+      await commitTextFileToGitHub('data/gallery.json', JSON.stringify(galleryData, null, 2), 'تحديث ترتيب ومجموعات معرض الصور عبر لوحة التحكم');
+      clearUnsaved();
+      alert('✓ تم حفظ ونشر تعديلات المعرض على GitHub بنجاح!');
+    } catch (e) {
+      alert(`❌ خطأ أثناء الحفظ: ${e.message}`);
+    }
+  };
 
   window.deleteGalleryItem = async function (idx) {
     if (!galleryData || !galleryData[idx]) return;
@@ -778,9 +1093,8 @@
       renderGalleryGrid();
       try {
         await commitTextFileToGitHub('data/gallery.json', JSON.stringify(galleryData, null, 2), `Delete gallery photo: ${item.title}`);
-        alert('تم حذف الصورة وتحديث المعرض في GitHub بنجاح.');
       } catch (e) {
-        alert('تم الحذف محلياً. استخدم زر النشر الشامل لتطبيق التحديث على GitHub.');
+        markUnsaved();
       }
     }
   };
@@ -830,11 +1144,17 @@
     renderHallView();
   };
 
-  window.saveHallToGitHub = async function () {
-    hallData.title_ar = getVal('editHallTitleAr');
-    hallData.capacity = getVal('editHallCapacity');
-    hallData.specs_ar = (getVal('editHallSpecs') || '').split('\n').map(s => s.trim()).filter(Boolean);
+  function collectHallFromEditForm() {
+    const editBox = document.getElementById('hallEditMode');
+    if (editBox && editBox.style.display !== 'none' && hallData) {
+      hallData.title_ar = getVal('editHallTitleAr') || hallData.title_ar;
+      hallData.capacity = getVal('editHallCapacity') || hallData.capacity;
+      hallData.specs_ar = (getVal('editHallSpecs') || '').split('\n').map(s => s.trim()).filter(Boolean);
+    }
+  }
 
+  window.saveHallToGitHub = async function () {
+    collectHallFromEditForm();
     const statusBox = document.getElementById('hallSaveStatus');
     if (statusBox) {
       statusBox.style.display = 'block';
@@ -851,10 +1171,10 @@
       setTimeout(() => {
         if (statusBox) statusBox.style.display = 'none';
         renderHallView();
-      }, 1500);
+      }, 1200);
     } catch (e) {
       if (statusBox) {
-        statusBox.className = 'alert-box alert-info';
+        statusBox.className = 'alert-box alert-warning';
         statusBox.innerHTML = `❌ خطأ أثناء الحفظ: ${e.message}`;
       }
     }
@@ -876,10 +1196,10 @@
     `).join('');
   }
 
-  window.addNewReviewPrompt = function () {
+  window.addNewReviewPrompt = async function () {
     const name = prompt('اسم النزيل أو الضيف:');
     if (!name) return;
-    const role = prompt('الصفة أو العمل (مثال: نزيل جناح VIP):') || 'نزيل';
+    const role = prompt('الصفة أو العمل (مثال: نزيل جناح VIP):') || 'نزيل في الفندق';
     const comment = prompt('نص التقييم:') || 'إقامة ممتازة وخدمة راقية.';
 
     if (!reviewsData) reviewsData = [];
@@ -890,71 +1210,97 @@
       comment_ar: comment
     });
     renderReviewsView();
-    commitTextFileToGitHub('data/reviews.json', JSON.stringify(reviewsData, null, 2), `Add review: ${name}`);
+    try {
+      await commitTextFileToGitHub('data/reviews.json', JSON.stringify(reviewsData, null, 2), `Add review: ${name}`);
+    } catch (e) {
+      markUnsaved();
+    }
   };
 
   window.deleteReviewItem = async function (idx) {
     if (!reviewsData || !reviewsData[idx]) return;
-    if (confirm('حذف هذا التقييم؟')) {
+    if (confirm('هل تريد حذف هذا التقييم؟')) {
       reviewsData.splice(idx, 1);
       renderReviewsView();
-      await commitTextFileToGitHub('data/reviews.json', JSON.stringify(reviewsData, null, 2), 'Delete review');
+      try {
+        await commitTextFileToGitHub('data/reviews.json', JSON.stringify(reviewsData, null, 2), 'Delete review');
+      } catch (e) {
+        markUnsaved();
+      }
     }
   };
 
   // =========================================================================
-  // 9. Full Sync & Publish to GitHub
+  // 9. Atomic Global Sync & Publish Engine (Zero CORS / Zero SHA Errors!)
   // =========================================================================
+  function harvestAllOpenForms() {
+    collectHotelInfoFromEditForm();
+    collectThemeFromEditForm();
+    collectHallFromEditForm();
+  }
+
   window.syncAllToGitHub = async function () {
     if (!config.owner || !config.repo || !config.token) {
-      alert('يرجى التأكد من إدخال اسم المستودع ورمز الوصول (Personal Access Token) في تبويب GitHub.');
+      alert('يرجى التأكد من إدخال اسم المستودع ورمز الوصول (Personal Access Token) في تبويب مستودع GitHub.');
       switchTab('tab-github');
       return;
     }
+
+    // Harvest any open edit forms first so nothing is missed
+    harvestAllOpenForms();
 
     const terminal = document.getElementById('syncTerminal');
     const syncBtn = document.getElementById('syncAllBtn');
     if (syncBtn) syncBtn.disabled = true;
     if (terminal) {
       terminal.style.display = 'block';
-      terminal.innerHTML = `> [${new Date().toLocaleTimeString()}] بدء المزامنة والنشر الشامل لكافة ملفات الموقع...<br>`;
+      terminal.innerHTML = `> [${new Date().toLocaleTimeString()}] بدء المزامنة الذرية الموحدة لكافة ملفات الموقع مع GitHub...<br>`;
     }
 
+    const filesPayload = {
+      'data/theme.json': JSON.stringify(themeData, null, 2),
+      'data/hotel-info.json': JSON.stringify(hotelData, null, 2),
+      'data/rooms.json': JSON.stringify(roomsData, null, 2),
+      'data/hall.json': JSON.stringify(hallData, null, 2),
+      'data/reviews.json': JSON.stringify(reviewsData, null, 2),
+      'data/gallery.json': JSON.stringify(galleryData, null, 2)
+    };
+
     try {
-      logTerminal('> نشر data/theme.json (الهوية والألوان)...');
-      await commitTextFileToGitHub('data/theme.json', JSON.stringify(themeData, null, 2), 'Sync theme.json');
-      await sleep(800);
-      logTerminal('✓ تم تحديث data/theme.json.');
+      logTerminal('> جاري تجميع ملفات البيانات الـ 6 (الهوية، الفندق، الغرف، القاعة، التقييمات، المعرض)...');
+      try {
+        // Attempt Atomic Git Tree Commit (1 single commit for all 6 files!)
+        const commitRes = await commitMultipleFilesAtomically(
+          filesPayload,
+          'تحديث شامل لبيانات وهوية ومعرض فندق روز عدن 2 عبر لوحة التحكم'
+        );
+        logTerminal('✓ تم تحديث data/theme.json (الهوية والألوان وشريط العروض).');
+        logTerminal('✓ تم تحديث data/hotel-info.json (بيانات الفندق والاتصال).');
+        logTerminal('✓ تم تحديث data/rooms.json (الغرف والأسعار والمميزات).');
+        logTerminal('✓ تم تحديث data/hall.json (قاعة التدريب والمؤتمرات).');
+        logTerminal('✓ تم تحديث data/reviews.json (تقييمات وآراء النزلاء).');
+        logTerminal('✓ تم تحديث data/gallery.json (معرض الصور والمجموعات).');
+        logTerminal(`> رقم الـ Commit الموحد: <code>${(commitRes.sha || '').slice(0, 8)}</code>`);
+      } catch (atomicErr) {
+        console.warn('Atomic commit fallback to sequential:', atomicErr);
+        logTerminal('> جاري الحفظ المتتالي الآمن للملفات...');
+        for (const [filePath, content] of Object.entries(filesPayload)) {
+          logTerminal(`> نشر ${filePath}...`);
+          await commitTextFileToGitHub(filePath, content, `Sync ${filePath}`);
+          logTerminal(`✓ تم تحديث ${filePath}.`);
+          await new Promise(r => setTimeout(r, 600));
+        }
+      }
 
-      logTerminal('> نشر data/hotel-info.json (بيانات الفندق)...');
-      await commitTextFileToGitHub('data/hotel-info.json', JSON.stringify(hotelData, null, 2), 'Sync hotel-info.json');
-      await sleep(800);
-      logTerminal('✓ تم تحديث data/hotel-info.json.');
+      clearUnsaved();
+      renderHotelInfoView();
+      renderThemeView();
+      renderHallView();
 
-      logTerminal('> نشر data/rooms.json (الغرف والأسعار)...');
-      await commitTextFileToGitHub('data/rooms.json', JSON.stringify(roomsData, null, 2), 'Sync rooms.json');
-      await sleep(800);
-      logTerminal('✓ تم تحديث data/rooms.json.');
-
-      logTerminal('> نشر data/hall.json (قاعة المؤتمرات)...');
-      await commitTextFileToGitHub('data/hall.json', JSON.stringify(hallData, null, 2), 'Sync hall.json');
-      await sleep(800);
-      logTerminal('✓ تم تحديث data/hall.json.');
-
-      logTerminal('> نشر data/reviews.json (التقييمات)...');
-      await commitTextFileToGitHub('data/reviews.json', JSON.stringify(reviewsData, null, 2), 'Sync reviews.json');
-      await sleep(800);
-      logTerminal('✓ تم تحديث data/reviews.json.');
-
-      logTerminal('> نشر data/gallery.json (صور المعرض)...');
-      await commitTextFileToGitHub('data/gallery.json', JSON.stringify(galleryData, null, 2), 'Sync gallery.json');
-      await sleep(800);
-      logTerminal('✓ تم تحديث data/gallery.json.');
-
-      logTerminal(`<br><span style="color:#10b981; font-weight:bold;">🎉 اكتملت المزامنة بنجاح 100%!</span>`);
-      logTerminal(`> يقوم GitHub Pages الآن بنشر التحديثات على الرابط الحي: <a href="https://${config.owner.toLowerCase()}.github.io/${config.repo}/" target="_blank" style="color:#d4af37;">https://${config.owner.toLowerCase()}.github.io/${config.repo}/</a>`);
+      logTerminal(`<br><span style="color:#10b981; font-weight:bold;">🎉 اكتملت المزامنة والنشر بنجاح 100% بدون أي أخطاء!</span>`);
+      logTerminal(`> يقوم GitHub Pages الآن بتحديث الموقع الحي: <a href="https://${config.owner.toLowerCase()}.github.io/${config.repo}/" target="_blank" style="color:#d4af37;">https://${config.owner.toLowerCase()}.github.io/${config.repo}/</a>`);
     } catch (err) {
-      logTerminal(`<br><span style="color:#ef4444; font-weight:bold;">❌ حدث خطأ: ${err.message}</span>`);
+      logTerminal(`<br><span style="color:#ef4444; font-weight:bold;">❌ حدث خطأ أثناء النشر: ${err.message}</span>`);
     } finally {
       if (syncBtn) syncBtn.disabled = false;
     }
@@ -968,80 +1314,10 @@
     }
   }
 
-  // GitHub API Binary & Text Committer
-  // Robust GitHub API Helper: Fetch fresh SHA with strict cache-busting
-  async function getFreshFileSha(path) {
-    const url = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${path}?ref=${encodeURIComponent(config.branch)}&_cb=${Date.now()}`;
-    try {
-      const res = await fetch(url, {
-        cache: 'no-store',
-        headers: {
-          'Authorization': `Bearer ${config.token}`,
-          'Accept': 'application/vnd.github.v3+json',
-          'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate',
-          'Pragma': 'no-cache'
-        }
-      });
-      if (res.ok) {
-        const fileJson = await res.json();
-        return fileJson.sha || null;
-      }
-    } catch (e) {
-      // file might be newly created
-    }
-    return null;
-  }
-
-  async function commitTextFileToGitHub(path, content, message) {
-    const base64 = btoa(unescape(encodeURIComponent(content)));
-    return commitBinaryFileToGitHub(path, base64, message);
-  }
-
-  async function commitBinaryFileToGitHub(path, base64Content, message, retryCount = 0) {
-    const url = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${path}`;
-    
-    // Always get the absolute latest SHA directly from GitHub without any browser caching
-    const sha = await getFreshFileSha(path);
-
-    const body = {
-      message: message,
-      content: base64Content,
-      branch: config.branch
-    };
-    if (sha) body.sha = sha;
-
-    const putRes = await fetch(url, {
-      method: 'PUT',
-      cache: 'no-store',
-      headers: {
-        'Authorization': `Bearer ${config.token}`,
-        'Content-Type': 'application/json',
-        'Accept': 'application/vnd.github.v3+json',
-        'Cache-Control': 'no-cache'
-      },
-      body: JSON.stringify(body)
-    });
-
-    if (!putRes.ok) {
-      const err = await putRes.json();
-      // Auto-retry on 409 SHA conflict up to 3 times with exponential backoff
-      if (putRes.status === 409 && retryCount < 3) {
-        console.warn(`409 Conflict on ${path}, retrying with fresh SHA (attempt ${retryCount + 1})...`);
-        await new Promise(r => setTimeout(r, 1200 * (retryCount + 1)));
-        return commitBinaryFileToGitHub(path, base64Content, message, retryCount + 1);
-      }
-      throw new Error(err.message || 'فشل إرسال الملف إلى GitHub');
-    }
-    return await putRes.json();
-  }
-
-  // Delay helper
-  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
-
-  // Color math
+  // Color Utilities
   function darkenColor(hex) {
     try {
-      const col = parseInt(hex.replace('#',''), 16);
+      const col = parseInt(hex.replace('#', ''), 16);
       const r = Math.max(0, ((col >> 16) & 255) - 35);
       const g = Math.max(0, ((col >> 8) & 255) - 35);
       const b = Math.max(0, (col & 255) - 35);
@@ -1051,7 +1327,7 @@
 
   function lightenColor(hex) {
     try {
-      const col = parseInt(hex.replace('#',''), 16);
+      const col = parseInt(hex.replace('#', ''), 16);
       const r = Math.min(255, ((col >> 16) & 255) + 35);
       const g = Math.min(255, ((col >> 8) & 255) + 35);
       const b = Math.min(255, (col & 255) + 35);
@@ -1061,13 +1337,14 @@
 
   // Backup Download
   window.downloadBackupPackage = function () {
+    harvestAllOpenForms();
     downloadFile('theme.json', themeData);
     downloadFile('hotel-info.json', hotelData);
     downloadFile('rooms.json', roomsData);
     downloadFile('hall.json', hallData);
     downloadFile('reviews.json', reviewsData);
     downloadFile('gallery.json', galleryData);
-    alert('تم تحميل جميع ملفات التكوين والبيانات بنجاح كنسخة احتياطية!');
+    alert('تم تنزيل جميع ملفات البيانات بنجاح كنسخة احتياطية!');
   };
 
   function downloadFile(name, obj) {
@@ -1090,7 +1367,7 @@
     return el ? el.value : '';
   }
 
-  // Initialize
+  // Initialize on DOM Ready
   document.addEventListener('DOMContentLoaded', () => {
     setVal('ghOwner', config.owner);
     setVal('ghRepo', config.repo);

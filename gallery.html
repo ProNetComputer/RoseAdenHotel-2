@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>معرض الصور | فندق روز عدن 2 السياحي</title>
+  <title>معرض الصور والمجموعات | فندق روز عدن 2 السياحي</title>
   <meta name="description" content="فندق روز عدن 2 السياحي - العريش، ساحل أبين، عدن. أرقى غرف وأجنحة VIP، طيرمانات بإطلالة بحرية، قاعة تدريب مجهزة بأحدث الشاشات الذكية، وإنترنت فايبر عالي السرعة.">
   <link rel="icon" type="image/jpeg" href="assets/images/favicon.jpg">
   
@@ -24,9 +24,9 @@
   <div class="top-bar">
     <div class="container top-bar-content">
       <div class="top-bar-info">
-        <a href="tel:+967780000656"><span>📱</span> 780000656</a>
+        <a href="tel:+967780000656"><span>📱</span> <span data-bind="hotel-whatsapp">780000656</span></a>
         <a href="tel:02278880"><span>☎️</span> 02-278880</a>
-        <span>📍 العريش - ساحل أبين - جوار جولة الرحاب - عدن</span>
+        <span>📍 <span data-bind="hotel-address">العريش - ساحل أبين - جوار جولة الرحاب - عدن</span></span>
       </div>
       <div class="top-bar-actions">
         <button class="tool-btn" onclick="toggleTheme()" id="themeBtn">
@@ -46,7 +46,7 @@
       <a href="index.html" class="brand-logo">
         <img src="assets/images/logo.jpg" alt="شعار فندق روز عدن 2">
         <div class="brand-text">
-          <h1>فندق روز عدن 2</h1>
+          <h1 data-bind="hotel-name">فندق روز عدن 2</h1>
           <span>ROSE ADEN 2 HOTEL</span>
         </div>
       </a>
@@ -65,7 +65,7 @@
 
       <div class="header-tools">
         <a href="https://wa.me/967780000656" target="_blank" class="btn btn-whatsapp btn-sm">
-          <span>💬</span> واتساب: 780000656
+          <span>💬</span> واتساب: <span data-bind="hotel-whatsapp">780000656</span>
         </a>
         <button class="mobile-toggle" id="mobileToggle" aria-label="القائمة">&#9776;</button>
       </div>
@@ -74,8 +74,8 @@
 
   <div class="page-hero">
     <div class="container">
-      <h1 class="page-hero-title">معرض الصور الحقيقية</h1>
-      <p class="page-hero-subtitle">لقطات حية من أروقة وغرف ومرافق فندق روز عدن 2 السياحي</p>
+      <h1 class="page-hero-title">معرض صور الفندق المصنف حسب المجموعات</h1>
+      <p class="page-hero-subtitle">جولة مصورة عالية الدقة في واجهة الفندق، صالة اللوبي، الأجنحة الملكية، الغرف، وقاعات التدريب (21 صورة)</p>
       <div class="breadcrumbs">
         <a href="index.html">الرئيسية</a> &gt; <span>معرض الصور</span>
       </div>
@@ -85,93 +85,218 @@
   <section class="section">
     <div class="container">
       <div class="filter-tabs">
-        <button class="filter-btn active" data-filter="all">جميع الصور (11)</button>
-        <button class="filter-btn" data-filter="exterior">الواجهة والمبنى</button>
-        <button class="filter-btn" data-filter="lobby">الاستقبال واللوبي</button>
-        <button class="filter-btn" data-filter="rooms">الغرف والأجنحة</button>
-        <button class="filter-btn" data-filter="vip">طيرمانات VIP</button>
-        <button class="filter-btn" data-filter="halls">قاعات التدريب والوجبات</button>
+        <button class="filter-btn active" data-filter="all">✨ جميع المجموعات (21)</button>
+        <button class="filter-btn" data-filter="exterior">🏛️ الواجهة والمبنى (3)</button>
+        <button class="filter-btn" data-filter="lobby">🛎️ الاستقبال واللوبي (4)</button>
+        <button class="filter-btn" data-filter="vip">👑 طيرمانات وأجنحة VIP (4)</button>
+        <button class="filter-btn" data-filter="rooms">🛏️ الغرف والأجنحة (7)</button>
+        <button class="filter-btn" data-filter="halls">🎓 قاعات التدريب والوجبات (3)</button>
       </div>
 
-      <div class="gallery-grid">
+      <div id="galleryGroupedContainer">
         
-        <div class="gallery-item" data-category="exterior">
-          <img src="assets/images/building-night.jpg" alt="مبنى فندق روز عدن 2 السياحي ليلاً" loading="lazy">
-          <div class="gallery-overlay">
-            <h4>مبنى فندق روز عدن 2 السياحي ليلاً</h4>
+        <div class="gallery-group-section" data-group="exterior">
+          <div class="gallery-group-header">
+            <h2 class="gallery-group-title">
+              <span>🏛️</span>
+              <span>مجموعة الواجهة والمبنى الخارجي</span>
+            </h2>
+            <span class="gallery-group-count">3 صور في هذه المجموعة</span>
+          </div>
+          <div class="gallery-grid">
+            <div class="gallery-item" data-category="exterior" onclick="openGalleryLightbox(0)">
+              <span class="gallery-item-badge">🏛️ الواجهة والمبنى</span>
+              <img src="assets/images/ros2-exterior-night-neon.jpg" alt="إضاءة واجهة مبنى فندق روز عدن 2 السياحي ليلاً" loading="lazy">
+              <div class="gallery-overlay">
+                <h4>إضاءة واجهة مبنى فندق روز عدن 2 السياحي ليلاً</h4>
+              </div>
+            </div>
+            <div class="gallery-item" data-category="exterior" onclick="openGalleryLightbox(1)">
+              <span class="gallery-item-badge">🏛️ الواجهة والمبنى</span>
+              <img src="assets/images/building-night.jpg" alt="مبنى فندق روز عدن 2 السياحي بالأقواس المعمارية ليلاً" loading="lazy">
+              <div class="gallery-overlay">
+                <h4>مبنى فندق روز عدن 2 السياحي بالأقواس المعمارية ليلاً</h4>
+              </div>
+            </div>
+            <div class="gallery-item" data-category="exterior" onclick="openGalleryLightbox(2)">
+              <span class="gallery-item-badge">🏛️ الواجهة والمبنى</span>
+              <img src="assets/images/building-day.jpg" alt="صرح فندق روز عدن 2 السياحي في العريش نهاراً" loading="lazy">
+              <div class="gallery-overlay">
+                <h4>صرح فندق روز عدن 2 السياحي في العريش نهاراً</h4>
+              </div>
+            </div>
           </div>
         </div>
-        
-        <div class="gallery-item" data-category="lobby">
-          <img src="assets/images/lobby-reception.jpg" alt="صالة الاستقبال واللوبي الفاخر" loading="lazy">
-          <div class="gallery-overlay">
-            <h4>صالة الاستقبال واللوبي الفاخر</h4>
+        <div class="gallery-group-section" data-group="lobby">
+          <div class="gallery-group-header">
+            <h2 class="gallery-group-title">
+              <span>🛎️</span>
+              <span>مجموعة صالة الاستقبال واللوبي الفاخر</span>
+            </h2>
+            <span class="gallery-group-count">4 صور في هذه المجموعة</span>
+          </div>
+          <div class="gallery-grid">
+            <div class="gallery-item" data-category="lobby" onclick="openGalleryLightbox(3)">
+              <span class="gallery-item-badge">🛎️ الاستقبال واللوبي</span>
+              <img src="assets/images/ros2-lobby-grand-entrance.jpg" alt="بهو المدخل الرئيسي الفخم بتصميم الرخام الهندسي" loading="lazy">
+              <div class="gallery-overlay">
+                <h4>بهو المدخل الرئيسي الفخم بتصميم الرخام الهندسي</h4>
+              </div>
+            </div>
+            <div class="gallery-item" data-category="lobby" onclick="openGalleryLightbox(4)">
+              <span class="gallery-item-badge">🛎️ الاستقبال واللوبي</span>
+              <img src="assets/images/ros2-lobby-chandeliers.jpg" alt="صالة الاستقبال واللوبي الفاخر بالثريات الكريستالية" loading="lazy">
+              <div class="gallery-overlay">
+                <h4>صالة الاستقبال واللوبي الفاخر بالثريات الكريستالية</h4>
+              </div>
+            </div>
+            <div class="gallery-item" data-category="lobby" onclick="openGalleryLightbox(5)">
+              <span class="gallery-item-badge">🛎️ الاستقبال واللوبي</span>
+              <img src="assets/images/ros2-lobby-lounge-emblem.jpg" alt="ركن الضيافة والاستقبال بشعار فندق روز عدن 2 الملكي" loading="lazy">
+              <div class="gallery-overlay">
+                <h4>ركن الضيافة والاستقبال بشعار فندق روز عدن 2 الملكي</h4>
+              </div>
+            </div>
+            <div class="gallery-item" data-category="lobby" onclick="openGalleryLightbox(6)">
+              <span class="gallery-item-badge">🛎️ الاستقبال واللوبي</span>
+              <img src="assets/images/lobby-reception.jpg" alt="كاونتر الاستقبال وخدمة الضيوف على مدار الساعة" loading="lazy">
+              <div class="gallery-overlay">
+                <h4>كاونتر الاستقبال وخدمة الضيوف على مدار الساعة</h4>
+              </div>
+            </div>
           </div>
         </div>
-        
-        <div class="gallery-item" data-category="rooms">
-          <img src="assets/images/suite-vip.jpg" alt="أجنحة VIP الفاخرة" loading="lazy">
-          <div class="gallery-overlay">
-            <h4>أجنحة VIP الفاخرة</h4>
+        <div class="gallery-group-section" data-group="vip">
+          <div class="gallery-group-header">
+            <h2 class="gallery-group-title">
+              <span>👑</span>
+              <span>مجموعة أجنحة وطيرمانات VIP الملكية</span>
+            </h2>
+            <span class="gallery-group-count">4 صور في هذه المجموعة</span>
+          </div>
+          <div class="gallery-grid">
+            <div class="gallery-item" data-category="vip" onclick="openGalleryLightbox(7)">
+              <span class="gallery-item-badge">👑 طيرمانات وأجنحة VIP</span>
+              <img src="assets/images/ros2-suite-king-blue.jpg" alt="جناح VIP ملكي بسرير ماستر كينج وتصميم مخملي فاخر" loading="lazy">
+              <div class="gallery-overlay">
+                <h4>جناح VIP ملكي بسرير ماستر كينج وتصميم مخملي فاخر</h4>
+              </div>
+            </div>
+            <div class="gallery-item" data-category="vip" onclick="openGalleryLightbox(8)">
+              <span class="gallery-item-badge">👑 طيرمانات وأجنحة VIP</span>
+              <img src="assets/images/ros2-vip-majlis.jpg" alt="مجلس وطيرمانة VIP عربية واسعة للضيافة والاستقبال" loading="lazy">
+              <div class="gallery-overlay">
+                <h4>مجلس وطيرمانة VIP عربية واسعة للضيافة والاستقبال</h4>
+              </div>
+            </div>
+            <div class="gallery-item" data-category="vip" onclick="openGalleryLightbox(9)">
+              <span class="gallery-item-badge">👑 طيرمانات وأجنحة VIP</span>
+              <img src="assets/images/tirmanah-vip.jpg" alt="طيرمانات VIP الملكية ومجالس كبار الشخصيات" loading="lazy">
+              <div class="gallery-overlay">
+                <h4>طيرمانات VIP الملكية ومجالس كبار الشخصيات</h4>
+              </div>
+            </div>
+            <div class="gallery-item" data-category="vip" onclick="openGalleryLightbox(10)">
+              <span class="gallery-item-badge">👑 طيرمانات وأجنحة VIP</span>
+              <img src="assets/images/suite-vip.jpg" alt="أجنحة VIP الرئاسية متكاملة التجهيزات" loading="lazy">
+              <div class="gallery-overlay">
+                <h4>أجنحة VIP الرئاسية متكاملة التجهيزات</h4>
+              </div>
+            </div>
           </div>
         </div>
-        
-        <div class="gallery-item" data-category="vip">
-          <img src="assets/images/tirmanah-vip.jpg" alt="طيرمانات VIP واستقبال الضيوف" loading="lazy">
-          <div class="gallery-overlay">
-            <h4>طيرمانات VIP واستقبال الضيوف</h4>
+        <div class="gallery-group-section" data-group="rooms">
+          <div class="gallery-group-header">
+            <h2 class="gallery-group-title">
+              <span>🛏️</span>
+              <span>مجموعة الغرف والأجنحة الفندقية</span>
+            </h2>
+            <span class="gallery-group-count">7 صور في هذه المجموعة</span>
+          </div>
+          <div class="gallery-grid">
+            <div class="gallery-item" data-category="rooms" onclick="openGalleryLightbox(11)">
+              <span class="gallery-item-badge">🛏️ الغرف والأجنحة</span>
+              <img src="assets/images/ros2-suite-vanity-angle.jpg" alt="جناح إقامة فاخر متكامل مع ركن التسريحة والمكتب" loading="lazy">
+              <div class="gallery-overlay">
+                <h4>جناح إقامة فاخر متكامل مع ركن التسريحة والمكتب</h4>
+              </div>
+            </div>
+            <div class="gallery-item" data-category="rooms" onclick="openGalleryLightbox(12)">
+              <span class="gallery-item-badge">🛏️ الغرف والأجنحة</span>
+              <img src="assets/images/ros2-room-twin-blue.jpg" alt="غرفة سريرين ديلوكس مع أريكة استرخاء جانبية" loading="lazy">
+              <div class="gallery-overlay">
+                <h4>غرفة سريرين ديلوكس مع أريكة استرخاء جانبية</h4>
+              </div>
+            </div>
+            <div class="gallery-item" data-category="rooms" onclick="openGalleryLightbox(13)">
+              <span class="gallery-item-badge">🛏️ الغرف والأجنحة</span>
+              <img src="assets/images/ros2-room-twin-grey.jpg" alt="غرفة سريرين فاخرة مع ركن جلوس وشاشة ذكية" loading="lazy">
+              <div class="gallery-overlay">
+                <h4>غرفة سريرين فاخرة مع ركن جلوس وشاشة ذكية</h4>
+              </div>
+            </div>
+            <div class="gallery-item" data-category="rooms" onclick="openGalleryLightbox(14)">
+              <span class="gallery-item-badge">🛏️ الغرف والأجنحة</span>
+              <img src="assets/images/ros2-room-triple-blue.jpg" alt="غرفة 3 أسرة واسعة بتصميم ملكي أزرق" loading="lazy">
+              <div class="gallery-overlay">
+                <h4>غرفة 3 أسرة واسعة بتصميم ملكي أزرق</h4>
+              </div>
+            </div>
+            <div class="gallery-item" data-category="rooms" onclick="openGalleryLightbox(15)">
+              <span class="gallery-item-badge">🛏️ الغرف والأجنحة</span>
+              <img src="assets/images/room-family.jpg" alt="الغرف العائلية الفاخرة والواسعة" loading="lazy">
+              <div class="gallery-overlay">
+                <h4>الغرف العائلية الفاخرة والواسعة</h4>
+              </div>
+            </div>
+            <div class="gallery-item" data-category="rooms" onclick="openGalleryLightbox(16)">
+              <span class="gallery-item-badge">🛏️ الغرف والأجنحة</span>
+              <img src="assets/images/room-twin.jpg" alt="غرف سريرين مزدوجة (Twin Room)" loading="lazy">
+              <div class="gallery-overlay">
+                <h4>غرف سريرين مزدوجة (Twin Room)</h4>
+              </div>
+            </div>
+            <div class="gallery-item" data-category="rooms" onclick="openGalleryLightbox(17)">
+              <span class="gallery-item-badge">🛏️ الغرف والأجنحة</span>
+              <img src="assets/images/room-triple.jpg" alt="غرف 3 أسرة مريحة (Triple Room)" loading="lazy">
+              <div class="gallery-overlay">
+                <h4>غرف 3 أسرة مريحة (Triple Room)</h4>
+              </div>
+            </div>
           </div>
         </div>
-        
-        <div class="gallery-item" data-category="halls">
-          <img src="assets/images/training-hall.jpg" alt="قاعة التدريب الحديثة الكبرى" loading="lazy">
-          <div class="gallery-overlay">
-            <h4>قاعة التدريب الحديثة الكبرى</h4>
+        <div class="gallery-group-section" data-group="halls">
+          <div class="gallery-group-header">
+            <h2 class="gallery-group-title">
+              <span>🎓</span>
+              <span>مجموعة قاعات التدريب والفعاليات والوجبات</span>
+            </h2>
+            <span class="gallery-group-count">3 صور في هذه المجموعة</span>
+          </div>
+          <div class="gallery-grid">
+            <div class="gallery-item" data-category="halls" onclick="openGalleryLightbox(18)">
+              <span class="gallery-item-badge">🎓 قاعات التدريب والوجبات</span>
+              <img src="assets/images/training-hall.jpg" alt="قاعة التدريب الحديثة الكبرى والمؤتمرات" loading="lazy">
+              <div class="gallery-overlay">
+                <h4>قاعة التدريب الحديثة الكبرى والمؤتمرات</h4>
+              </div>
+            </div>
+            <div class="gallery-item" data-category="halls" onclick="openGalleryLightbox(19)">
+              <span class="gallery-item-badge">🎓 قاعات التدريب والوجبات</span>
+              <img src="assets/images/smart-screen.jpg" alt="الشاشة الذكية العملاقة للتدريب وورش العمل" loading="lazy">
+              <div class="gallery-overlay">
+                <h4>الشاشة الذكية العملاقة للتدريب وورش العمل</h4>
+              </div>
+            </div>
+            <div class="gallery-item" data-category="halls" onclick="openGalleryLightbox(20)">
+              <span class="gallery-item-badge">🎓 قاعات التدريب والوجبات</span>
+              <img src="assets/images/dining-hall.jpg" alt="قاعة الوجبات والضيافة واستراحات القهوة" loading="lazy">
+              <div class="gallery-overlay">
+                <h4>قاعة الوجبات والضيافة واستراحات القهوة</h4>
+              </div>
+            </div>
           </div>
         </div>
-        
-        <div class="gallery-item" data-category="halls">
-          <img src="assets/images/smart-screen.jpg" alt="الشاشة الذكية العملاقة للتدريب" loading="lazy">
-          <div class="gallery-overlay">
-            <h4>الشاشة الذكية العملاقة للتدريب</h4>
-          </div>
-        </div>
-        
-        <div class="gallery-item" data-category="halls">
-          <img src="assets/images/dining-hall.jpg" alt="قاعة الوجبات والضيافة" loading="lazy">
-          <div class="gallery-overlay">
-            <h4>قاعة الوجبات والضيافة</h4>
-          </div>
-        </div>
-        
-        <div class="gallery-item" data-category="rooms">
-          <img src="assets/images/room-family.jpg" alt="الغرف العائلية الفاخرة" loading="lazy">
-          <div class="gallery-overlay">
-            <h4>الغرف العائلية الفاخرة</h4>
-          </div>
-        </div>
-        
-        <div class="gallery-item" data-category="rooms">
-          <img src="assets/images/room-twin.jpg" alt="غرف سريرين (Twin Room)" loading="lazy">
-          <div class="gallery-overlay">
-            <h4>غرف سريرين (Twin Room)</h4>
-          </div>
-        </div>
-        
-        <div class="gallery-item" data-category="rooms">
-          <img src="assets/images/room-triple.jpg" alt="غرف 3 أسرة واسعة" loading="lazy">
-          <div class="gallery-overlay">
-            <h4>غرف 3 أسرة واسعة</h4>
-          </div>
-        </div>
-        
-        <div class="gallery-item" data-category="exterior">
-          <img src="assets/images/building-day.jpg" alt="مبنى فندق روز عدن 2 نهاراً" loading="lazy">
-          <div class="gallery-overlay">
-            <h4>مبنى فندق روز عدن 2 نهاراً</h4>
-          </div>
-        </div>
-        
       </div>
     </div>
   </section>
@@ -186,7 +311,7 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-col footer-about">
-          <h4>فندق روز عدن 2 السياحي</h4>
+          <h4 data-bind="hotel-name">فندق روز عدن 2 السياحي</h4>
           <p>
             حيث يلتقي سحر البحر وأمواج ساحل أبين بالفخامة والخدمة الفندقية المتكاملة. خياركم الأول للإقامة السياحية، العائلية، واستضافة المؤتمرات وورش العمل في العاصمة عدن.
           </p>
@@ -204,7 +329,7 @@
             <li><a href="rooms.html">الغرف والأجنحة</a></li>
             <li><a href="vip-suites.html">طيرمانات وأجنحة VIP</a></li>
             <li><a href="training-hall.html">قاعة التدريب والمؤتمرات</a></li>
-            <li><a href="gallery.html">معرض الصور</a></li>
+            <li><a href="gallery.html">معرض الصور (21 لقطة)</a></li>
           </ul>
         </div>
 
@@ -223,10 +348,10 @@
         <div class="footer-col footer-contact">
           <h4>معلومات الاتصال</h4>
           <ul>
-            <li><span>📍</span> العريش - ساحل أبين - جوار جولة الرحاب - عدن</li>
-            <li><span>📱</span> واتساب وجوال: <a href="https://wa.me/967780000656">780000656</a></li>
+            <li><span>📍</span> <span data-bind="hotel-address">العريش - ساحل أبين - جوار جولة الرحاب - عدن</span></li>
+            <li><span>📱</span> واتساب وجوال: <a href="https://wa.me/967780000656" data-bind="hotel-whatsapp">780000656</a></li>
             <li><span>☎️</span> الهاتف الأرضي: <a href="tel:02278880">02-278880</a></li>
-            <li><span>☎️</span> خطوط إضافية: 02-278881 | 02-278882 | 02-278885 | 02-278888</li>
+            <li><span>☎️</span> خطوط الاستقبال: <span data-bind="hotel-phones">02-278880 | 02-278881 | 02-278882 | 02-278885 | 02-278888</span></li>
           </ul>
         </div>
       </div>
@@ -234,7 +359,7 @@
       <div class="footer-bottom">
         <div>&copy; 2026 فندق روز عدن 2 السياحي. جميع الحقوق محفوظة.</div>
         <div style="display: flex; gap: 1.5rem; align-items: center;">
-          <a href="admin/index.html">لوحة الإدارة</a>
+          <a href="admin/index.html">لوحة الإدارة (GitHub CMS)</a>
           <span>|</span>
           <span style="font-size: 0.82rem; color: #a39298;">
             تطوير وتنفيذ: <strong style="color: var(--luxury-gold-light);">برونت كمبيوتر | ProNet Computer</strong>

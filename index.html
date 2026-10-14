@@ -24,9 +24,9 @@
   <div class="top-bar">
     <div class="container top-bar-content">
       <div class="top-bar-info">
-        <a href="tel:+967780000656"><span>📱</span> 780000656</a>
+        <a href="tel:+967780000656"><span>📱</span> <span data-bind="hotel-whatsapp">780000656</span></a>
         <a href="tel:02278880"><span>☎️</span> 02-278880</a>
-        <span>📍 العريش - ساحل أبين - جوار جولة الرحاب - عدن</span>
+        <span>📍 <span data-bind="hotel-address">العريش - ساحل أبين - جوار جولة الرحاب - عدن</span></span>
       </div>
       <div class="top-bar-actions">
         <button class="tool-btn" onclick="toggleTheme()" id="themeBtn">
@@ -46,7 +46,7 @@
       <a href="index.html" class="brand-logo">
         <img src="assets/images/logo.jpg" alt="شعار فندق روز عدن 2">
         <div class="brand-text">
-          <h1>فندق روز عدن 2</h1>
+          <h1 data-bind="hotel-name">فندق روز عدن 2</h1>
           <span>ROSE ADEN 2 HOTEL</span>
         </div>
       </a>
@@ -65,7 +65,7 @@
 
       <div class="header-tools">
         <a href="https://wa.me/967780000656" target="_blank" class="btn btn-whatsapp btn-sm">
-          <span>💬</span> واتساب: 780000656
+          <span>💬</span> واتساب: <span data-bind="hotel-whatsapp">780000656</span>
         </a>
         <button class="mobile-toggle" id="mobileToggle" aria-label="القائمة">&#9776;</button>
       </div>
@@ -91,56 +91,47 @@
     </div>
   </section>
 
-  
   <!-- Hero Randomized Gallery Showcase Carousel (Placed above Quick Booking Bar) -->
   <div class="hero-carousel-container" id="heroCarouselSection">
     <div class="container">
       <div class="hero-carousel-box" id="heroCarouselBox">
-        <!-- Top bar with live tag and category badge -->
         <div class="carousel-top-bar">
           <div class="carousel-tag">
             <span class="live-dot"></span>
-            <span>معرض اللقطات الحية | جولة بصرية متجددة في فندق روز عدن 2</span>
+            <span>معرض اللقطات الحية | جولة بصرية عشوائية ومتجددة في فندق روز عدن 2</span>
           </div>
           <div class="carousel-category-pill" id="carouselCategoryPill">
-            أجنحة وطيرمانات VIP
+            👑 أجنحة وطيرمانات VIP
           </div>
         </div>
 
-        <!-- Stage with slides and controls -->
         <div class="hero-carousel-stage" id="carouselStage">
-          <!-- Dynamic Progress Bar -->
           <div class="carousel-progress-bar">
             <div class="carousel-progress-fill" id="carouselProgressFill"></div>
           </div>
 
-          <!-- Slides Track (populated in random order by JS) -->
           <div class="hero-carousel-track" id="heroCarouselTrack">
             <div class="hero-car-slide active">
-              <img src="assets/images/building-night.jpg" alt="واجهة فندق روز عدن 2 ليلاً">
+              <img src="assets/images/ros2-exterior-night-neon.jpg" alt="إضاءة واجهة مبنى فندق روز عدن 2 السياحي ليلاً">
               <div class="hero-slide-overlay">
-                <div class="hero-slide-caption">
-                  <h3 class="carousel-active-title">مبنى فندق روز عدن 2 السياحي ليلاً</h3>
-                </div>
+                <div class="hero-slide-caption"></div>
               </div>
             </div>
           </div>
 
-          <!-- Glass Nav Arrows -->
           <button class="hero-car-btn hero-car-prev" id="carPrevBtn" aria-label="الصورة السابقة">&#10095;</button>
           <button class="hero-car-btn hero-car-next" id="carNextBtn" aria-label="الصورة التالية">&#10094;</button>
         </div>
 
-        <!-- Bottom bar with title, counter, and dots -->
         <div class="carousel-bottom-bar">
           <div class="carousel-info-text">
-            <h3 class="carousel-active-title" id="carouselActiveTitle">جاري تحميل لقطات المعرض...</h3>
-            <span class="carousel-active-counter" id="carouselActiveCounter">لقطة من المعرض</span>
+            <h3 class="carousel-active-title" id="carouselActiveTitle">إضاءة واجهة مبنى فندق روز عدن 2 السياحي ليلاً</h3>
+            <span class="carousel-active-counter" id="carouselActiveCounter">لقطة رقم 1 من إجمالي 21 صورة في المعرض</span>
           </div>
           <div style="display: flex; align-items: center; gap: 1rem;">
             <div class="carousel-dots-wrapper" id="heroCarouselDots"></div>
             <a href="gallery.html" class="btn btn-outline btn-sm" style="padding: 0.35rem 0.85rem; font-size: 0.8rem; border-color: var(--luxury-gold); color: var(--luxury-gold-light);">
-              <span>📸</span> ألبوم الصور &larr;
+              <span>📸</span> ألبوم المجموعات (21 صورة) &larr;
             </a>
           </div>
         </div>
@@ -156,12 +147,8 @@
           <div class="form-group">
             <label for="bkRoomType">نوع الإقامة</label>
             <select id="bkRoomType" class="form-select">
-              <option value="جناح VIP الملكي">أجنحة VIP الفاخرة</option>
-              <option value="غرفة عائلية فاخرة">الغرف العائلية الفاخرة</option>
-              <option value="غرفة سريرين (Twin)">غرفة سريرين (Twin)</option>
-              <option value="غرفة 3 أسرة">غرفة 3 أسرة واسعة</option>
-              <option value="طيرمانة VIP ومجالس ضيوف">طيرمانات VIP</option>
-              <option value="حجز قاعة التدريب">قاعة التدريب والمؤتمرات</option>
+              <option value="أجنحة VIP الملكية الفاخرة">أجنحة VIP الملكية الفاخرة</option><option value="الغرف والأجنحة العائلية الفاخرة">الغرف والأجنحة العائلية الفاخرة</option><option value="غرف سريرين ديلوكس (Deluxe Twin)">غرف سريرين ديلوكس (Deluxe Twin)</option><option value="غرف 3 أسرة واسعة (Triple Room)">غرف 3 أسرة واسعة (Triple Room)</option><option value="طيرمانات ومجالس VIP لاستقبال الضيوف">طيرمانات ومجالس VIP لاستقبال الضيوف</option>
+              <option value="حجز قاعة التدريب والمؤتمرات">قاعة التدريب والمؤتمرات</option>
             </select>
           </div>
           <div class="form-group">
@@ -233,80 +220,80 @@
         <p class="section-desc">مجهزة بأحدث مفروشات الراحة، أجهزة التكييف الهادئة، وشاشات العرض الذكية</p>
       </div>
 
-      <div class="rooms-grid">
+      <div class="rooms-grid" id="featuredRoomsGrid">
         
-        <div class="room-card">
+        <div class="room-card" id="vip-suite">
           <div class="room-card-media">
-            <img src="assets/images/suite-vip.jpg" alt="أجنحة VIP الفاخرة" loading="lazy">
+            <img src="assets/images/ros2-suite-king-blue.jpg" alt="أجنحة VIP الملكية الفاخرة" loading="lazy">
             <span class="room-badge">الأكثر فخامة</span>
           </div>
           <div class="room-card-body">
-            <h3 class="room-title">أجنحة VIP الفاخرة</h3>
+            <h3 class="room-title">أجنحة VIP الملكية الفاخرة</h3>
             <div class="room-meta">
-              <span>🛏️ سرير ملكي ماستر كينج (King Bed)</span>
+              <span>🛏️ سرير ملكي ماستر كينج (King Bed) + ركن جلوس</span>
               <span>👥 2 - 3 أشخاص</span>
             </div>
             <ul class="room-features-list">
-              <li>صالون استقبال فاخر ومستقل</li><li>إطلالة بانورامية بحرية ساحرة</li><li>أثاث ملكي عصري وديكورات إضاءة متناسقة</li><li>شاشة ذكية 4K + إنترنت فايبر فائق السرعة</li>
+              <li>سرير ماستر كينج بتصميم مخملي ملكي فاخر</li><li>ركن جلوس وأريكة استرخاء مريحة مع تسريحة ومكتب</li><li>إطلالة ساحرة وأجواء هادئة عالية الخصوصية</li><li>شاشة ذكية 4K + إنترنت فايبر فائق السرعة مجاناً</li>
             </ul>
             <div class="room-card-footer">
               <div class="room-price-box">
-                <span class="room-price-label">السعر:</span>
+                <span class="room-price-label">سعر الليلة:</span>
                 <span class="room-price-val">حسب الطلب / أسعار خاصة</span>
               </div>
-              <button onclick="bookSpecificRoom('أجنحة VIP الفاخرة')" class="btn btn-whatsapp btn-sm">
+              <button onclick="bookSpecificRoom('أجنحة VIP الملكية الفاخرة')" class="btn btn-whatsapp btn-sm">
                 <span>💬</span> احجز الآن
               </button>
             </div>
           </div>
         </div>
         
-        <div class="room-card">
+        <div class="room-card" id="family-room">
           <div class="room-card-media">
-            <img src="assets/images/room-family.jpg" alt="الغرف العائلية الفاخرة" loading="lazy">
+            <img src="assets/images/ros2-suite-vanity-angle.jpg" alt="الغرف والأجنحة العائلية الفاخرة" loading="lazy">
             <span class="room-badge">مثالية للعائلات</span>
           </div>
           <div class="room-card-body">
-            <h3 class="room-title">الغرف العائلية الفاخرة</h3>
+            <h3 class="room-title">الغرف والأجنحة العائلية الفاخرة</h3>
             <div class="room-meta">
-              <span>🛏️ سرير مزدوج كبير + أسرة إضافية</span>
+              <span>🛏️ سرير مزدوج كبير + أسرة إضافية وجلسة عائلية</span>
               <span>👥 4 - 5 أشخاص</span>
             </div>
             <ul class="room-features-list">
-              <li>مساحات رحبة وتوزيع ذكي للخصوصية العائلية</li><li>منطقة جلوس مريحة للأطفال والعائلة</li><li>شاشات تلفاز مسطحة مع قنوات فضائية منوعة</li><li>إنترنت فايبر غير محدود فائق السرعة</li>
+              <li>مساحات رحبة وتوزيع ذكي يضمن راحة وخصوصية العائلة</li><li>تسريحة حديثة بثلاث مرايا ودواليب تخزين واسعة</li><li>منطقة جلوس مريحة وشاشة تلفاز ذكية بقنوات فضائية</li><li>إنترنت فايبر غير محدود فائق السرعة</li>
             </ul>
             <div class="room-card-footer">
               <div class="room-price-box">
-                <span class="room-price-label">السعر:</span>
+                <span class="room-price-label">سعر الليلة:</span>
                 <span class="room-price-val">أسعار تنافسية</span>
               </div>
-              <button onclick="bookSpecificRoom('الغرف العائلية الفاخرة')" class="btn btn-whatsapp btn-sm">
+              <button onclick="bookSpecificRoom('الغرف والأجنحة العائلية الفاخرة')" class="btn btn-whatsapp btn-sm">
                 <span>💬</span> احجز الآن
               </button>
             </div>
           </div>
         </div>
         
-        <div class="room-card">
+        <div class="room-card" id="twin-room-deluxe">
           <div class="room-card-media">
-            <img src="assets/images/room-twin.jpg" alt="غرف سريرين (Twin Room)" loading="lazy">
-            <span class="room-badge">الأكثر طلباً للأصدقاء ورجال الأعمال</span>
+            <img src="assets/images/ros2-room-twin-blue.jpg" alt="غرف سريرين ديلوكس (Deluxe Twin)" loading="lazy">
+            <span class="room-badge">الأكثر طلباً لرجال الأعمال</span>
           </div>
           <div class="room-card-body">
-            <h3 class="room-title">غرف سريرين (Twin Room)</h3>
+            <h3 class="room-title">غرف سريرين ديلوكس (Deluxe Twin)</h3>
             <div class="room-meta">
-              <span>🛏️ سريران منفصلان مريحان من أرقى الماركات</span>
-              <span>👥 شخصان</span>
+              <span>🛏️ سريران منفصلان مريحان + أريكة جلوس جانبية</span>
+              <span>👥 شخصان - 3 أشخاص</span>
             </div>
             <ul class="room-features-list">
-              <li>مراتب طبية مريحة لضمان أقصى درجات الاسترخاء</li><li>مكتب عمل مناسب لرجال الأعمال ومندوبي الشركات</li><li>واي فاي فايبر مجاني وسريع جداً</li><li>تكييف اسبليت هادئ</li>
+              <li>سريران منفصلان بمراتب طبية فندقية فائقة الراحة</li><li>أريكة جلوس جانبية مريحة وأرضيات رخامية لامعة</li><li>شاشة ذكية مسطحة وثلاجة ميني بار خاصة</li><li>واي فاي فايبر مجاني وسريع جداً لرجال الأعمال</li>
             </ul>
             <div class="room-card-footer">
               <div class="room-price-box">
-                <span class="room-price-label">السعر:</span>
+                <span class="room-price-label">سعر الليلة:</span>
                 <span class="room-price-val">أسعار مميزة</span>
               </div>
-              <button onclick="bookSpecificRoom('غرف سريرين (Twin Room)')" class="btn btn-whatsapp btn-sm">
+              <button onclick="bookSpecificRoom('غرف سريرين ديلوكس (Deluxe Twin)')" class="btn btn-whatsapp btn-sm">
                 <span>💬</span> احجز الآن
               </button>
             </div>
@@ -334,9 +321,9 @@
         </div>
         <div class="hall-details">
           <span class="section-badge" style="width: fit-content;">مجهزة بالكامل للمنظمات والشركات</span>
-          <h2 class="section-title" style="font-size: 1.8rem; margin: 0.5rem 0 1rem;">قاعة التدريب الحديثة الكبرى والمؤتمرات</h2>
-          <p style="color: var(--luxury-gold); font-weight: 700; margin-bottom: 1.5rem;">👥 تتسع لأكثر من 50 إلى 70 مشاركاً بأريحية تامة</p>
-          <div style="margin-bottom: 2rem;">
+          <h2 class="section-title" id="dynamicHallTitle" style="font-size: 1.8rem; margin: 0.5rem 0 1rem;">قاعة التدريب الحديثة الكبرى والمؤتمرات</h2>
+          <p id="dynamicHallCapacity" style="color: var(--luxury-gold); font-weight: 700; margin-bottom: 1.5rem;">👥 تتسع لأكثر من 50 إلى 70 مشاركاً بأريحية تامة</p>
+          <div id="dynamicHallSpecs" data-limit="4" style="margin-bottom: 2rem;">
             
             <div class="hall-spec-item">
               <span class="hall-spec-icon">★</span>
@@ -368,7 +355,7 @@
     </div>
   </section>
 
-<!-- Guest Testimonials -->
+  <!-- Guest Testimonials -->
   <section class="section alt-bg">
     <div class="container">
       <div class="section-header">
@@ -377,7 +364,7 @@
         <p class="section-desc">فخورون بثقة ضيوفنا الكرام من مختلف المحافظات والمنظمات الدولية</p>
       </div>
 
-      <div class="reviews-grid">
+      <div class="reviews-grid" id="guestReviewsGrid">
         
         <div class="review-card">
           <div class="review-stars">★★★★★</div>
@@ -414,7 +401,7 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-col footer-about">
-          <h4>فندق روز عدن 2 السياحي</h4>
+          <h4 data-bind="hotel-name">فندق روز عدن 2 السياحي</h4>
           <p>
             حيث يلتقي سحر البحر وأمواج ساحل أبين بالفخامة والخدمة الفندقية المتكاملة. خياركم الأول للإقامة السياحية، العائلية، واستضافة المؤتمرات وورش العمل في العاصمة عدن.
           </p>
@@ -432,7 +419,7 @@
             <li><a href="rooms.html">الغرف والأجنحة</a></li>
             <li><a href="vip-suites.html">طيرمانات وأجنحة VIP</a></li>
             <li><a href="training-hall.html">قاعة التدريب والمؤتمرات</a></li>
-            <li><a href="gallery.html">معرض الصور</a></li>
+            <li><a href="gallery.html">معرض الصور (21 لقطة)</a></li>
           </ul>
         </div>
 
@@ -451,10 +438,10 @@
         <div class="footer-col footer-contact">
           <h4>معلومات الاتصال</h4>
           <ul>
-            <li><span>📍</span> العريش - ساحل أبين - جوار جولة الرحاب - عدن</li>
-            <li><span>📱</span> واتساب وجوال: <a href="https://wa.me/967780000656">780000656</a></li>
+            <li><span>📍</span> <span data-bind="hotel-address">العريش - ساحل أبين - جوار جولة الرحاب - عدن</span></li>
+            <li><span>📱</span> واتساب وجوال: <a href="https://wa.me/967780000656" data-bind="hotel-whatsapp">780000656</a></li>
             <li><span>☎️</span> الهاتف الأرضي: <a href="tel:02278880">02-278880</a></li>
-            <li><span>☎️</span> خطوط إضافية: 02-278881 | 02-278882 | 02-278885 | 02-278888</li>
+            <li><span>☎️</span> خطوط الاستقبال: <span data-bind="hotel-phones">02-278880 | 02-278881 | 02-278882 | 02-278885 | 02-278888</span></li>
           </ul>
         </div>
       </div>
@@ -462,7 +449,7 @@
       <div class="footer-bottom">
         <div>&copy; 2026 فندق روز عدن 2 السياحي. جميع الحقوق محفوظة.</div>
         <div style="display: flex; gap: 1.5rem; align-items: center;">
-          <a href="admin/index.html">لوحة الإدارة</a>
+          <a href="admin/index.html">لوحة الإدارة (GitHub CMS)</a>
           <span>|</span>
           <span style="font-size: 0.82rem; color: #a39298;">
             تطوير وتنفيذ: <strong style="color: var(--luxury-gold-light);">برونت كمبيوتر | ProNet Computer</strong>

@@ -989,3 +989,321 @@ html[lang="en"] .hero-car-next {
     margin-top: 0.5rem;
   }
 }
+/* ==========================================================================
+   Grouped Gallery & Lightbox Styles
+   تنسيقات مجموعات المعرض وعارض الصور المكبر (Lightbox)
+   ========================================================================== */
+
+.gallery-group-section {
+  margin-bottom: 3.5rem;
+}
+
+.gallery-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 2px solid var(--border-accent);
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.gallery-group-title {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.gallery-group-count {
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid var(--border-gold);
+  color: var(--luxury-gold-light);
+  padding: 0.25rem 0.9rem;
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.gallery-item-badge {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  background: rgba(13, 4, 7, 0.8);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--border-gold);
+  color: var(--luxury-gold-light);
+  padding: 0.22rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 700;
+  z-index: 2;
+}
+
+/* Lightbox Modal */
+.lightbox-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 2, 4, 0.94);
+  backdrop-filter: blur(12px);
+  z-index: 3000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.lightbox-backdrop.open {
+  display: flex;
+}
+
+.lightbox-content {
+  position: relative;
+  max-width: 1050px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.lightbox-img-wrapper {
+  position: relative;
+  width: 100%;
+  max-height: 78vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1.5px solid var(--border-gold);
+  background: #000;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9);
+}
+
+.lightbox-img-wrapper img {
+  max-width: 100%;
+  max-height: 78vh;
+  object-fit: contain;
+}
+
+.lightbox-caption-bar {
+  margin-top: 1rem;
+  text-align: center;
+  color: #fff;
+}
+
+.lightbox-caption-bar h3 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin-bottom: 0.25rem;
+}
+
+.lightbox-caption-bar span {
+  font-size: 0.85rem;
+  color: var(--luxury-gold-light);
+}
+
+.lightbox-close {
+  position: absolute;
+  top: -3rem;
+  left: 0;
+  background: rgba(226, 45, 70, 0.25);
+  border: 1px solid var(--rose-primary);
+  color: #fff;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(13, 4, 7, 0.75);
+  border: 1.5px solid var(--luxury-gold);
+  color: #fff;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  font-size: 1.3rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.lightbox-nav:hover {
+  background: var(--rose-primary);
+  border-color: var(--rose-primary);
+}
+
+.lightbox-prev { right: 1rem; }
+.lightbox-next { left: 1rem; }
+/* ==========================================================================
+   Grouped Gallery & Lightbox Styles
+   تنسيقات مجموعات المعرض وعارض الصور المكبر (Lightbox)
+   ========================================================================== */
+
+.gallery-group-section {
+  margin-bottom: 3.5rem;
+}
+
+.gallery-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 2px solid var(--border-accent);
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.gallery-group-title {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.gallery-group-count {
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid var(--border-gold);
+  color: var(--luxury-gold-light);
+  padding: 0.25rem 0.9rem;
+  border-radius: var(--radius-full);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.gallery-item-badge {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  background: rgba(13, 4, 7, 0.8);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--border-gold);
+  color: var(--luxury-gold-light);
+  padding: 0.22rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 700;
+  z-index: 2;
+}
+
+/* Lightbox Modal */
+.lightbox-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 2, 4, 0.94);
+  backdrop-filter: blur(12px);
+  z-index: 3000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.lightbox-backdrop.open {
+  display: flex;
+}
+
+.lightbox-content {
+  position: relative;
+  max-width: 1050px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.lightbox-img-wrapper {
+  position: relative;
+  width: 100%;
+  max-height: 78vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1.5px solid var(--border-gold);
+  background: #000;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9);
+}
+
+.lightbox-img-wrapper img {
+  max-width: 100%;
+  max-height: 78vh;
+  object-fit: contain;
+}
+
+.lightbox-caption-bar {
+  margin-top: 1rem;
+  text-align: center;
+  color: #fff;
+}
+
+.lightbox-caption-bar h3 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin-bottom: 0.25rem;
+}
+
+.lightbox-caption-bar span {
+  font-size: 0.85rem;
+  color: var(--luxury-gold-light);
+}
+
+.lightbox-close {
+  position: absolute;
+  top: -3rem;
+  left: 0;
+  background: rgba(226, 45, 70, 0.25);
+  border: 1px solid var(--rose-primary);
+  color: #fff;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(13, 4, 7, 0.75);
+  border: 1.5px solid var(--luxury-gold);
+  color: #fff;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  font-size: 1.3rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.lightbox-nav:hover {
+  background: var(--rose-primary);
+  border-color: var(--rose-primary);
+}
+
+.lightbox-prev { right: 1rem; }
+.lightbox-next { left: 1rem; }

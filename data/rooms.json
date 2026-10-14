@@ -2,94 +2,91 @@
   {
     "id": "vip-suite",
     "category": "vip",
-    "title_ar": "أجنحة VIP الفاخرة",
+    "title_ar": "أجنحة VIP الملكية الفاخرة",
     "title_en": "Royal VIP Suites",
     "badge_ar": "الأكثر فخامة",
     "badge_en": "Most Luxurious",
     "price_per_night": "حسب الطلب / أسعار خاصة",
     "price_en": "Upon Request / Special Rate",
-    "beds_ar": "سرير ملكي ماستر كينج (King Bed)",
-    "beds_en": "Master King Bed",
+    "beds_ar": "سرير ملكي ماستر كينج (King Bed) + ركن جلوس",
+    "beds_en": "Master King Bed + Lounge Area",
     "capacity_ar": "2 - 3 أشخاص",
     "capacity_en": "2 - 3 Guests",
-    "image": "assets/images/suite-vip.jpg",
+    "image": "assets/images/ros2-suite-king-blue.jpg",
     "features_ar": [
-      "صالون استقبال فاخر ومستقل",
-      "إطلالة بانورامية بحرية ساحرة",
-      "أثاث ملكي عصري وديكورات إضاءة متناسقة",
-      "شاشة ذكية 4K + إنترنت فايبر فائق السرعة",
+      "سرير ماستر كينج بتصميم مخملي ملكي فاخر",
+      "ركن جلوس وأريكة استرخاء مريحة مع تسريحة ومكتب",
+      "إطلالة ساحرة وأجواء هادئة عالية الخصوصية",
+      "شاشة ذكية 4K + إنترنت فايبر فائق السرعة مجاناً",
       "حمام رخامي مجهز بأحدث التجهيزات ومستلزمات العناية",
-      "ميني بار، غلاية ومستلزمات ضيافة مجانية",
-      "تكييف مركزي متطور فائق الهدوء"
+      "ثلاجة ميني بار، غلاية، وضيافة ترحيبية مجانية",
+      "تكييف متطور فائق الهدوء وكهرباء 24/7"
     ],
     "features_en": [
-      "Private luxury living room & salon",
-      "Stunning panoramic sea view",
-      "Royal modern furniture & warm ambient lighting",
-      "4K Smart TV + High-speed fiber Wi-Fi",
-      "Marble bathroom with luxury toiletries",
-      "Mini bar, kettle, and complimentary coffee/tea",
-      "Ultra-quiet advanced climate control"
+      "Royal velvet Master King bed",
+      "Private sitting sofa area, vanity mirror & desk",
+      "4K Smart TV + High-speed complimentary fiber Wi-Fi",
+      "Luxury marble bathroom with toiletries",
+      "Mini-fridge, kettle & welcome hospitality tray",
+      "24/7 uninterrupted power & whisper-quiet AC"
     ]
   },
   {
     "id": "family-room",
     "category": "family",
-    "title_ar": "الغرف العائلية الفاخرة",
-    "title_en": "Luxury Family Rooms",
+    "title_ar": "الغرف والأجنحة العائلية الفاخرة",
+    "title_en": "Luxury Family Suites",
     "badge_ar": "مثالية للعائلات",
     "badge_en": "Family Choice",
     "price_per_night": "أسعار تنافسية",
     "price_en": "Competitive Rates",
-    "beds_ar": "سرير مزدوج كبير + أسرة إضافية",
+    "beds_ar": "سرير مزدوج كبير + أسرة إضافية وجلسة عائلية",
     "beds_en": "Large Double Bed + Extra Beds",
     "capacity_ar": "4 - 5 أشخاص",
     "capacity_en": "4 - 5 Guests",
-    "image": "assets/images/room-family.jpg",
+    "image": "assets/images/ros2-suite-vanity-angle.jpg",
     "features_ar": [
-      "مساحات رحبة وتوزيع ذكي للخصوصية العائلية",
-      "منطقة جلوس مريحة للأطفال والعائلة",
-      "شاشات تلفاز مسطحة مع قنوات فضائية منوعة",
+      "مساحات رحبة وتوزيع ذكي يضمن راحة وخصوصية العائلة",
+      "تسريحة حديثة بثلاث مرايا ودواليب تخزين واسعة",
+      "منطقة جلوس مريحة وشاشة تلفاز ذكية بقنوات فضائية",
       "إنترنت فايبر غير محدود فائق السرعة",
       "خدمة غرف وتنظيف على مدار الساعة",
-      "ثلاجة، غلاية ومشروبات ترحيبية"
+      "ثلاجة خاصة وغلاية ومشروبات ترحيبية"
     ],
     "features_en": [
-      "Spacious layout ensuring family privacy",
-      "Comfortable sitting area for families",
-      "Flat-screen TVs with kids & satellite channels",
+      "Spacious layout ensuring family comfort & privacy",
+      "Modern vanity mirror desk and large wardrobes",
+      "Comfortable sitting area & Smart LED TV",
       "Unlimited high-speed fiber internet",
-      "24/7 dedicated room service & housekeeping",
-      "Refrigerator, electric kettle, and welcome amenities"
+      "24/7 dedicated room service & housekeeping"
     ]
   },
   {
-    "id": "twin-room",
+    "id": "twin-room-deluxe",
     "category": "standard",
-    "title_ar": "غرف سريرين (Twin Room)",
+    "title_ar": "غرف سريرين ديلوكس (Deluxe Twin)",
     "title_en": "Deluxe Twin Room",
-    "badge_ar": "الأكثر طلباً للأصدقاء ورجال الأعمال",
-    "badge_en": "Most Popular for Business & Friends",
+    "badge_ar": "الأكثر طلباً لرجال الأعمال",
+    "badge_en": "Popular for Business & Friends",
     "price_per_night": "أسعار مميزة",
     "price_en": "Special Rate",
-    "beds_ar": "سريران منفصلان مريحان من أرقى الماركات",
-    "beds_en": "2 Comfortable Separate Beds",
-    "capacity_ar": "شخصان",
-    "capacity_en": "2 Guests",
-    "image": "assets/images/room-twin.jpg",
+    "beds_ar": "سريران منفصلان مريحان + أريكة جلوس جانبية",
+    "beds_en": "2 Separate Beds + Side Sofa",
+    "capacity_ar": "شخصان - 3 أشخاص",
+    "capacity_en": "2 - 3 Guests",
+    "image": "assets/images/ros2-room-twin-blue.jpg",
     "features_ar": [
-      "مراتب طبية مريحة لضمان أقصى درجات الاسترخاء",
-      "مكتب عمل مناسب لرجال الأعمال ومندوبي الشركات",
-      "واي فاي فايبر مجاني وسريع جداً",
-      "تكييف اسبليت هادئ",
-      "حمام خاص متكامل الخدمات"
+      "سريران منفصلان بمراتب طبية فندقية فائقة الراحة",
+      "أريكة جلوس جانبية مريحة وأرضيات رخامية لامعة",
+      "شاشة ذكية مسطحة وثلاجة ميني بار خاصة",
+      "واي فاي فايبر مجاني وسريع جداً لرجال الأعمال",
+      "تكييف اسبليت هادئ وحمام خاص متكامل"
     ],
     "features_en": [
-      "Ergonomic medical mattresses for deep sleep",
-      "Work desk ideal for business travelers",
-      "Superfast complimentary fiber Wi-Fi",
-      "Quiet whisper-cool split AC",
-      "Private fully equipped modern bathroom"
+      "2 separate beds with orthopedic hotel mattresses",
+      "Comfortable side sofa and polished marble floors",
+      "Smart flat-screen TV and private mini-fridge",
+      "Superfast complimentary fiber Wi-Fi"
     ]
   },
   {
@@ -103,47 +100,47 @@
     "price_en": "Great Value Rate",
     "beds_ar": "3 أسرة مفردة مجهزة بمفارش قطنية فاخرة",
     "beds_en": "3 Separate Beds with Luxury Linens",
-    "capacity_ar": "3 أشخاص",
-    "capacity_en": "3 Guests",
-    "image": "assets/images/room-triple.jpg",
+    "capacity_ar": "3 - 4 أشخاص",
+    "capacity_en": "3 - 4 Guests",
+    "image": "assets/images/ros2-room-triple-blue.jpg",
     "features_ar": [
-      "تصميم داخلي واسع يتيح سهولة الحركة",
-      "دواليب ملابس رحبة وخزنة أمانات",
-      "شاشة LED ذكية وإنترنت فايبر",
-      "خدمة غرف متواصلة 24 ساعة"
+      "3 أسرة فندقية مريحة بتصميم مخملي أزرق عصري",
+      "مساحة داخلية واسعة تتيح سهولة الحركة والاسترخاء",
+      "ثلاجة تبريد، شاشة ذكية، وإنترنت فايبر مجاني",
+      "دواليب ملابس رحبة وخدمة غرف 24 ساعة"
     ],
     "features_en": [
+      "3 comfortable beds with royal blue velvet headboard",
       "Roomy interior layout for easy movement",
-      "Spacious wardrobes and secure deposit safe",
-      "Smart LED TV and high-speed fiber Wi-Fi",
+      "Mini-fridge, Smart LED TV, and free fiber Wi-Fi",
       "24-hour around-the-clock room service"
     ]
   },
   {
     "id": "vip-tirmanah",
     "category": "vip",
-    "title_ar": "طيرمانات V I P واستقبال الضيوف",
-    "title_en": "VIP Penthouse & Hospitality Lounge",
-    "badge_ar": "أعلى إطلالة بحرية في العريش",
-    "badge_en": "Top Sea View & Traditional Luxury",
+    "title_ar": "طيرمانات ومجالس VIP لاستقبال الضيوف",
+    "title_en": "VIP Penthouse & Majlis Lounge",
+    "badge_ar": "مجالس ضيافة وإطلالة بحرية",
+    "badge_en": "Sea View & Traditional Luxury",
     "price_per_night": "حسب الحجز والمناسبة",
     "price_en": "Upon Reservation",
-    "beds_ar": "مجلس يمني ملكي أصيل مع جلسات راقية",
-    "beds_en": "Royal Heritage Lounge & Salon",
-    "capacity_ar": "استقبال ومجالس ضيوف خاصة",
-    "capacity_en": "Exclusive Private Hospitality",
-    "image": "assets/images/tirmanah-vip.jpg",
+    "beds_ar": "مجلس عربي ويمني ملكي فسيح بأرقى المفروشات",
+    "beds_en": "Spacious Royal Arabic Majlis",
+    "capacity_ar": "يتسع لاستقبال الضيوف واللقاءات الخاصة",
+    "capacity_en": "Exclusive VIP Gatherings",
+    "image": "assets/images/ros2-vip-majlis.jpg",
     "features_ar": [
-      "إطلالة بانورامية خيالية مفتوحة على شاطئ أبين ومدينة عدن",
-      "طراز معماري أصيل يمزج بين التراث اليمني والأناقة العصرية",
-      "مجهزة بكافة شاشات العرض والخدمات الترفيهية والضيافة",
-      "مخصصة للشخصيات الهامة، كبار الضيوف، واللقاءات الخاصة"
+      "مجلس فسيح ومفروش بأحدث الجلسات العربية المريحة",
+      "إطلالة بانورامية على ساحل أبين وأفق مدينة عدن",
+      "تكييف مركزي بارد، شاشات عرض، وإنترنت فايبر",
+      "مثالي لاستقبال كبار الضيوف، رجال الأعمال، والمقيل اليمني الفاخر"
     ],
     "features_en": [
-      "Breathtaking open panoramic view of Abyan coast & Aden",
-      "Authentic architectural design blending heritage with modern luxury",
-      "Equipped with entertainment displays and hospitality services",
-      "Designed for VIP guests, executives, and exclusive gatherings"
+      "Spacious lounge furnished with modern comfortable Arabic seating",
+      "Panoramic view of Abyan coast and Aden skyline",
+      "Cool air conditioning, large displays, and fiber internet",
+      "Ideal for VIP guests, executives, and private gatherings"
     ]
   }
 ]

@@ -24,9 +24,9 @@
   <div class="top-bar">
     <div class="container top-bar-content">
       <div class="top-bar-info">
-        <a href="tel:+967780000656"><span>📱</span> 780000656</a>
+        <a href="tel:+967780000656"><span>📱</span> <span data-bind="hotel-whatsapp">780000656</span></a>
         <a href="tel:02278880"><span>☎️</span> 02-278880</a>
-        <span>📍 العريش - ساحل أبين - جوار جولة الرحاب - عدن</span>
+        <span>📍 <span data-bind="hotel-address">العريش - ساحل أبين - جوار جولة الرحاب - عدن</span></span>
       </div>
       <div class="top-bar-actions">
         <button class="tool-btn" onclick="toggleTheme()" id="themeBtn">
@@ -46,7 +46,7 @@
       <a href="index.html" class="brand-logo">
         <img src="assets/images/logo.jpg" alt="شعار فندق روز عدن 2">
         <div class="brand-text">
-          <h1>فندق روز عدن 2</h1>
+          <h1 data-bind="hotel-name">فندق روز عدن 2</h1>
           <span>ROSE ADEN 2 HOTEL</span>
         </div>
       </a>
@@ -65,7 +65,7 @@
 
       <div class="header-tools">
         <a href="https://wa.me/967780000656" target="_blank" class="btn btn-whatsapp btn-sm">
-          <span>💬</span> واتساب: 780000656
+          <span>💬</span> واتساب: <span data-bind="hotel-whatsapp">780000656</span>
         </a>
         <button class="mobile-toggle" id="mobileToggle" aria-label="القائمة">&#9776;</button>
       </div>
@@ -94,9 +94,9 @@
         </div>
         <div class="hall-details">
           <span class="section-badge" style="width: fit-content;">مجهزة بالكامل للمنظمات والشركات</span>
-          <h2 class="section-title" style="font-size: 2rem; margin: 0.5rem 0 1rem;">قاعة تدريب مجهزة بأحدث التقنيات</h2>
-          <p style="color: var(--luxury-gold); font-size: 1.1rem; font-weight: 700; margin-bottom: 1.5rem;">👥 تتسع لأكثر من 50 إلى 70 مشاركاً بأريحية تامة</p>
-          <div style="margin-bottom: 2rem;">
+          <h2 class="section-title" id="dynamicHallTitle" style="font-size: 2rem; margin: 0.5rem 0 1rem;">قاعة التدريب الحديثة الكبرى والمؤتمرات</h2>
+          <p id="dynamicHallCapacity" style="color: var(--luxury-gold); font-size: 1.1rem; font-weight: 700; margin-bottom: 1.5rem;">👥 تتسع لأكثر من 50 إلى 70 مشاركاً بأريحية تامة</p>
+          <div id="dynamicHallSpecs" style="margin-bottom: 2rem;">
             
             <div class="hall-spec-item">
               <span class="hall-spec-icon">★</span>
@@ -152,7 +152,7 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-col footer-about">
-          <h4>فندق روز عدن 2 السياحي</h4>
+          <h4 data-bind="hotel-name">فندق روز عدن 2 السياحي</h4>
           <p>
             حيث يلتقي سحر البحر وأمواج ساحل أبين بالفخامة والخدمة الفندقية المتكاملة. خياركم الأول للإقامة السياحية، العائلية، واستضافة المؤتمرات وورش العمل في العاصمة عدن.
           </p>
@@ -170,7 +170,7 @@
             <li><a href="rooms.html">الغرف والأجنحة</a></li>
             <li><a href="vip-suites.html">طيرمانات وأجنحة VIP</a></li>
             <li><a href="training-hall.html">قاعة التدريب والمؤتمرات</a></li>
-            <li><a href="gallery.html">معرض الصور</a></li>
+            <li><a href="gallery.html">معرض الصور (21 لقطة)</a></li>
           </ul>
         </div>
 
@@ -189,10 +189,10 @@
         <div class="footer-col footer-contact">
           <h4>معلومات الاتصال</h4>
           <ul>
-            <li><span>📍</span> العريش - ساحل أبين - جوار جولة الرحاب - عدن</li>
-            <li><span>📱</span> واتساب وجوال: <a href="https://wa.me/967780000656">780000656</a></li>
+            <li><span>📍</span> <span data-bind="hotel-address">العريش - ساحل أبين - جوار جولة الرحاب - عدن</span></li>
+            <li><span>📱</span> واتساب وجوال: <a href="https://wa.me/967780000656" data-bind="hotel-whatsapp">780000656</a></li>
             <li><span>☎️</span> الهاتف الأرضي: <a href="tel:02278880">02-278880</a></li>
-            <li><span>☎️</span> خطوط إضافية: 02-278881 | 02-278882 | 02-278885 | 02-278888</li>
+            <li><span>☎️</span> خطوط الاستقبال: <span data-bind="hotel-phones">02-278880 | 02-278881 | 02-278882 | 02-278885 | 02-278888</span></li>
           </ul>
         </div>
       </div>
@@ -200,7 +200,7 @@
       <div class="footer-bottom">
         <div>&copy; 2026 فندق روز عدن 2 السياحي. جميع الحقوق محفوظة.</div>
         <div style="display: flex; gap: 1.5rem; align-items: center;">
-          <a href="admin/index.html">لوحة الإدارة</a>
+          <a href="admin/index.html">لوحة الإدارة (GitHub CMS)</a>
           <span>|</span>
           <span style="font-size: 0.82rem; color: #a39298;">
             تطوير وتنفيذ: <strong style="color: var(--luxury-gold-light);">برونت كمبيوتر | ProNet Computer</strong>

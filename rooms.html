@@ -24,9 +24,9 @@
   <div class="top-bar">
     <div class="container top-bar-content">
       <div class="top-bar-info">
-        <a href="tel:+967780000656"><span>📱</span> 780000656</a>
+        <a href="tel:+967780000656"><span>📱</span> <span data-bind="hotel-whatsapp">780000656</span></a>
         <a href="tel:02278880"><span>☎️</span> 02-278880</a>
-        <span>📍 العريش - ساحل أبين - جوار جولة الرحاب - عدن</span>
+        <span>📍 <span data-bind="hotel-address">العريش - ساحل أبين - جوار جولة الرحاب - عدن</span></span>
       </div>
       <div class="top-bar-actions">
         <button class="tool-btn" onclick="toggleTheme()" id="themeBtn">
@@ -46,7 +46,7 @@
       <a href="index.html" class="brand-logo">
         <img src="assets/images/logo.jpg" alt="شعار فندق روز عدن 2">
         <div class="brand-text">
-          <h1>فندق روز عدن 2</h1>
+          <h1 data-bind="hotel-name">فندق روز عدن 2</h1>
           <span>ROSE ADEN 2 HOTEL</span>
         </div>
       </a>
@@ -65,7 +65,7 @@
 
       <div class="header-tools">
         <a href="https://wa.me/967780000656" target="_blank" class="btn btn-whatsapp btn-sm">
-          <span>💬</span> واتساب: 780000656
+          <span>💬</span> واتساب: <span data-bind="hotel-whatsapp">780000656</span>
         </a>
         <button class="mobile-toggle" id="mobileToggle" aria-label="القائمة">&#9776;</button>
       </div>
@@ -84,28 +84,28 @@
 
   <section class="section">
     <div class="container">
-      <div class="rooms-grid">
+      <div class="rooms-grid" id="allRoomsGrid">
         
         <div class="room-card" id="vip-suite">
           <div class="room-card-media">
-            <img src="assets/images/suite-vip.jpg" alt="أجنحة VIP الفاخرة" loading="lazy">
+            <img src="assets/images/ros2-suite-king-blue.jpg" alt="أجنحة VIP الملكية الفاخرة" loading="lazy">
             <span class="room-badge">الأكثر فخامة</span>
           </div>
           <div class="room-card-body">
-            <h2 class="room-title">أجنحة VIP الفاخرة</h2>
+            <h2 class="room-title">أجنحة VIP الملكية الفاخرة</h2>
             <div class="room-meta">
-              <span>🛏️ سرير ملكي ماستر كينج (King Bed)</span>
+              <span>🛏️ سرير ملكي ماستر كينج (King Bed) + ركن جلوس</span>
               <span>👥 2 - 3 أشخاص</span>
             </div>
             <ul class="room-features-list">
-              <li>صالون استقبال فاخر ومستقل</li><li>إطلالة بانورامية بحرية ساحرة</li><li>أثاث ملكي عصري وديكورات إضاءة متناسقة</li><li>شاشة ذكية 4K + إنترنت فايبر فائق السرعة</li><li>حمام رخامي مجهز بأحدث التجهيزات ومستلزمات العناية</li><li>ميني بار، غلاية ومستلزمات ضيافة مجانية</li><li>تكييف مركزي متطور فائق الهدوء</li>
+              <li>سرير ماستر كينج بتصميم مخملي ملكي فاخر</li><li>ركن جلوس وأريكة استرخاء مريحة مع تسريحة ومكتب</li><li>إطلالة ساحرة وأجواء هادئة عالية الخصوصية</li><li>شاشة ذكية 4K + إنترنت فايبر فائق السرعة مجاناً</li><li>حمام رخامي مجهز بأحدث التجهيزات ومستلزمات العناية</li><li>ثلاجة ميني بار، غلاية، وضيافة ترحيبية مجانية</li><li>تكييف متطور فائق الهدوء وكهرباء 24/7</li>
             </ul>
             <div class="room-card-footer">
               <div class="room-price-box">
                 <span class="room-price-label">سعر الليلة:</span>
                 <span class="room-price-val">حسب الطلب / أسعار خاصة</span>
               </div>
-              <button onclick="bookSpecificRoom('أجنحة VIP الفاخرة')" class="btn btn-whatsapp">
+              <button onclick="bookSpecificRoom('أجنحة VIP الملكية الفاخرة')" class="btn btn-whatsapp">
                 <span>💬</span> احجز هذه الغرفة
               </button>
             </div>
@@ -114,50 +114,50 @@
         
         <div class="room-card" id="family-room">
           <div class="room-card-media">
-            <img src="assets/images/room-family.jpg" alt="الغرف العائلية الفاخرة" loading="lazy">
+            <img src="assets/images/ros2-suite-vanity-angle.jpg" alt="الغرف والأجنحة العائلية الفاخرة" loading="lazy">
             <span class="room-badge">مثالية للعائلات</span>
           </div>
           <div class="room-card-body">
-            <h2 class="room-title">الغرف العائلية الفاخرة</h2>
+            <h2 class="room-title">الغرف والأجنحة العائلية الفاخرة</h2>
             <div class="room-meta">
-              <span>🛏️ سرير مزدوج كبير + أسرة إضافية</span>
+              <span>🛏️ سرير مزدوج كبير + أسرة إضافية وجلسة عائلية</span>
               <span>👥 4 - 5 أشخاص</span>
             </div>
             <ul class="room-features-list">
-              <li>مساحات رحبة وتوزيع ذكي للخصوصية العائلية</li><li>منطقة جلوس مريحة للأطفال والعائلة</li><li>شاشات تلفاز مسطحة مع قنوات فضائية منوعة</li><li>إنترنت فايبر غير محدود فائق السرعة</li><li>خدمة غرف وتنظيف على مدار الساعة</li><li>ثلاجة، غلاية ومشروبات ترحيبية</li>
+              <li>مساحات رحبة وتوزيع ذكي يضمن راحة وخصوصية العائلة</li><li>تسريحة حديثة بثلاث مرايا ودواليب تخزين واسعة</li><li>منطقة جلوس مريحة وشاشة تلفاز ذكية بقنوات فضائية</li><li>إنترنت فايبر غير محدود فائق السرعة</li><li>خدمة غرف وتنظيف على مدار الساعة</li><li>ثلاجة خاصة وغلاية ومشروبات ترحيبية</li>
             </ul>
             <div class="room-card-footer">
               <div class="room-price-box">
                 <span class="room-price-label">سعر الليلة:</span>
                 <span class="room-price-val">أسعار تنافسية</span>
               </div>
-              <button onclick="bookSpecificRoom('الغرف العائلية الفاخرة')" class="btn btn-whatsapp">
+              <button onclick="bookSpecificRoom('الغرف والأجنحة العائلية الفاخرة')" class="btn btn-whatsapp">
                 <span>💬</span> احجز هذه الغرفة
               </button>
             </div>
           </div>
         </div>
         
-        <div class="room-card" id="twin-room">
+        <div class="room-card" id="twin-room-deluxe">
           <div class="room-card-media">
-            <img src="assets/images/room-twin.jpg" alt="غرف سريرين (Twin Room)" loading="lazy">
-            <span class="room-badge">الأكثر طلباً للأصدقاء ورجال الأعمال</span>
+            <img src="assets/images/ros2-room-twin-blue.jpg" alt="غرف سريرين ديلوكس (Deluxe Twin)" loading="lazy">
+            <span class="room-badge">الأكثر طلباً لرجال الأعمال</span>
           </div>
           <div class="room-card-body">
-            <h2 class="room-title">غرف سريرين (Twin Room)</h2>
+            <h2 class="room-title">غرف سريرين ديلوكس (Deluxe Twin)</h2>
             <div class="room-meta">
-              <span>🛏️ سريران منفصلان مريحان من أرقى الماركات</span>
-              <span>👥 شخصان</span>
+              <span>🛏️ سريران منفصلان مريحان + أريكة جلوس جانبية</span>
+              <span>👥 شخصان - 3 أشخاص</span>
             </div>
             <ul class="room-features-list">
-              <li>مراتب طبية مريحة لضمان أقصى درجات الاسترخاء</li><li>مكتب عمل مناسب لرجال الأعمال ومندوبي الشركات</li><li>واي فاي فايبر مجاني وسريع جداً</li><li>تكييف اسبليت هادئ</li><li>حمام خاص متكامل الخدمات</li>
+              <li>سريران منفصلان بمراتب طبية فندقية فائقة الراحة</li><li>أريكة جلوس جانبية مريحة وأرضيات رخامية لامعة</li><li>شاشة ذكية مسطحة وثلاجة ميني بار خاصة</li><li>واي فاي فايبر مجاني وسريع جداً لرجال الأعمال</li><li>تكييف اسبليت هادئ وحمام خاص متكامل</li>
             </ul>
             <div class="room-card-footer">
               <div class="room-price-box">
                 <span class="room-price-label">سعر الليلة:</span>
                 <span class="room-price-val">أسعار مميزة</span>
               </div>
-              <button onclick="bookSpecificRoom('غرف سريرين (Twin Room)')" class="btn btn-whatsapp">
+              <button onclick="bookSpecificRoom('غرف سريرين ديلوكس (Deluxe Twin)')" class="btn btn-whatsapp">
                 <span>💬</span> احجز هذه الغرفة
               </button>
             </div>
@@ -166,17 +166,17 @@
         
         <div class="room-card" id="triple-room">
           <div class="room-card-media">
-            <img src="assets/images/room-triple.jpg" alt="غرف 3 أسرة واسعة (Triple Room)" loading="lazy">
+            <img src="assets/images/ros2-room-triple-blue.jpg" alt="غرف 3 أسرة واسعة (Triple Room)" loading="lazy">
             <span class="room-badge">سعة إضافية وراحة متكاملة</span>
           </div>
           <div class="room-card-body">
             <h2 class="room-title">غرف 3 أسرة واسعة (Triple Room)</h2>
             <div class="room-meta">
               <span>🛏️ 3 أسرة مفردة مجهزة بمفارش قطنية فاخرة</span>
-              <span>👥 3 أشخاص</span>
+              <span>👥 3 - 4 أشخاص</span>
             </div>
             <ul class="room-features-list">
-              <li>تصميم داخلي واسع يتيح سهولة الحركة</li><li>دواليب ملابس رحبة وخزنة أمانات</li><li>شاشة LED ذكية وإنترنت فايبر</li><li>خدمة غرف متواصلة 24 ساعة</li>
+              <li>3 أسرة فندقية مريحة بتصميم مخملي أزرق عصري</li><li>مساحة داخلية واسعة تتيح سهولة الحركة والاسترخاء</li><li>ثلاجة تبريد، شاشة ذكية، وإنترنت فايبر مجاني</li><li>دواليب ملابس رحبة وخدمة غرف 24 ساعة</li>
             </ul>
             <div class="room-card-footer">
               <div class="room-price-box">
@@ -192,24 +192,24 @@
         
         <div class="room-card" id="vip-tirmanah">
           <div class="room-card-media">
-            <img src="assets/images/tirmanah-vip.jpg" alt="طيرمانات V I P واستقبال الضيوف" loading="lazy">
-            <span class="room-badge">أعلى إطلالة بحرية في العريش</span>
+            <img src="assets/images/ros2-vip-majlis.jpg" alt="طيرمانات ومجالس VIP لاستقبال الضيوف" loading="lazy">
+            <span class="room-badge">مجالس ضيافة وإطلالة بحرية</span>
           </div>
           <div class="room-card-body">
-            <h2 class="room-title">طيرمانات V I P واستقبال الضيوف</h2>
+            <h2 class="room-title">طيرمانات ومجالس VIP لاستقبال الضيوف</h2>
             <div class="room-meta">
-              <span>🛏️ مجلس يمني ملكي أصيل مع جلسات راقية</span>
-              <span>👥 استقبال ومجالس ضيوف خاصة</span>
+              <span>🛏️ مجلس عربي ويمني ملكي فسيح بأرقى المفروشات</span>
+              <span>👥 يتسع لاستقبال الضيوف واللقاءات الخاصة</span>
             </div>
             <ul class="room-features-list">
-              <li>إطلالة بانورامية خيالية مفتوحة على شاطئ أبين ومدينة عدن</li><li>طراز معماري أصيل يمزج بين التراث اليمني والأناقة العصرية</li><li>مجهزة بكافة شاشات العرض والخدمات الترفيهية والضيافة</li><li>مخصصة للشخصيات الهامة، كبار الضيوف، واللقاءات الخاصة</li>
+              <li>مجلس فسيح ومفروش بأحدث الجلسات العربية المريحة</li><li>إطلالة بانورامية على ساحل أبين وأفق مدينة عدن</li><li>تكييف مركزي بارد، شاشات عرض، وإنترنت فايبر</li><li>مثالي لاستقبال كبار الضيوف، رجال الأعمال، والمقيل اليمني الفاخر</li>
             </ul>
             <div class="room-card-footer">
               <div class="room-price-box">
                 <span class="room-price-label">سعر الليلة:</span>
                 <span class="room-price-val">حسب الحجز والمناسبة</span>
               </div>
-              <button onclick="bookSpecificRoom('طيرمانات V I P واستقبال الضيوف')" class="btn btn-whatsapp">
+              <button onclick="bookSpecificRoom('طيرمانات ومجالس VIP لاستقبال الضيوف')" class="btn btn-whatsapp">
                 <span>💬</span> احجز هذه الغرفة
               </button>
             </div>
@@ -230,7 +230,7 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-col footer-about">
-          <h4>فندق روز عدن 2 السياحي</h4>
+          <h4 data-bind="hotel-name">فندق روز عدن 2 السياحي</h4>
           <p>
             حيث يلتقي سحر البحر وأمواج ساحل أبين بالفخامة والخدمة الفندقية المتكاملة. خياركم الأول للإقامة السياحية، العائلية، واستضافة المؤتمرات وورش العمل في العاصمة عدن.
           </p>
@@ -248,7 +248,7 @@
             <li><a href="rooms.html">الغرف والأجنحة</a></li>
             <li><a href="vip-suites.html">طيرمانات وأجنحة VIP</a></li>
             <li><a href="training-hall.html">قاعة التدريب والمؤتمرات</a></li>
-            <li><a href="gallery.html">معرض الصور</a></li>
+            <li><a href="gallery.html">معرض الصور (21 لقطة)</a></li>
           </ul>
         </div>
 
@@ -267,10 +267,10 @@
         <div class="footer-col footer-contact">
           <h4>معلومات الاتصال</h4>
           <ul>
-            <li><span>📍</span> العريش - ساحل أبين - جوار جولة الرحاب - عدن</li>
-            <li><span>📱</span> واتساب وجوال: <a href="https://wa.me/967780000656">780000656</a></li>
+            <li><span>📍</span> <span data-bind="hotel-address">العريش - ساحل أبين - جوار جولة الرحاب - عدن</span></li>
+            <li><span>📱</span> واتساب وجوال: <a href="https://wa.me/967780000656" data-bind="hotel-whatsapp">780000656</a></li>
             <li><span>☎️</span> الهاتف الأرضي: <a href="tel:02278880">02-278880</a></li>
-            <li><span>☎️</span> خطوط إضافية: 02-278881 | 02-278882 | 02-278885 | 02-278888</li>
+            <li><span>☎️</span> خطوط الاستقبال: <span data-bind="hotel-phones">02-278880 | 02-278881 | 02-278882 | 02-278885 | 02-278888</span></li>
           </ul>
         </div>
       </div>
@@ -278,7 +278,7 @@
       <div class="footer-bottom">
         <div>&copy; 2026 فندق روز عدن 2 السياحي. جميع الحقوق محفوظة.</div>
         <div style="display: flex; gap: 1.5rem; align-items: center;">
-          <a href="admin/index.html">لوحة الإدارة</a>
+          <a href="admin/index.html">لوحة الإدارة (GitHub CMS)</a>
           <span>|</span>
           <span style="font-size: 0.82rem; color: #a39298;">
             تطوير وتنفيذ: <strong style="color: var(--luxury-gold-light);">برونت كمبيوتر | ProNet Computer</strong>
