@@ -1,0 +1,29 @@
+{
+  "title_ar": "قاعة التدريب الحديثة الكبرى والمؤتمرات",
+  "title_en": "Grand Training & Conference Hall",
+  "badge_ar": "مجهزة بالكامل للمنظمات والشركات",
+  "badge_en": "Fully Equipped for NGOs & Enterprises",
+  "capacity": "تتسع لأكثر من 50 إلى 70 مشاركاً بأريحية تامة",
+  "capacity_en": "Accommodates 50 to 70 participants comfortably",
+  "image_main": "assets/images/training-hall.jpg",
+  "image_screen": "assets/images/smart-screen.jpg",
+  "image_dining": "assets/images/dining-hall.jpg",
+  "specs_ar": [
+    "شاشة ذكية تفاعلية عملاقة مع أنظمة عرض رقمية فائقة الدقة",
+    "أنظمة صوتية لاسلكية متطورة تضمن وضوح الصوت في كل زوايا القاعة",
+    "تكييف هوائي قوي صامت يضمن بيئة تدريب مريحة طوال ساعات العمل",
+    "قاعة مخصصة ومستقلة للوجبات واستراحات القهوة (Coffee Breaks)",
+    "إنترنت فايبر عالي السرعة لدعم ورش العمل الافتراضية واجتماعات Zoom",
+    "ترتيب مرن للطاولات والمقاعد (حذوة فرس U-Shape، قاعة صفية، أو مسرح)",
+    "خدمات التصوير والتوثيق والطباعة السريعة لمواد التدريب"
+  ],
+  "specs_en": [
+    "Giant interactive smart display with ultra-high resolution",
+    "State-of-the-art wireless sound system covering every corner",
+    "Silent high-capacity air conditioning for maximum comfort",
+    "Dedicated separate hall for lunches and coffee breaks",
+    "Ultra-fast fiber internet supporting virtual workshops & Zoom calls",
+    "Flexible seating layouts (U-shape, classroom, banquet, or theater)",
+    "Printing, documentation, and stationary support services"
+  ]
+}

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة تحكم فندق روز عدن 2 | Rose Aden 2 CMS</title>
+  <link rel="icon" type="image/jpeg" href="../assets/images/favicon.jpg">
+  
+  <!-- Google Fonts: Cairo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="admin-brand">
+      <img src="../assets/images/logo.jpg" alt="شعار فندق روز عدن 2">
+      <div>
+        <h2>روز عدن 2</h2>
+        <span>لوحة التحكم وGitHub</span>
+      </div>
+    </div>
+
+    <nav class="admin-nav">
+      <div class="admin-nav-item active" data-tab="tab-github" onclick="switchTab('tab-github')">
+        <span>⚙️</span> إعدادات مستودع GitHub
+      </div>
+      <div class="admin-nav-item" data-tab="tab-hotel" onclick="switchTab('tab-hotel')">
+        <span>🏨</span> بيانات الفندق والاتصال
+      </div>
+      <div class="admin-nav-item" data-tab="tab-rooms" onclick="switchTab('tab-rooms')">
+        <span>🛏️</span> إدارة الغرف والأسعار
+      </div>
+      <div class="admin-nav-item" data-tab="tab-hall" onclick="switchTab('tab-hall')">
+        <span>🎓</span> قاعة التدريب والمؤتمرات
+      </div>
+      <div class="admin-nav-item" data-tab="tab-publish" onclick="switchTab('tab-publish')">
+        <span>🚀</span> النشر والحفظ على GitHub
+      </div>
+    </nav>
+
+    <div style="padding: 1.5rem; border-top: 1px solid var(--admin-border); font-size: 0.82rem; color: var(--admin-muted);">
+      <a href="../index.html" target="_blank" style="color: var(--admin-gold); text-decoration: none; display: flex; align-items: center; gap: 0.4rem;">
+        <span>🌐</span> معاينة الموقع الرئيسي &larr;
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <h1 style="font-size: 1.3rem; font-weight: 800; color: #ffffff;">لوحة إدارة المحتوى والمزامنة المباشرة</h1>
+      <div class="sync-status">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="statusText">جاري فحص الاتصال بـ GitHub...</span>
+      </div>
+    </div>
+
+    <div class="admin-content">
+
+      <!-- TAB 1: GitHub Settings -->
+      <section class="tab-pane active" id="tab-github">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h2 class="admin-card-title"><span>⚙️</span> إعدادات الربط المباشر مع مستودع GitHub</h2>
+            <button type="button" class="admin-btn admin-btn-outline" onclick="testGitHubConnection()">فحص الاتصال</button>
+          </div>
+
+          <div id="ghConnAlert" class="alert-box alert-info">
+            💡 هذه اللوحة تتيح لك تعديل أسعار الغرف وبيانات الفندق مباشرة من المتصفح وحفظها في مستودع GitHub الخاص بك بنقرة واحدة دون الحاجة لأي سيرفر خارجي!
+          </div>
+
+          <form onsubmit="saveGitHubConfig(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="ghOwner">اسم المستخدم أو المنظمة في GitHub (Owner)</label>
+                <input type="text" id="ghOwner" class="admin-input" placeholder="مثال: Ammar-Alasadi" required>
+              </div>
+              <div class="form-group">
+                <label for="ghRepo">اسم المستودع (Repository Name)</label>
+                <input type="text" id="ghRepo" class="admin-input" placeholder="مثال: rose-aden-hotel" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="ghBranch">الفرع الرئيسي للنشر (Branch)</label>
+                <input type="text" id="ghBranch" class="admin-input" value="main" placeholder="main أو master أو gh-pages">
+              </div>
+              <div class="form-group">
+                <label for="ghToken">رمز الوصول الشخصي (Personal Access Token - PAT)</label>
+                <input type="password" id="ghToken" class="admin-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" required>
+                <small style="color: var(--admin-muted); display: block; margin-top: 0.35rem;">
+                  يمكنك إنشاء رمز برمجيات مجاني من إعدادات حسابك في GitHub: Settings &rarr; Developer Settings &rarr; Personal Access Tokens مع تفعيل صلاحية (repo).
+                </small>
+              </div>
+            </div>
+
+            <button type="submit" class="admin-btn admin-btn-gold">
+              <span>💾</span> حفظ إعدادات GitHub في المتصفح
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <!-- TAB 2: Hotel Info -->
+      <section class="tab-pane" id="tab-hotel">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h2 class="admin-card-title"><span>🏨</span> البيانات العامة ومعلومات الاتصال</h2>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="hotelNameAr">اسم الفندق (عربي)</label>
+              <input type="text" id="hotelNameAr" class="admin-input">
+            </div>
+            <div class="form-group">
+              <label for="hotelSloganAr">الشعار اللفظي (Slogan)</label>
+              <input type="text" id="hotelSloganAr" class="admin-input">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="hotelAddressAr">العنوان التفصيلي</label>
+            <input type="text" id="hotelAddressAr" class="admin-input">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="hotelWa">رقم الواتساب الرئيسي للحجوزات</label>
+              <input type="text" id="hotelWa" class="admin-input">
+            </div>
+            <div class="form-group">
+              <label for="hotelPhones">هواتف الاستقبال الأرضية (مفصولة بـ |)</label>
+              <input type="text" id="hotelPhones" class="admin-input">
+            </div>
+          </div>
+
+          <button type="button" class="admin-btn admin-btn-primary" onclick="switchTab('tab-publish')">
+            <span>التالي:</span> مراجعة ونشر التعديلات &larr;
+          </button>
+        </div>
+      </section>
+
+      <!-- TAB 3: Rooms -->
+      <section class="tab-pane" id="tab-rooms">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h2 class="admin-card-title"><span>🛏️</span> إدارة الغرف والأسعار والمميزات</h2>
+          </div>
+
+          <p style="color: var(--admin-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">
+            قم بتعديل أسعار الغرف أو مسمياتها وشاراتها الترويجية أدناه، ثم انتقل لتبويب النشر لحفظها مباشرة على GitHub.
+          </p>
+
+          <div id="roomsListContainer">
+            <!-- Dynamic Rooms -->
+          </div>
+
+          <button type="button" class="admin-btn admin-btn-primary" onclick="switchTab('tab-publish')">
+            <span>التالي:</span> مراجعة ونشر التعديلات &larr;
+          </button>
+        </div>
+      </section>
+
+      <!-- TAB 4: Hall -->
+      <section class="tab-pane" id="tab-hall">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h2 class="admin-card-title"><span>🎓</span> قاعة التدريب والفعاليات</h2>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="hallTitleAr">عنوان القاعة</label>
+              <input type="text" id="hallTitleAr" class="admin-input">
+            </div>
+            <div class="form-group">
+              <label for="hallCapacity">السعة الاستيعابية</label>
+              <input type="text" id="hallCapacity" class="admin-input">
+            </div>
+          </div>
+
+          <button type="button" class="admin-btn admin-btn-primary" onclick="switchTab('tab-publish')">
+            <span>التالي:</span> مراجعة ونشر التعديلات &larr;
+          </button>
+        </div>
+      </section>
+
+      <!-- TAB 5: Publish to GitHub -->
+      <section class="tab-pane" id="tab-publish">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h2 class="admin-card-title"><span>🚀</span> نشر التعديلات وتحديث موقع GitHub Pages</h2>
+          </div>
+
+          <div class="alert-box alert-info">
+            عند النقر على زر النشر، سيقوم النظام بعمل Commit تلقائي إلى ملفات <code>data/*.json</code> في مستودع GitHub الخاص بك. سيقوم GitHub Pages تلقائياً بإعادة بناء ونشر الموقع خلال 30 إلى 60 ثانية!
+          </div>
+
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
+            <button type="button" id="publishBtn" class="admin-btn admin-btn-gold" style="font-size: 1.05rem; padding: 0.85rem 2rem;" onclick="publishToGitHub()">
+              <span>🚀</span> حفظ ونشر التعديلات على GitHub الآن
+            </button>
+            <button type="button" class="admin-btn admin-btn-outline" onclick="downloadJsonPackage()">
+              <span>📥</span> تحميل ملفات JSON المعدلة يدوياً
+            </button>
+          </div>
+
+          <div id="publishLog" class="alert-box alert-success" style="display: none; line-height: 1.8;">
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>

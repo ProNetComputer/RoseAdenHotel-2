@@ -1,0 +1,80 @@
+/* ==========================================================================
+   Rose Aden 2 Tourist Hotel - Design System Tokens & Variables
+   فندق روز عدن 2 السياحي - هوية التصميم والألوان الرسمية
+   ========================================================================== */
+
+:root {
+  /* Brand Identity Colors */
+  --rose-primary: #e22d46;
+  --rose-dark: #be123c;
+  --rose-light: #fff1f2;
+  --rose-glow: rgba(226, 45, 70, 0.4);
+  --luxury-gold: #d4af37;
+  --luxury-gold-light: #f5cd5f;
+  --luxury-gold-glow: rgba(212, 175, 55, 0.35);
+  --espresso-dark: #1f0b12;
+  --whatsapp-green: #25d366;
+  --whatsapp-hover: #1ebd5a;
+
+  /* Typography */
+  --font-arabic: 'Cairo', system-ui, -apple-system, sans-serif;
+  --font-latin: 'Poppins', 'Segoe UI', sans-serif;
+
+  /* Layout & Geometry */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
+  --radius-full: 9999px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --container-max: 1240px;
+}
+
+/* Dark Theme (Royal Velvet Rose - Default) */
+html[data-theme="dark"] {
+  --bg-body: #0d0407;
+  --bg-surface: #17070d;
+  --bg-surface-elevated: #220b13;
+  --bg-card: rgba(26, 9, 15, 0.88);
+  --bg-card-hover: rgba(38, 13, 22, 0.95);
+  --bg-glass: rgba(13, 4, 7, 0.85);
+  --header-glass: rgba(13, 4, 7, 0.92);
+
+  --text-primary: #ffffff;
+  --text-secondary: #e2d9dc;
+  --text-muted: #a39298;
+
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-accent: rgba(226, 45, 70, 0.35);
+  --border-gold: rgba(212, 175, 55, 0.3);
+
+  --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.75);
+
+  --hero-overlay: linear-gradient(180deg, rgba(13, 4, 7, 0.65) 0%, rgba(13, 4, 7, 0.9) 100%);
+}
+
+/* Light Theme (Pearl Luxury Rose) */
+html[data-theme="light"] {
+  --bg-body: #fbf8f9;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-hover: #ffffff;
+  --bg-glass: rgba(255, 255, 255, 0.9);
+  --header-glass: rgba(255, 255, 255, 0.95);
+
+  --text-primary: #190a10;
+  --text-secondary: #47323a;
+  --text-muted: #735e66;
+
+  --border-subtle: rgba(0, 0, 0, 0.07);
+  --border-accent: rgba(226, 45, 70, 0.25);
+  --border-gold: rgba(212, 175, 55, 0.35);
+
+  --shadow-sm: 0 4px 12px rgba(226, 45, 70, 0.06);
+  --shadow-md: 0 10px 25px rgba(226, 45, 70, 0.1);
+  --shadow-lg: 0 20px 40px rgba(226, 45, 70, 0.14);
+
+  --hero-overlay: linear-gradient(180deg, rgba(23, 7, 13, 0.75) 0%, rgba(13, 4, 7, 0.92) 100%);
+}

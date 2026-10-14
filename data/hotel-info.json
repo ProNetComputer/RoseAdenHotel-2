@@ -1,0 +1,47 @@
+{
+  "name_ar": "فندق روز عدن 2 السياحي",
+  "name_en": "Rose Aden 2 Tourist Hotel",
+  "slogan_ar": "حيث يلتقي البحر بالفخامة... تبدأ أجمل لحظاتك",
+  "slogan_en": "Where the Sea Meets Luxury... Your Best Moments Begin",
+  "tagline_ar": "صرح فندقي مضاء بأقواس معمارية فاخرة وإطلالة بحرية ساحرة",
+  "tagline_en": "An illuminated architectural masterpiece with sea views and premier hospitality",
+  "city": "عدن - اليمن",
+  "address_ar": "العريش - ساحل أبين - جوار جولة الرحاب - عدن",
+  "address_en": "Al-Arish, Abyan Beach, Near Al-Rehab Roundabout, Aden, Yemen",
+  "whatsapp": "780000656",
+  "whatsapp_intl": "+967780000656",
+  "whatsapp_link": "https://wa.me/967780000656",
+  "phones": [
+    "02-278880",
+    "02-278881",
+    "02-278882",
+    "02-278885",
+    "02-278888"
+  ],
+  "mobile": "780000656",
+  "email": "info@roseadenhotel.com",
+  "check_in": "14:00",
+  "check_out": "12:00",
+  "location_features": [
+    {
+      "ar": "دقيقتان عن ساحل أبين",
+      "en": "2 minutes from Abyan Coast"
+    },
+    {
+      "ar": "5 دقائق من مطار عدن الدولي",
+      "en": "5 minutes from Aden International Airport"
+    },
+    {
+      "ar": "خدمة التوصيل من وإلى المطار مجاناً للنزلاء",
+      "en": "Complimentary airport pickup/drop-off for guests"
+    },
+    {
+      "ar": "موقفان فسيحان للسيارات بحراسة أمنية وكاميرات 24/7",
+      "en": "Two secure parking lots with 24/7 surveillance"
+    }
+  ],
+  "tech_partner": {
+    "name": "برونت كمبيوتر | ProNet Computer",
+    "contact": "775043020 - 02-241004"
+  }
+}
