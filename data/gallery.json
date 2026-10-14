@@ -6,12 +6,6 @@
     "src": "assets/images/ros2-exterior-night-neon.jpg"
   },
   {
-    "title": "مبنى فندق روز عدن 2 السياحي بالأقواس المعمارية ليلاً",
-    "category": "exterior",
-    "group_ar": "الواجهة والمبنى الخارجي",
-    "src": "assets/images/building-night.jpg"
-  },
-  {
     "title": "صرح فندق روز عدن 2 السياحي في العريش نهاراً",
     "category": "exterior",
     "group_ar": "الواجهة والمبنى الخارجي",
@@ -61,8 +55,8 @@
   },
   {
     "title": "أجنحة VIP الرئاسية متكاملة التجهيزات",
-    "category": "vip",
-    "group_ar": "أجنحة وطيرمانات VIP",
+    "category": "rooms",
+    "group_ar": "الغرف والأجنحة",
     "src": "assets/images/suite-vip.jpg"
   },
   {
