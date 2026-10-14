@@ -1,1 +1,29 @@
-null
+[
+  {
+    "name": "المهندس أحمد باحبيب",
+    "name_en": "Eng. Ahmed Bahabib",
+    "role": "نزيل جناح VIP ورجل أعمال",
+    "role_en": "VIP Guest & Businessman",
+    "rating": 5,
+    "comment_ar": "من أفضل وأرقى الفنادق في عدن؛ النظافة استثنائية، والأثاث فاخر وجديد، والخدمة سريعة جداً. موقع الفندق في العريش هادئ وقريب من المطار والساحل.",
+    "comment_en": "One of the finest hotels in Aden! Exceptional cleanliness, brand-new luxury furniture, and rapid service. Peaceful location near the airport and beach."
+  },
+  {
+    "name": "د. سارة المنصوري",
+    "name_en": "Dr. Sara Al-Mansouri",
+    "role": "منسقة برامج تدريبية بمنظمة دولية",
+    "role_en": "Training Coordinator, INGO",
+    "rating": 5,
+    "comment_ar": "أقمنا ورشة عمل تدريبية في قاعة المؤتمرات بالفندق؛ التجهيزات والشاشة الذكية والصوتيات كانت على أعلى مستوى، وصالة الوجبات ممتازة وفريق العمل متعاون للغاية.",
+    "comment_en": "We held a multi-day training workshop in the conference hall; the smart screen, audio system, and dining area were outstanding and the staff was extremely helpful."
+  },
+  {
+    "name": "الأستاذ فؤاد الشميري",
+    "name_en": "Mr. Fouad Al-Shamiri",
+    "role": "نزيل برفقة العائلة",
+    "role_en": "Family Guest",
+    "rating": 5,
+    "comment_ar": "تجربة رائعة مع العائلة في الغرف الفسيحة. التكييف ممتاز والكهرباء لم تنقطع نهائياً، والمواقف واسعة وآمنة. أنصح به بشدة لكل زائر لمدينة عدن.",
+    "comment_en": "A wonderful family stay! Spacious rooms, continuous silent AC, 24/7 power, and secure parking. Highly recommended for anyone visiting Aden."
+  }
+]

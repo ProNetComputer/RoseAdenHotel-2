@@ -923,26 +923,32 @@
     try {
       logTerminal('> نشر data/theme.json (الهوية والألوان)...');
       await commitTextFileToGitHub('data/theme.json', JSON.stringify(themeData, null, 2), 'Sync theme.json');
+      await sleep(800);
       logTerminal('✓ تم تحديث data/theme.json.');
 
       logTerminal('> نشر data/hotel-info.json (بيانات الفندق)...');
       await commitTextFileToGitHub('data/hotel-info.json', JSON.stringify(hotelData, null, 2), 'Sync hotel-info.json');
+      await sleep(800);
       logTerminal('✓ تم تحديث data/hotel-info.json.');
 
       logTerminal('> نشر data/rooms.json (الغرف والأسعار)...');
       await commitTextFileToGitHub('data/rooms.json', JSON.stringify(roomsData, null, 2), 'Sync rooms.json');
+      await sleep(800);
       logTerminal('✓ تم تحديث data/rooms.json.');
 
       logTerminal('> نشر data/hall.json (قاعة المؤتمرات)...');
       await commitTextFileToGitHub('data/hall.json', JSON.stringify(hallData, null, 2), 'Sync hall.json');
+      await sleep(800);
       logTerminal('✓ تم تحديث data/hall.json.');
 
       logTerminal('> نشر data/reviews.json (التقييمات)...');
       await commitTextFileToGitHub('data/reviews.json', JSON.stringify(reviewsData, null, 2), 'Sync reviews.json');
+      await sleep(800);
       logTerminal('✓ تم تحديث data/reviews.json.');
 
       logTerminal('> نشر data/gallery.json (صور المعرض)...');
       await commitTextFileToGitHub('data/gallery.json', JSON.stringify(galleryData, null, 2), 'Sync gallery.json');
+      await sleep(800);
       logTerminal('✓ تم تحديث data/gallery.json.');
 
       logTerminal(`<br><span style="color:#10b981; font-weight:bold;">🎉 اكتملت المزامنة بنجاح 100%!</span>`);
@@ -963,29 +969,39 @@
   }
 
   // GitHub API Binary & Text Committer
+  // Robust GitHub API Helper: Fetch fresh SHA with strict cache-busting
+  async function getFreshFileSha(path) {
+    const url = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${path}?ref=${encodeURIComponent(config.branch)}&_cb=${Date.now()}`;
+    try {
+      const res = await fetch(url, {
+        cache: 'no-store',
+        headers: {
+          'Authorization': `Bearer ${config.token}`,
+          'Accept': 'application/vnd.github.v3+json',
+          'Cache-Control': 'no-cache, no-store, max-age=0, must-revalidate',
+          'Pragma': 'no-cache'
+        }
+      });
+      if (res.ok) {
+        const fileJson = await res.json();
+        return fileJson.sha || null;
+      }
+    } catch (e) {
+      // file might be newly created
+    }
+    return null;
+  }
+
   async function commitTextFileToGitHub(path, content, message) {
     const base64 = btoa(unescape(encodeURIComponent(content)));
     return commitBinaryFileToGitHub(path, base64, message);
   }
 
-  async function commitBinaryFileToGitHub(path, base64Content, message) {
+  async function commitBinaryFileToGitHub(path, base64Content, message, retryCount = 0) {
     const url = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${path}`;
     
-    let sha = null;
-    try {
-      const getRes = await fetch(`${url}?ref=${config.branch}`, {
-        headers: {
-          'Authorization': `Bearer ${config.token}`,
-          'Accept': 'application/vnd.github.v3+json'
-        }
-      });
-      if (getRes.ok) {
-        const fileJson = await getRes.json();
-        sha = fileJson.sha;
-      }
-    } catch (e) {
-      // file may be new
-    }
+    // Always get the absolute latest SHA directly from GitHub without any browser caching
+    const sha = await getFreshFileSha(path);
 
     const body = {
       message: message,
@@ -996,20 +1012,31 @@
 
     const putRes = await fetch(url, {
       method: 'PUT',
+      cache: 'no-store',
       headers: {
         'Authorization': `Bearer ${config.token}`,
         'Content-Type': 'application/json',
-        'Accept': 'application/vnd.github.v3+json'
+        'Accept': 'application/vnd.github.v3+json',
+        'Cache-Control': 'no-cache'
       },
       body: JSON.stringify(body)
     });
 
     if (!putRes.ok) {
       const err = await putRes.json();
+      // Auto-retry on 409 SHA conflict up to 3 times with exponential backoff
+      if (putRes.status === 409 && retryCount < 3) {
+        console.warn(`409 Conflict on ${path}, retrying with fresh SHA (attempt ${retryCount + 1})...`);
+        await new Promise(r => setTimeout(r, 1200 * (retryCount + 1)));
+        return commitBinaryFileToGitHub(path, base64Content, message, retryCount + 1);
+      }
       throw new Error(err.message || 'فشل إرسال الملف إلى GitHub');
     }
     return await putRes.json();
   }
+
+  // Delay helper
+  const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
   // Color math
   function darkenColor(hex) {

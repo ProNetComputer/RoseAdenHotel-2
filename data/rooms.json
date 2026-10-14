@@ -125,14 +125,14 @@
     "title_ar": "طيرمانات V I P واستقبال الضيوف",
     "title_en": "VIP Penthouse & Hospitality Lounge",
     "badge_ar": "أعلى إطلالة بحرية في العريش",
-    "badge_en": "Special",
+    "badge_en": "Top Sea View & Traditional Luxury",
     "price_per_night": "حسب الحجز والمناسبة",
-    "price_en": "Special Rate",
+    "price_en": "Upon Reservation",
     "beds_ar": "مجلس يمني ملكي أصيل مع جلسات راقية",
-    "beds_en": "Comfortable Bed",
+    "beds_en": "Royal Heritage Lounge & Salon",
     "capacity_ar": "استقبال ومجالس ضيوف خاصة",
-    "capacity_en": "2 Guests",
-    "image": "assets/images/room-1791954116119.jpg",
+    "capacity_en": "Exclusive Private Hospitality",
+    "image": "assets/images/tirmanah-vip.jpg",
     "features_ar": [
       "إطلالة بانورامية خيالية مفتوحة على شاطئ أبين ومدينة عدن",
       "طراز معماري أصيل يمزج بين التراث اليمني والأناقة العصرية",
@@ -140,9 +140,10 @@
       "مخصصة للشخصيات الهامة، كبار الضيوف، واللقاءات الخاصة"
     ],
     "features_en": [
-      "Silent Air Conditioning",
-      "Smart Screen TV",
-      "Free Fiber Wi-Fi"
+      "Breathtaking open panoramic view of Abyan coast & Aden",
+      "Authentic architectural design blending heritage with modern luxury",
+      "Equipped with entertainment displays and hospitality services",
+      "Designed for VIP guests, executives, and exclusive gatherings"
     ]
   }
 ]
