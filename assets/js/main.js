@@ -111,7 +111,223 @@
 
   // Initialize
   document.addEventListener('DOMContentLoaded', () => {
+    initHeroRandomCarousel();
     applyTheme(currentTheme);
     loadDynamicThemeConfig();
   });
+
+  // ==========================================
+  
+
+  // ==============================================================
+  // Smart Randomized Hero Gallery Carousel Controller
+  // محرك السلايدر العشوائي التلقائي لجميع محتويات المعرض
+  // ==============================================================
+  async function initHeroRandomCarousel() {
+    const track = document.getElementById('heroCarouselTrack');
+    const dotsContainer = document.getElementById('heroCarouselDots');
+    const prevBtn = document.getElementById('carPrevBtn');
+    const nextBtn = document.getElementById('carNextBtn');
+    const box = document.getElementById('heroCarouselBox');
+    const titleEl = document.getElementById('carouselActiveTitle');
+    const counterEl = document.getElementById('carouselActiveCounter');
+    const categoryPill = document.getElementById('carouselCategoryPill');
+    const progressFill = document.getElementById('carouselProgressFill');
+
+    if (!track) return;
+
+    let items = [];
+    let currentIndex = 0;
+    let autoPlayTimer = null;
+    let progressTimer = null;
+    const slideDuration = 4000; // 4 seconds per slide
+    const progressInterval = 50;
+
+    const categoryArabicNames = {
+      'exterior': '🏛️ الواجهة والمبنى الخارجي',
+      'rooms': '🛏️ الغرف والأجنحة الفندقية',
+      'vip': '👑 طيرمانات وأجنحة VIP الملكية',
+      'halls': '🎓 قاعات التدريب والفعاليات والوجبات',
+      'lobby': '🛎️ صالة الاستقبال واللوبي الفاخر'
+    };
+
+    // 1. Fetch gallery items
+    try {
+      const res = await fetch('data/gallery.json');
+      if (res.ok) {
+        items = await res.json();
+      }
+    } catch (e) {
+      console.warn('Could not load gallery.json:', e);
+    }
+
+    if (!items || items.length === 0) return;
+
+    // 2. Fisher-Yates Shuffle for true random order on each page visit
+    items = shuffleArray([...items]);
+
+    // 3. Render Slides in Track
+    track.innerHTML = items.map((slide, idx) => `
+      <div class="hero-car-slide ${idx === 0 ? 'active' : ''}">
+        <img src="${slide.src}" alt="${slide.title || 'فندق روز عدن 2'}" loading="${idx === 0 ? 'eager' : 'lazy'}" onerror="this.src='assets/images/building-day.jpg'">
+        <div class="hero-slide-overlay">
+          <div class="hero-slide-caption">
+            <!-- Overlay caption for high-contrast mobile view -->
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    // 4. Render Dots
+    if (dotsContainer) {
+      dotsContainer.innerHTML = items.map((_, idx) => `
+        <button class="hero-car-dot ${idx === 0 ? 'active' : ''}" data-idx="${idx}" aria-label="صورة ${idx + 1}"></button>
+      `).join('');
+
+      dotsContainer.querySelectorAll('.hero-car-dot').forEach(dot => {
+        dot.addEventListener('click', (e) => {
+          const idx = parseInt(e.target.getAttribute('data-idx'), 10);
+          goToSlide(idx);
+          resetAutoPlay();
+        });
+      });
+    }
+
+    const slideEls = track.querySelectorAll('.hero-car-slide');
+
+    // 5. Update Carousel View
+    function updateCarousel() {
+      const isRtl = document.documentElement.dir === 'rtl';
+      const offset = currentIndex * 100;
+      track.style.transform = isRtl ? `translateX(${offset}%)` : `translateX(-${offset}%)`;
+
+      // Active slide styling
+      slideEls.forEach((s, idx) => {
+        if (idx === currentIndex) s.classList.add('active');
+        else s.classList.remove('active');
+      });
+
+      // Update active text and badge
+      const curItem = items[currentIndex];
+      if (curItem) {
+        if (titleEl) titleEl.textContent = curItem.title || 'فندق روز عدن 2';
+        if (categoryPill) categoryPill.textContent = categoryArabicNames[curItem.category] || 'لقطة مميزة';
+        if (counterEl) counterEl.textContent = `لقطة رقم ${currentIndex + 1} من إجمالي ${items.length} صور في المعرض`;
+      }
+
+      // Update dots
+      if (dotsContainer) {
+        const dots = dotsContainer.querySelectorAll('.hero-car-dot');
+        dots.forEach((d, idx) => {
+          if (idx === currentIndex) d.classList.add('active');
+          else d.classList.remove('active');
+        });
+      }
+    }
+
+    function goToSlide(index) {
+      if (index >= items.length) currentIndex = 0;
+      else if (index < 0) currentIndex = items.length - 1;
+      else currentIndex = index;
+      updateCarousel();
+    }
+
+    function nextSlide() {
+      goToSlide(currentIndex + 1);
+    }
+
+    function prevSlide() {
+      goToSlide(currentIndex - 1);
+    }
+
+    if (prevBtn) {
+      prevBtn.onclick = () => {
+        prevSlide();
+        resetAutoPlay();
+      };
+    }
+
+    if (nextBtn) {
+      nextBtn.onclick = () => {
+        nextSlide();
+        resetAutoPlay();
+      };
+    }
+
+    // Progress Bar Animation
+    let progressElapsed = 0;
+    function startProgress() {
+      progressElapsed = 0;
+      if (progressFill) progressFill.style.width = '0%';
+      clearInterval(progressTimer);
+      progressTimer = setInterval(() => {
+        progressElapsed += progressInterval;
+        const pct = Math.min(100, (progressElapsed / slideDuration) * 100);
+        if (progressFill) progressFill.style.width = `${pct}%`;
+      }, progressInterval);
+    }
+
+    function startAutoPlay() {
+      startProgress();
+      clearInterval(autoPlayTimer);
+      autoPlayTimer = setInterval(() => {
+        nextSlide();
+        startProgress();
+      }, slideDuration);
+    }
+
+    function stopAutoPlay() {
+      clearInterval(autoPlayTimer);
+      clearInterval(progressTimer);
+    }
+
+    function resetAutoPlay() {
+      stopAutoPlay();
+      startAutoPlay();
+    }
+
+    if (box) {
+      box.addEventListener('mouseenter', stopAutoPlay);
+      box.addEventListener('mouseleave', startAutoPlay);
+
+      // Touch Swipe
+      let touchStartX = 0;
+      let touchEndX = 0;
+
+      box.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+        stopAutoPlay();
+      }, { passive: true });
+
+      box.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        const diff = touchEndX - touchStartX;
+        if (Math.abs(diff) > 40) {
+          const isRtl = document.documentElement.dir === 'rtl';
+          if (diff > 0) {
+            if (isRtl) nextSlide();
+            else prevSlide();
+          } else {
+            if (isRtl) prevSlide();
+            else nextSlide();
+          }
+        }
+        startAutoPlay();
+      }, { passive: true });
+    }
+
+    // Helper: Fisher-Yates shuffle
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    // Initialize first view and start
+    updateCarousel();
+    startAutoPlay();
+  }
+
 })();

@@ -91,6 +91,63 @@
     </div>
   </section>
 
+  
+  <!-- Hero Randomized Gallery Showcase Carousel (Placed above Quick Booking Bar) -->
+  <div class="hero-carousel-container" id="heroCarouselSection">
+    <div class="container">
+      <div class="hero-carousel-box" id="heroCarouselBox">
+        <!-- Top bar with live tag and category badge -->
+        <div class="carousel-top-bar">
+          <div class="carousel-tag">
+            <span class="live-dot"></span>
+            <span>معرض اللقطات الحية | جولة بصرية متجددة في فندق روز عدن 2</span>
+          </div>
+          <div class="carousel-category-pill" id="carouselCategoryPill">
+            أجنحة وطيرمانات VIP
+          </div>
+        </div>
+
+        <!-- Stage with slides and controls -->
+        <div class="hero-carousel-stage" id="carouselStage">
+          <!-- Dynamic Progress Bar -->
+          <div class="carousel-progress-bar">
+            <div class="carousel-progress-fill" id="carouselProgressFill"></div>
+          </div>
+
+          <!-- Slides Track (populated in random order by JS) -->
+          <div class="hero-carousel-track" id="heroCarouselTrack">
+            <div class="hero-car-slide active">
+              <img src="assets/images/building-night.jpg" alt="واجهة فندق روز عدن 2 ليلاً">
+              <div class="hero-slide-overlay">
+                <div class="hero-slide-caption">
+                  <h3 class="carousel-active-title">مبنى فندق روز عدن 2 السياحي ليلاً</h3>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Glass Nav Arrows -->
+          <button class="hero-car-btn hero-car-prev" id="carPrevBtn" aria-label="الصورة السابقة">&#10095;</button>
+          <button class="hero-car-btn hero-car-next" id="carNextBtn" aria-label="الصورة التالية">&#10094;</button>
+        </div>
+
+        <!-- Bottom bar with title, counter, and dots -->
+        <div class="carousel-bottom-bar">
+          <div class="carousel-info-text">
+            <h3 class="carousel-active-title" id="carouselActiveTitle">جاري تحميل لقطات المعرض...</h3>
+            <span class="carousel-active-counter" id="carouselActiveCounter">لقطة من المعرض</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 1rem;">
+            <div class="carousel-dots-wrapper" id="heroCarouselDots"></div>
+            <a href="gallery.html" class="btn btn-outline btn-sm" style="padding: 0.35rem 0.85rem; font-size: 0.8rem; border-color: var(--luxury-gold); color: var(--luxury-gold-light);">
+              <span>📸</span> ألبوم الصور &larr;
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Quick Booking Engine Bar -->
   <div class="container booking-bar-wrapper">
     <div class="booking-bar">
@@ -311,7 +368,7 @@
     </div>
   </section>
 
-  <!-- Guest Testimonials -->
+<!-- Guest Testimonials -->
   <section class="section alt-bg">
     <div class="container">
       <div class="section-header">
