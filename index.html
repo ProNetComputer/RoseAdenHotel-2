@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>فندق روز عدن 2 السياحي | الصفحة الرئيسية</title>
+  <meta name="description" content="فندق روز عدن 2 السياحي - العريش، ساحل أبين، عدن. أرقى غرف وأجنحة VIP، طيرمانات بإطلالة بحرية، قاعة تدريب مجهزة بأحدث الشاشات الذكية، وإنترنت فايبر عالي السرعة.">
+  <link rel="icon" type="image/jpeg" href="assets/images/favicon.jpg">
+  
+  <!-- Google Fonts: Cairo & Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Modular Stylesheets -->
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/components.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+
+  <!-- Top Announcement & Contact Bar -->
+  <div class="top-bar">
+    <div class="container top-bar-content">
+      <div class="top-bar-info">
+        <a href="tel:+967780000656"><span>📱</span> 780000656</a>
+        <a href="tel:02278880"><span>☎️</span> 02-278880</a>
+        <span>📍 العريش - ساحل أبين - جوار جولة الرحاب - عدن</span>
+      </div>
+      <div class="top-bar-actions">
+        <button class="tool-btn" onclick="toggleTheme()" id="themeBtn">
+          <span id="themeBtnIcon">☀️</span>
+          <span id="themeBtnText">النهاري</span>
+        </button>
+        <a href="admin/index.html" class="tool-btn" style="border-color: var(--luxury-gold); color: var(--luxury-gold-light);">
+          <span>⚙️</span> لوحة التحكم (GitHub)
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Navigation Header -->
+  <header class="main-header">
+    <div class="container navbar">
+      <a href="index.html" class="brand-logo">
+        <img src="assets/images/logo.jpg" alt="شعار فندق روز عدن 2">
+        <div class="brand-text">
+          <h1>فندق روز عدن 2</h1>
+          <span>ROSE ADEN 2 HOTEL</span>
+        </div>
+      </a>
+
+      <!-- Desktop & Mobile Links -->
+      <nav class="nav-links" id="navLinks">
+        <a href="index.html" class="active">الرئيسية</a>
+        <a href="about.html" class="">عن الفندق</a>
+        <a href="rooms.html" class="">الغرف والأجنحة</a>
+        <a href="vip-suites.html" class="">طيرمانات VIP</a>
+        <a href="training-hall.html" class="">قاعة التدريب</a>
+        <a href="gallery.html" class="">معرض الصور</a>
+        <a href="location.html" class="">الموقع</a>
+        <a href="contact.html" class="">الحجز والاتصال</a>
+      </nav>
+
+      <div class="header-tools">
+        <a href="https://wa.me/967780000656" target="_blank" class="btn btn-whatsapp btn-sm">
+          <span>💬</span> واتساب: 780000656
+        </a>
+        <button class="mobile-toggle" id="mobileToggle" aria-label="القائمة">&#9776;</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-home">
+    <div class="hero-home-content">
+      <div class="hero-badge">✨ فندق روز عدن 2 السياحي - العريش جوار جولة الرحاب</div>
+      <h2 class="hero-home-title">حيث يلتقي البحر بالفخامة...<br><span>تبدأ أجمل لحظاتك</span></h2>
+      <p class="hero-home-desc">
+        استمتع بإقامة استثنائية في فندق روز عدن 2 السياحي المطل على الساحل؛ أثاث راقٍ، أجهزة حديثة، غرف وأجنحة VIP واسعة، قاعات تدريب مجهزة بشاشات عملاقة، وإنترنت فايبر عالي السرعة مجاناً.
+      </p>
+      <div class="hero-actions">
+        <a href="https://wa.me/967780000656?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%A7%D9%84%D8%AD%D8%AC%D8%B2%20%D9%81%D9%8A%20%D9%81%D9%86%D8%AF%D9%82%20%D8%B1%D9%88%D8%B2%20%D8%B9%D8%AF%D9%86%202" class="btn btn-whatsapp btn-lg" target="_blank">
+          <span>💬</span> حجز فوري عبر واتساب
+        </a>
+        <a href="rooms.html" class="btn btn-gold btn-lg">
+          <span>🛏️</span> استكشف الغرف والأسعار
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Booking Engine Bar -->
+  <div class="container booking-bar-wrapper">
+    <div class="booking-bar">
+      <form onsubmit="handleQuickBook(event)">
+        <div class="booking-grid">
+          <div class="form-group">
+            <label for="bkRoomType">نوع الإقامة</label>
+            <select id="bkRoomType" class="form-select">
+              <option value="جناح VIP الملكي">أجنحة VIP الفاخرة</option>
+              <option value="غرفة عائلية فاخرة">الغرف العائلية الفاخرة</option>
+              <option value="غرفة سريرين (Twin)">غرفة سريرين (Twin)</option>
+              <option value="غرفة 3 أسرة">غرفة 3 أسرة واسعة</option>
+              <option value="طيرمانة VIP ومجالس ضيوف">طيرمانات VIP</option>
+              <option value="حجز قاعة التدريب">قاعة التدريب والمؤتمرات</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="bkCheckIn">تاريخ الوصول</label>
+            <input type="date" id="bkCheckIn" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="bkCheckOut">تاريخ المغادرة</label>
+            <input type="date" id="bkCheckOut" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="bkGuests">عدد النزلاء</label>
+            <select id="bkGuests" class="form-select">
+              <option value="1">نزيل واحد</option>
+              <option value="2">نزيلان</option>
+              <option value="3">3 نزلاء</option>
+              <option value="4+">عائلة (4 أشخاص فأكثر)</option>
+            </select>
+          </div>
+          <div>
+            <button type="submit" class="btn btn-primary" style="height: 48px; width: 100%;">
+              <span>🔍</span> تحقق واحجز الآن
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Featured Highlights Section -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">لماذا تختار فندق روز عدن 2؟</span>
+        <h2 class="section-title">فخامة متكاملة وضيافة أصيلة</h2>
+        <p class="section-desc">موقع استراتيجي يجمع بين هدوء الساحل وقربه من المطار والخدمات الحيوية في عدن</p>
+      </div>
+
+      <div class="amenities-grid">
+        
+        <div class="amenity-card">
+          <div class="amenity-icon">🌐</div>
+          <h3 class="amenity-title">إنترنت فايبر مجاني</h3>
+          <p class="amenity-desc">تغطية واي فاي فايبر سريعة ومجانية في جميع أرجاء الفندق والغرف والقاعات.</p>
+        </div>
+        
+        <div class="amenity-card">
+          <div class="amenity-icon">⚡</div>
+          <h3 class="amenity-title">كهرباء وتكييف 24/7</h3>
+          <p class="amenity-desc">مولدات كهربائية حديثة تعمل على مدار الساعة دون انقطاع لضمان راحتكم التامة.</p>
+        </div>
+        
+        <div class="amenity-card">
+          <div class="amenity-icon">🅿️</div>
+          <h3 class="amenity-title">موقفان للسيارات بحراسة</h3>
+          <p class="amenity-desc">موقفان فسيحان للسيارات بحراسة أمنية مستمرة وكاميرات مراقبة رقمية حديثة.</p>
+        </div>
+        
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Rooms Preview -->
+  <section class="section alt-bg">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">أرقى خيارات الإقامة</span>
+        <h2 class="section-title">الغرف والأجنحة الفندقية</h2>
+        <p class="section-desc">مجهزة بأحدث مفروشات الراحة، أجهزة التكييف الهادئة، وشاشات العرض الذكية</p>
+      </div>
+
+      <div class="rooms-grid">
+        
+        <div class="room-card">
+          <div class="room-card-media">
+            <img src="assets/images/suite-vip.jpg" alt="أجنحة VIP الفاخرة" loading="lazy">
+            <span class="room-badge">الأكثر فخامة</span>
+          </div>
+          <div class="room-card-body">
+            <h3 class="room-title">أجنحة VIP الفاخرة</h3>
+            <div class="room-meta">
+              <span>🛏️ سرير ملكي ماستر كينج (King Bed)</span>
+              <span>👥 2 - 3 أشخاص</span>
+            </div>
+            <ul class="room-features-list">
+              <li>صالون استقبال فاخر ومستقل</li><li>إطلالة بانورامية بحرية ساحرة</li><li>أثاث ملكي عصري وديكورات إضاءة متناسقة</li><li>شاشة ذكية 4K + إنترنت فايبر فائق السرعة</li>
+            </ul>
+            <div class="room-card-footer">
+              <div class="room-price-box">
+                <span class="room-price-label">السعر:</span>
+                <span class="room-price-val">حسب الطلب / أسعار خاصة</span>
+              </div>
+              <button onclick="bookSpecificRoom('أجنحة VIP الفاخرة')" class="btn btn-whatsapp btn-sm">
+                <span>💬</span> احجز الآن
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="room-card">
+          <div class="room-card-media">
+            <img src="assets/images/room-family.jpg" alt="الغرف العائلية الفاخرة" loading="lazy">
+            <span class="room-badge">مثالية للعائلات</span>
+          </div>
+          <div class="room-card-body">
+            <h3 class="room-title">الغرف العائلية الفاخرة</h3>
+            <div class="room-meta">
+              <span>🛏️ سرير مزدوج كبير + أسرة إضافية</span>
+              <span>👥 4 - 5 أشخاص</span>
+            </div>
+            <ul class="room-features-list">
+              <li>مساحات رحبة وتوزيع ذكي للخصوصية العائلية</li><li>منطقة جلوس مريحة للأطفال والعائلة</li><li>شاشات تلفاز مسطحة مع قنوات فضائية منوعة</li><li>إنترنت فايبر غير محدود فائق السرعة</li>
+            </ul>
+            <div class="room-card-footer">
+              <div class="room-price-box">
+                <span class="room-price-label">السعر:</span>
+                <span class="room-price-val">أسعار تنافسية</span>
+              </div>
+              <button onclick="bookSpecificRoom('الغرف العائلية الفاخرة')" class="btn btn-whatsapp btn-sm">
+                <span>💬</span> احجز الآن
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="room-card">
+          <div class="room-card-media">
+            <img src="assets/images/room-twin.jpg" alt="غرف سريرين (Twin Room)" loading="lazy">
+            <span class="room-badge">الأكثر طلباً للأصدقاء ورجال الأعمال</span>
+          </div>
+          <div class="room-card-body">
+            <h3 class="room-title">غرف سريرين (Twin Room)</h3>
+            <div class="room-meta">
+              <span>🛏️ سريران منفصلان مريحان من أرقى الماركات</span>
+              <span>👥 شخصان</span>
+            </div>
+            <ul class="room-features-list">
+              <li>مراتب طبية مريحة لضمان أقصى درجات الاسترخاء</li><li>مكتب عمل مناسب لرجال الأعمال ومندوبي الشركات</li><li>واي فاي فايبر مجاني وسريع جداً</li><li>تكييف اسبليت هادئ</li>
+            </ul>
+            <div class="room-card-footer">
+              <div class="room-price-box">
+                <span class="room-price-label">السعر:</span>
+                <span class="room-price-val">أسعار مميزة</span>
+              </div>
+              <button onclick="bookSpecificRoom('غرف سريرين (Twin Room)')" class="btn btn-whatsapp btn-sm">
+                <span>💬</span> احجز الآن
+              </button>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+
+      <div style="text-align: center; margin-top: 3rem;">
+        <a href="rooms.html" class="btn btn-outline btn-lg">عرض جميع خيارات الغرف والأجنحة (5 فئات) &larr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Grand Training Hall Section Preview -->
+  <section class="section">
+    <div class="container">
+      <div class="hall-hero-card">
+        <div class="hall-gallery-split">
+          <img src="assets/images/training-hall.jpg" alt="قاعة التدريب الحديثة الكبرى والمؤتمرات" class="hall-img-main">
+          <div class="hall-img-thumbs">
+            <img src="assets/images/smart-screen.jpg" alt="الشاشة الذكية العملاقة">
+            <img src="assets/images/dining-hall.jpg" alt="صالة الوجبات">
+          </div>
+        </div>
+        <div class="hall-details">
+          <span class="section-badge" style="width: fit-content;">مجهزة بالكامل للمنظمات والشركات</span>
+          <h2 class="section-title" style="font-size: 1.8rem; margin: 0.5rem 0 1rem;">قاعة التدريب الحديثة الكبرى والمؤتمرات</h2>
+          <p style="color: var(--luxury-gold); font-weight: 700; margin-bottom: 1.5rem;">👥 تتسع لأكثر من 50 إلى 70 مشاركاً بأريحية تامة</p>
+          <div style="margin-bottom: 2rem;">
+            
+            <div class="hall-spec-item">
+              <span class="hall-spec-icon">★</span>
+              <span>شاشة ذكية تفاعلية عملاقة مع أنظمة عرض رقمية فائقة الدقة</span>
+            </div>
+            
+            <div class="hall-spec-item">
+              <span class="hall-spec-icon">★</span>
+              <span>أنظمة صوتية لاسلكية متطورة تضمن وضوح الصوت في كل زوايا القاعة</span>
+            </div>
+            
+            <div class="hall-spec-item">
+              <span class="hall-spec-icon">★</span>
+              <span>تكييف هوائي قوي صامت يضمن بيئة تدريب مريحة طوال ساعات العمل</span>
+            </div>
+            
+            <div class="hall-spec-item">
+              <span class="hall-spec-icon">★</span>
+              <span>قاعة مخصصة ومستقلة للوجبات واستراحات القهوة (Coffee Breaks)</span>
+            </div>
+            
+          </div>
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <a href="training-hall.html" class="btn btn-gold">تفاصيل القاعة والتجهيزات</a>
+            <a href="https://wa.me/967780000656?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%AD%D8%AC%D8%B2%20%D9%82%D8%A7%D8%B9%D8%A9%20%D8%A7%D9%84%D8%AA%D8%AF%D8%B1%D9%8A%D8%A8%20%D9%81%D9%8A%20%D9%81%D9%86%D8%AF%D9%82%20%D8%B1%D9%88%D8%B2%20%D8%B9%D8%AF%D9%86%202" class="btn btn-whatsapp" target="_blank">حجز موعد للقاعة</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Guest Testimonials -->
+  <section class="section alt-bg">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge">تجارب النزلاء</span>
+        <h2 class="section-title">ماذا يقول ضيوف فندق روز عدن 2؟</h2>
+        <p class="section-desc">فخورون بثقة ضيوفنا الكرام من مختلف المحافظات والمنظمات الدولية</p>
+      </div>
+
+      <div class="reviews-grid">
+        
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">"من أفضل وأرقى الفنادق في عدن؛ النظافة استثنائية، والأثاث فاخر وجديد، والخدمة سريعة جداً. موقع الفندق في العريش هادئ وقريب من المطار والساحل."</p>
+          <div class="reviewer-name">المهندس أحمد باحبيب</div>
+          <div class="reviewer-role">نزيل جناح VIP ورجل أعمال</div>
+        </div>
+        
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">"أقمنا ورشة عمل تدريبية في قاعة المؤتمرات بالفندق؛ التجهيزات والشاشة الذكية والصوتيات كانت على أعلى مستوى، وصالة الوجبات ممتازة وفريق العمل متعاون للغاية."</p>
+          <div class="reviewer-name">د. سارة المنصوري</div>
+          <div class="reviewer-role">منسقة برامج تدريبية بمنظمة دولية</div>
+        </div>
+        
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">"تجربة رائعة مع العائلة في الغرف الفسيحة. التكييف ممتاز والكهرباء لم تنقطع نهائياً، والمواقف واسعة وآمنة. أنصح به بشدة لكل زائر لمدينة عدن."</p>
+          <div class="reviewer-name">الأستاذ فؤاد الشميري</div>
+          <div class="reviewer-role">نزيل برفقة العائلة</div>
+        </div>
+        
+      </div>
+    </div>
+  </section>
+
+  <!-- Floating WhatsApp Button -->
+  <a href="https://wa.me/967780000656?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%A7%D8%B1%20%D8%B9%D9%86%20%D8%A7%D9%84%D8%AD%D8%AC%D8%B2%20%D9%81%D9%8A%20%D9%81%D9%86%D8%AF%D9%82%20%D8%B1%D9%88%D8%B2%20%D8%B9%D8%AF%D9%86%202" class="whatsapp-floating" target="_blank" title="تواصل عبر واتساب">
+    <span>💬</span> تواصل واحجز الآن
+  </a>
+
+  <!-- Main Footer -->
+  <footer class="main-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col footer-about">
+          <h4>فندق روز عدن 2 السياحي</h4>
+          <p>
+            حيث يلتقي سحر البحر وأمواج ساحل أبين بالفخامة والخدمة الفندقية المتكاملة. خياركم الأول للإقامة السياحية، العائلية، واستضافة المؤتمرات وورش العمل في العاصمة عدن.
+          </p>
+          <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
+            <a href="https://wa.me/967780000656" class="btn btn-whatsapp btn-sm" target="_blank">واتساب مباشر</a>
+            <a href="contact.html" class="btn btn-outline btn-sm">خريطة الوصول</a>
+          </div>
+        </div>
+
+        <div class="footer-col footer-links">
+          <h4>روابط سريعة</h4>
+          <ul>
+            <li><a href="index.html">الصفحة الرئيسية</a></li>
+            <li><a href="about.html">نبذة عن الفندق</a></li>
+            <li><a href="rooms.html">الغرف والأجنحة</a></li>
+            <li><a href="vip-suites.html">طيرمانات وأجنحة VIP</a></li>
+            <li><a href="training-hall.html">قاعة التدريب والمؤتمرات</a></li>
+            <li><a href="gallery.html">معرض الصور</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col footer-links">
+          <h4>المرافق والخدمات</h4>
+          <ul>
+            <li><span>⚡</span> كهرباء وتكييف 24/7</li>
+            <li><span>🌐</span> إنترنت فايبر مجاني</li>
+            <li><span>🅿️</span> موقفان بحراسة وكاميرات</li>
+            <li><span>✈️</span> 5 دقائق عن مطار عدن</li>
+            <li><span>📺</span> شاشات ذكية متطورة</li>
+            <li><span>🍽️</span> صالة وجبات وضيافة</li>
+          </ul>
+        </div>
+
+        <div class="footer-col footer-contact">
+          <h4>معلومات الاتصال</h4>
+          <ul>
+            <li><span>📍</span> العريش - ساحل أبين - جوار جولة الرحاب - عدن</li>
+            <li><span>📱</span> واتساب وجوال: <a href="https://wa.me/967780000656">780000656</a></li>
+            <li><span>☎️</span> الهاتف الأرضي: <a href="tel:02278880">02-278880</a></li>
+            <li><span>☎️</span> خطوط إضافية: 02-278881 | 02-278882 | 02-278885 | 02-278888</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 فندق روز عدن 2 السياحي. جميع الحقوق محفوظة.</div>
+        <div style="display: flex; gap: 1.5rem; align-items: center;">
+          <a href="admin/index.html">لوحة الإدارة</a>
+          <span>|</span>
+          <span style="font-size: 0.82rem; color: #a39298;">
+            تطوير وتنفيذ: <strong style="color: var(--luxury-gold-light);">برونت كمبيوتر | ProNet Computer</strong>
+          </span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/booking.js"></script>
+  <script src="assets/js/gallery.js"></script>
+</body>
+</html>
