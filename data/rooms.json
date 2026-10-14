@@ -5,14 +5,14 @@
     "title_ar": "أجنحة VIP الفاخرة",
     "title_en": "Royal VIP Suites",
     "badge_ar": "الأكثر فخامة",
-    "badge_en": "Most Luxurious",
+    "badge_en": "Special",
     "price_per_night": "حسب الطلب / أسعار خاصة",
-    "price_en": "Upon Request / Special Rate",
-    "beds_ar": "سرير ملكي ماستر كينج (King Bed)",
-    "beds_en": "Master King Bed",
+    "price_en": "Special Rate",
+    "beds_ar": "غرفة سرير عائلي + مجلس عربي و ضيوف ",
+    "beds_en": "Comfortable Bed",
     "capacity_ar": "2 - 3 أشخاص",
-    "capacity_en": "2 - 3 Guests",
-    "image": "assets/images/suite-vip.jpg",
+    "capacity_en": "2 Guests",
+    "image": "assets/images/room-1791953613541.jpg",
     "features_ar": [
       "صالون استقبال فاخر ومستقل",
       "إطلالة بانورامية بحرية ساحرة",
@@ -23,13 +23,9 @@
       "تكييف مركزي متطور فائق الهدوء"
     ],
     "features_en": [
-      "Private luxury living room & salon",
-      "Stunning panoramic sea view",
-      "Royal modern furniture & warm ambient lighting",
-      "4K Smart TV + High-speed fiber Wi-Fi",
-      "Marble bathroom with luxury toiletries",
-      "Mini bar, kettle, and complimentary coffee/tea",
-      "Ultra-quiet advanced climate control"
+      "Silent Air Conditioning",
+      "Smart Screen TV",
+      "Free Fiber Wi-Fi"
     ]
   },
   {
