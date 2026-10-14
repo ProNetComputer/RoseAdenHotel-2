@@ -5,14 +5,14 @@
     "title_ar": "أجنحة VIP الفاخرة",
     "title_en": "Royal VIP Suites",
     "badge_ar": "الأكثر فخامة",
-    "badge_en": "Special",
+    "badge_en": "Most Luxurious",
     "price_per_night": "حسب الطلب / أسعار خاصة",
-    "price_en": "Special Rate",
+    "price_en": "Upon Request / Special Rate",
     "beds_ar": "سرير ملكي ماستر كينج (King Bed)",
-    "beds_en": "Comfortable Bed",
+    "beds_en": "Master King Bed",
     "capacity_ar": "2 - 3 أشخاص",
-    "capacity_en": "2 Guests",
-    "image": "assets/images/room-1791953305461.jpg",
+    "capacity_en": "2 - 3 Guests",
+    "image": "assets/images/suite-vip.jpg",
     "features_ar": [
       "صالون استقبال فاخر ومستقل",
       "إطلالة بانورامية بحرية ساحرة",
@@ -23,9 +23,13 @@
       "تكييف مركزي متطور فائق الهدوء"
     ],
     "features_en": [
-      "Silent Air Conditioning",
-      "Smart Screen TV",
-      "Free Fiber Wi-Fi"
+      "Private luxury living room & salon",
+      "Stunning panoramic sea view",
+      "Royal modern furniture & warm ambient lighting",
+      "4K Smart TV + High-speed fiber Wi-Fi",
+      "Marble bathroom with luxury toiletries",
+      "Mini bar, kettle, and complimentary coffee/tea",
+      "Ultra-quiet advanced climate control"
     ]
   },
   {
@@ -34,14 +38,14 @@
     "title_ar": "الغرف العائلية الفاخرة",
     "title_en": "Luxury Family Rooms",
     "badge_ar": "مثالية للعائلات",
-    "badge_en": "Family Choice",
+    "badge_en": "Special",
     "price_per_night": "أسعار تنافسية",
-    "price_en": "Competitive Rates",
+    "price_en": "Special Rate",
     "beds_ar": "سرير مزدوج كبير + أسرة إضافية",
-    "beds_en": "Large Double Bed + Extra Beds",
+    "beds_en": "Comfortable Bed",
     "capacity_ar": "4 - 5 أشخاص",
-    "capacity_en": "4 - 5 Guests",
-    "image": "assets/images/room-family.jpg",
+    "capacity_en": "2 Guests",
+    "image": "assets/images/room-1791953434235.jpg",
     "features_ar": [
       "مساحات رحبة وتوزيع ذكي للخصوصية العائلية",
       "منطقة جلوس مريحة للأطفال والعائلة",
@@ -51,12 +55,9 @@
       "ثلاجة، غلاية ومشروبات ترحيبية"
     ],
     "features_en": [
-      "Spacious layout ensuring family privacy",
-      "Comfortable sitting area for families",
-      "Flat-screen TVs with kids & satellite channels",
-      "Unlimited high-speed fiber internet",
-      "24/7 dedicated room service & housekeeping",
-      "Refrigerator, electric kettle, and welcome amenities"
+      "Silent Air Conditioning",
+      "Smart Screen TV",
+      "Free Fiber Wi-Fi"
     ]
   },
   {
