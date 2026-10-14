@@ -3,216 +3,492 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>لوحة تحكم فندق روز عدن 2 | Rose Aden 2 CMS</title>
+  <title>لوحة تحكم فندق روز عدن 2 | Advanced CMS Dashboard</title>
   <link rel="icon" type="image/jpeg" href="../assets/images/favicon.jpg">
   
-  <!-- Google Fonts: Cairo -->
+  <!-- Google Fonts: Cairo & Poppins -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
 
   <!-- Sidebar -->
-  <aside class="admin-sidebar">
-    <div class="admin-brand">
-      <img src="../assets/images/logo.jpg" alt="شعار فندق روز عدن 2">
+  <aside class="adm-sidebar">
+    <div class="adm-brand">
+      <img src="../assets/images/logo.jpg" alt="شعار فندق روز عدن 2" onerror="this.src='../assets/images/favicon.jpg'">
       <div>
         <h2>روز عدن 2</h2>
-        <span>لوحة التحكم وGitHub</span>
+        <span>لوحة التحكم الاحترافية</span>
       </div>
     </div>
 
-    <nav class="admin-nav">
-      <div class="admin-nav-item active" data-tab="tab-github" onclick="switchTab('tab-github')">
-        <span>⚙️</span> إعدادات مستودع GitHub
+    <nav class="adm-nav">
+      <div class="adm-nav-item active" data-tab="tab-github" onclick="switchTab('tab-github')">
+        <span>⚙️</span> مستودع GitHub والربط
       </div>
-      <div class="admin-nav-item" data-tab="tab-hotel" onclick="switchTab('tab-hotel')">
+      <div class="adm-nav-item" data-tab="tab-theme" onclick="switchTab('tab-theme')">
+        <span>🎨</span> الهوية، الألوان والتنسيقات
+      </div>
+      <div class="adm-nav-item" data-tab="tab-media" onclick="switchTab('tab-media')">
+        <span>🖼️</span> الشعار والصور والوسائط
+      </div>
+      <div class="adm-nav-item" data-tab="tab-rooms" onclick="switchTab('tab-rooms')">
+        <span>🛏️</span> الغرف، الأسعار والمميزات
+      </div>
+      <div class="adm-nav-item" data-tab="tab-announcement" onclick="switchTab('tab-announcement')">
+        <span>📢</span> شريط العروض والإعلانات
+      </div>
+      <div class="adm-nav-item" data-tab="tab-hotel" onclick="switchTab('tab-hotel')">
         <span>🏨</span> بيانات الفندق والاتصال
       </div>
-      <div class="admin-nav-item" data-tab="tab-rooms" onclick="switchTab('tab-rooms')">
-        <span>🛏️</span> إدارة الغرف والأسعار
+      <div class="adm-nav-item" data-tab="tab-hall" onclick="switchTab('tab-hall')">
+        <span>🎓</span> قاعة التدريب والفعاليات
       </div>
-      <div class="admin-nav-item" data-tab="tab-hall" onclick="switchTab('tab-hall')">
-        <span>🎓</span> قاعة التدريب والمؤتمرات
+      <div class="adm-nav-item" data-tab="tab-reviews" onclick="switchTab('tab-reviews')">
+        <span>⭐</span> تقييمات وآراء النزلاء
       </div>
-      <div class="admin-nav-item" data-tab="tab-publish" onclick="switchTab('tab-publish')">
-        <span>🚀</span> النشر والحفظ على GitHub
+      <div class="adm-nav-item" data-tab="tab-gallery" onclick="switchTab('tab-gallery')">
+        <span>📸</span> معرض الصور الحي
+      </div>
+      <div class="adm-nav-item" data-tab="tab-publish" onclick="switchTab('tab-publish')" style="color: var(--adm-gold-light); font-weight: 800;">
+        <span>🚀</span> مركز النشر على GitHub
       </div>
     </nav>
 
-    <div style="padding: 1.5rem; border-top: 1px solid var(--admin-border); font-size: 0.82rem; color: var(--admin-muted);">
-      <a href="../index.html" target="_blank" style="color: var(--admin-gold); text-decoration: none; display: flex; align-items: center; gap: 0.4rem;">
-        <span>🌐</span> معاينة الموقع الرئيسي &larr;
+    <div style="padding: 1.25rem; border-top: 1px solid var(--adm-border); font-size: 0.85rem;">
+      <a href="../index.html" target="_blank" style="color: var(--adm-gold); text-decoration: none; display: flex; align-items: center; gap: 0.4rem; font-weight: 700;">
+        <span>🌐</span> معاينة الموقع الحي &larr;
       </a>
     </div>
   </aside>
 
-  <!-- Main Content -->
-  <main class="admin-main">
-    <div class="admin-topbar">
-      <h1 style="font-size: 1.3rem; font-weight: 800; color: #ffffff;">لوحة إدارة المحتوى والمزامنة المباشرة</h1>
+  <!-- Main Content Area -->
+  <main class="adm-main">
+    <div class="adm-topbar">
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <h1 style="font-size: 1.25rem; font-weight: 800; color: #fff;">إدارة محتوى وهوية فندق روز عدن 2</h1>
+      </div>
       <div class="sync-status">
         <span class="status-dot" id="statusDot"></span>
         <span id="statusText">جاري فحص الاتصال بـ GitHub...</span>
       </div>
     </div>
 
-    <div class="admin-content">
+    <div class="adm-content">
 
-      <!-- TAB 1: GitHub Settings -->
+      <!-- ================= TAB 1: GITHUB CONNECTION ================= -->
       <section class="tab-pane active" id="tab-github">
-        <div class="admin-card">
-          <div class="admin-card-header">
-            <h2 class="admin-card-title"><span>⚙️</span> إعدادات الربط المباشر مع مستودع GitHub</h2>
-            <button type="button" class="admin-btn admin-btn-outline" onclick="testGitHubConnection()">فحص الاتصال</button>
+        <div class="adm-card">
+          <div class="adm-card-header">
+            <h2 class="adm-card-title"><span>⚙️</span> إعدادات الربط المباشر مع مستودع GitHub</h2>
+            <button type="button" class="adm-btn adm-btn-outline adm-btn-sm" onclick="testGitHubConnection()">فحص الاتصال الحي</button>
           </div>
 
           <div id="ghConnAlert" class="alert-box alert-info">
-            💡 هذه اللوحة تتيح لك تعديل أسعار الغرف وبيانات الفندق مباشرة من المتصفح وحفظها في مستودع GitHub الخاص بك بنقرة واحدة دون الحاجة لأي سيرفر خارجي!
+            💡 هذه اللوحة متصلة بحسابك <strong>ProNetComputer</strong> ومستودعك <strong>RoseAdenHotel-2</strong>. أي تعديل تقوم بحفظه سيتم إرساله كـ Commit فوري لمستودعك في ثوانٍ!
           </div>
 
           <form onsubmit="saveGitHubConfig(event)">
             <div class="form-row">
               <div class="form-group">
-                <label for="ghOwner">اسم المستخدم أو المنظمة في GitHub (Owner)</label>
-                <input type="text" id="ghOwner" class="admin-input" placeholder="مثال: Ammar-Alasadi" required>
+                <label for="ghOwner">اسم المستخدم في GitHub (Owner)</label>
+                <input type="text" id="ghOwner" class="adm-input" value="ProNetComputer" required>
               </div>
               <div class="form-group">
                 <label for="ghRepo">اسم المستودع (Repository Name)</label>
-                <input type="text" id="ghRepo" class="admin-input" placeholder="مثال: rose-aden-hotel" required>
+                <input type="text" id="ghRepo" class="adm-input" value="RoseAdenHotel-2" required>
               </div>
             </div>
 
             <div class="form-row">
               <div class="form-group">
                 <label for="ghBranch">الفرع الرئيسي للنشر (Branch)</label>
-                <input type="text" id="ghBranch" class="admin-input" value="main" placeholder="main أو master أو gh-pages">
+                <input type="text" id="ghBranch" class="adm-input" value="main" required>
               </div>
               <div class="form-group">
                 <label for="ghToken">رمز الوصول الشخصي (Personal Access Token - PAT)</label>
-                <input type="password" id="ghToken" class="admin-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" required>
-                <small style="color: var(--admin-muted); display: block; margin-top: 0.35rem;">
-                  يمكنك إنشاء رمز برمجيات مجاني من إعدادات حسابك في GitHub: Settings &rarr; Developer Settings &rarr; Personal Access Tokens مع تفعيل صلاحية (repo).
+                <input type="password" id="ghToken" class="adm-input" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" required>
+                <small style="color: var(--adm-muted); display: block; margin-top: 0.35rem;">
+                  الرمز المحفوظ تلقائياً في متصفحك يملك صلاحية <code>repo</code> للنشر التلقائي.
                 </small>
               </div>
             </div>
 
-            <button type="submit" class="admin-btn admin-btn-gold">
-              <span>💾</span> حفظ إعدادات GitHub في المتصفح
-            </button>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+              <button type="submit" class="adm-btn adm-btn-gold">
+                <span>💾</span> حفظ إعدادات GitHub
+              </button>
+              <button type="button" class="adm-btn adm-btn-outline" onclick="switchTab('tab-theme')">
+                <span>التالي:</span> تخصيص الألوان والهوية &larr;
+              </button>
+            </div>
           </form>
         </div>
       </section>
 
-      <!-- TAB 2: Hotel Info -->
+      <!-- ================= TAB 2: THEME & COLOR CUSTOMIZER ================= -->
+      <section class="tab-pane" id="tab-theme">
+        <div class="adm-card">
+          <div class="adm-card-header">
+            <h2 class="adm-card-title"><span>🎨</span> تخصيص الهوية البصرية والألوان والتنسيقات</h2>
+          </div>
+
+          <p style="color: var(--adm-text-sub); margin-bottom: 1.5rem; font-size: 0.92rem;">
+            يمكنك تخصيص الألوان الملكية للفندق واختيار الخط ونصف قطر الحواف، وستنعكس فوراً على الموقع بالكامل:
+          </p>
+
+          <div class="form-row">
+            <!-- Primary Color -->
+            <div class="form-group">
+              <label>اللون الأساسي للفندق (Primary Brand Color)</label>
+              <div class="color-picker-box">
+                <input type="color" id="thmPrimary" value="#e22d46" oninput="syncColorInput('thmPrimary', 'thmPrimaryText')">
+                <input type="text" id="thmPrimaryText" class="adm-input" value="#e22d46" oninput="syncTextInput('thmPrimaryText', 'thmPrimary')">
+              </div>
+              <div style="display: flex; gap: 0.5rem; margin-top: 0.6rem; align-items: center;">
+                <span style="font-size: 0.78rem; color: var(--adm-muted);">أنماط مقترحة:</span>
+                <button type="button" class="color-preset-btn" style="background: #e22d46;" title="Rose Aden Classic" onclick="setPresetColor('#e22d46', '#d4af37')"></button>
+                <button type="button" class="color-preset-btn" style="background: #be123c;" title="Royal Deep Velvet" onclick="setPresetColor('#be123c', '#f5cd5f')"></button>
+                <button type="button" class="color-preset-btn" style="background: #0284c7;" title="Cyan Sea Blue" onclick="setPresetColor('#0284c7', '#f59e0b')"></button>
+                <button type="button" class="color-preset-btn" style="background: #059669;" title="Emerald Luxury" onclick="setPresetColor('#059669', '#d4af37')"></button>
+              </div>
+            </div>
+
+            <!-- Gold Accent -->
+            <div class="form-group">
+              <label>لون التمييز الذهبي (Luxury Gold Accent)</label>
+              <div class="color-picker-box">
+                <input type="color" id="thmGold" value="#d4af37" oninput="syncColorInput('thmGold', 'thmGoldText')">
+                <input type="text" id="thmGoldText" class="adm-input" value="#d4af37" oninput="syncTextInput('thmGoldText', 'thmGold')">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="thmFont">نوع الخط العربي (Typography)</label>
+              <select id="thmFont" class="adm-select">
+                <option value="'Cairo', system-ui, sans-serif">خط كايرو (Cairo - الفاخر الافتراضي)</option>
+                <option value="'Tajawal', system-ui, sans-serif">خط تجوال (Tajawal - عصري ونظيف)</option>
+                <option value="'Almarai', system-ui, sans-serif">خط المراعي (Almarai - هندسي متوازن)</option>
+                <option value="'Readex Pro', system-ui, sans-serif">خط ريديكس برو (Readex Pro - تقني أنيق)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="thmRadius">انحناء الحواف والكروت (Border Radius)</label>
+              <select id="thmRadius" class="adm-select">
+                <option value="12px">كلاسيكي مستقيم (12px)</option>
+                <option value="18px" selected>عصري متوازن (18px)</option>
+                <option value="26px">مستدير فائق النعومة (26px)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Live Theme Preview -->
+          <div style="margin-top: 1.5rem; background: rgba(0,0,0,0.5); border: 1px solid var(--adm-border); border-radius: 12px; padding: 1.5rem;" id="themePreviewBox">
+            <h4 style="font-size: 0.95rem; color: var(--adm-gold); margin-bottom: 0.75rem;">👁️ معاينة فورية لتناسق الألوان:</h4>
+            <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+              <button type="button" class="adm-btn adm-btn-primary" style="background: var(--prev-primary, #e22d46);">زر أساسي تجريبي</button>
+              <button type="button" class="adm-btn adm-btn-gold" style="background: var(--prev-gold, #d4af37);">زر ذهبي ملكي</button>
+              <span style="color: var(--prev-gold, #d4af37); font-weight: 800; font-size: 1.1rem;">★ أجنحة VIP الفاخرة</span>
+            </div>
+          </div>
+
+          <div style="margin-top: 2rem;">
+            <button type="button" class="adm-btn adm-btn-gold" onclick="switchTab('tab-publish')">
+              <span>🚀</span> حفظ ونشر الألوان على GitHub
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 3: MEDIA & LOGO UPLOADER ================= -->
+      <section class="tab-pane" id="tab-media">
+        <div class="adm-card">
+          <div class="adm-card-header">
+            <h2 class="adm-card-title"><span>🖼️</span> مدير الوسائط وتعديل الشعار والصور عبر GitHub</h2>
+          </div>
+
+          <p style="color: var(--adm-text-sub); margin-bottom: 1.5rem; font-size: 0.92rem;">
+            يمكنك رفع صور وشعارات جديدة مباشرة من جهازك إلى مستودع GitHub؛ ستقوم الأداة بضغط وتشفير الصورة ورفعها للمستودع فوراً:
+          </p>
+
+          <!-- Logo Uploader -->
+          <div class="image-uploader-card">
+            <img src="../assets/images/logo.jpg" class="image-preview-thumb" id="logoPreview" alt="شعار الفندق" onerror="this.src='../assets/images/favicon.jpg'">
+            <div>
+              <strong style="color: #fff; display: block; font-size: 1.05rem; margin-bottom: 0.35rem;">شعار الفندق الرسمي (Logo)</strong>
+              <span style="font-size: 0.8rem; color: var(--adm-muted); display: block; margin-bottom: 0.75rem;">المسار في المستودع: <code>assets/images/logo.jpg</code></span>
+              <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                <input type="file" id="logoFileInput" accept="image/*" class="adm-input" style="padding: 0.4rem; max-width: 250px;">
+                <button type="button" class="adm-btn adm-btn-primary adm-btn-sm" onclick="uploadDirectAsset('logoFileInput', 'assets/images/logo.jpg', 'logoStatusBox')">
+                  <span>⬆️</span> رفع واستبدال الشعار على GitHub
+                </button>
+              </div>
+              <div id="logoStatusBox" class="alert-box" style="display:none; margin-top: 0.75rem; padding: 0.6rem 1rem;"></div>
+            </div>
+          </div>
+
+          <!-- Favicon Uploader -->
+          <div class="image-uploader-card">
+            <img src="../assets/images/favicon.jpg" class="image-preview-thumb" id="favPreview" alt="الأيقونة" onerror="this.src='../assets/images/logo.jpg'">
+            <div>
+              <strong style="color: #fff; display: block; font-size: 1.05rem; margin-bottom: 0.35rem;">أيقونة المتصفح (Favicon)</strong>
+              <span style="font-size: 0.8rem; color: var(--adm-muted); display: block; margin-bottom: 0.75rem;">المسار في المستودع: <code>assets/images/favicon.jpg</code></span>
+              <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                <input type="file" id="favFileInput" accept="image/*" class="adm-input" style="padding: 0.4rem; max-width: 250px;">
+                <button type="button" class="adm-btn adm-btn-primary adm-btn-sm" onclick="uploadDirectAsset('favFileInput', 'assets/images/favicon.jpg', 'favStatusBox')">
+                  <span>⬆️</span> رفع واستبدال الأيقونة
+                </button>
+              </div>
+              <div id="favStatusBox" class="alert-box" style="display:none; margin-top: 0.75rem; padding: 0.6rem 1rem;"></div>
+            </div>
+          </div>
+
+          <!-- Hero Background Uploader -->
+          <div class="image-uploader-card">
+            <img src="../assets/images/building-day.jpg" class="image-preview-thumb" id="heroPreview" alt="خلفية الواجهة" onerror="this.src='../assets/images/building-night.jpg'">
+            <div>
+              <strong style="color: #fff; display: block; font-size: 1.05rem; margin-bottom: 0.35rem;">صورة خلفية الواجهة (Hero Banner Image)</strong>
+              <span style="font-size: 0.8rem; color: var(--adm-muted); display: block; margin-bottom: 0.75rem;">المسار في المستودع: <code>assets/images/building-day.jpg</code></span>
+              <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                <input type="file" id="heroFileInput" accept="image/*" class="adm-input" style="padding: 0.4rem; max-width: 250px;">
+                <button type="button" class="adm-btn adm-btn-primary adm-btn-sm" onclick="uploadDirectAsset('heroFileInput', 'assets/images/building-day.jpg', 'heroStatusBox')">
+                  <span>⬆️</span> استبدال خلفية الواجهة
+                </button>
+              </div>
+              <div id="heroStatusBox" class="alert-box" style="display:none; margin-top: 0.75rem; padding: 0.6rem 1rem;"></div>
+            </div>
+          </div>
+
+          <!-- Custom Asset Uploader -->
+          <div style="background: rgba(0,0,0,0.3); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--adm-border); margin-top: 1.5rem;">
+            <h4 style="font-size: 1rem; color: var(--adm-gold); margin-bottom: 0.5rem;">📁 رفع صورة مخصصة جديدة للمشروع:</h4>
+            <p style="font-size: 0.85rem; color: var(--adm-muted); margin-bottom: 1rem;">
+              اختر أي صورة من جهازك واكتب اسماً لها ليتم رفعها إلى مجلد <code>assets/images/</code> ويمكنك استخدامها لأي غرفة أو في المعرض.
+            </p>
+            <div class="form-row">
+              <div class="form-group">
+                <label>اسم الملف المستهدف (مثال: new-room.jpg)</label>
+                <input type="text" id="customFileName" class="adm-input" placeholder="new-photo.jpg">
+              </div>
+              <div class="form-group">
+                <label>اختر ملف الصورة من جهازك</label>
+                <input type="file" id="customFileInput" accept="image/*" class="adm-input" style="padding: 0.4rem;">
+              </div>
+            </div>
+            <button type="button" class="adm-btn adm-btn-gold" onclick="
+              const fn = document.getElementById('customFileName').value.trim() || 'image-' + Date.now() + '.jpg';
+              uploadDirectAsset('customFileInput', 'assets/images/' + fn, 'customStatusBox');
+            ">
+              <span>🚀</span> رفع الصورة المخصصة إلى GitHub
+            </button>
+            <div id="customStatusBox" class="alert-box" style="display:none; margin-top: 1rem;"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 4: ROOMS & SUITES ================= -->
+      <section class="tab-pane" id="tab-rooms">
+        <div class="adm-card">
+          <div class="adm-card-header">
+            <h2 class="adm-card-title"><span>🛏️</span> إدارة الغرف، الأجنحة، والأسعار</h2>
+            <button type="button" class="adm-btn adm-btn-gold adm-btn-sm" onclick="addNewRoom()">+ إضافة غرفة جديدة</button>
+          </div>
+
+          <div id="roomsContainer">
+            <!-- Dynamic Rooms Injected by JS -->
+          </div>
+
+          <button type="button" class="adm-btn adm-btn-gold" onclick="switchTab('tab-publish')">
+            <span>🚀</span> مراجعة ونشر تعديلات الغرف
+          </button>
+        </div>
+      </section>
+
+      <!-- ================= TAB 5: ANNOUNCEMENT BANNER ================= -->
+      <section class="tab-pane" id="tab-announcement">
+        <div class="adm-card">
+          <div class="adm-card-header">
+            <h2 class="adm-card-title"><span>📢</span> شريط الإعلانات الترويجي والعروض الخاصة</h2>
+          </div>
+
+          <div style="background: rgba(0,0,0,0.3); padding: 1.25rem; border-radius: 12px; margin-bottom: 1.5rem; border: 1px solid var(--adm-border);">
+            <label style="display: flex; align-items: center; gap: 0.75rem; font-weight: 700; cursor: pointer; color: #fff;">
+              <input type="checkbox" id="annEnabled" style="width: 20px; height: 20px; cursor: pointer;">
+              <span>تفعيل وإظهار شريط العروض الترويجي أعلى الموقع</span>
+            </label>
+          </div>
+
+          <div class="form-group">
+            <label for="annTextAr">نص العرض الترويجي (بالعربية)</label>
+            <input type="text" id="annTextAr" class="adm-input" placeholder="✨ عرض خاص بمناسبة الموسم السياحي: خصم 20% على أجنحة VIP!">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="annLink">رابط زر الحجز الخاص بالعرض (واتساب أو صفحة)</label>
+              <input type="text" id="annLink" class="adm-input" placeholder="https://wa.me/967780000656">
+            </div>
+            <div class="form-group">
+              <label for="annBtn">نص زر العرض</label>
+              <input type="text" id="annBtn" class="adm-input" placeholder="احجز بالعرض الآن">
+            </div>
+          </div>
+
+          <button type="button" class="adm-btn adm-btn-gold" onclick="switchTab('tab-publish')">
+            <span>🚀</span> حفظ ونشر شريط العروض
+          </button>
+        </div>
+      </section>
+
+      <!-- ================= TAB 6: HOTEL INFO ================= -->
       <section class="tab-pane" id="tab-hotel">
-        <div class="admin-card">
-          <div class="admin-card-header">
-            <h2 class="admin-card-title"><span>🏨</span> البيانات العامة ومعلومات الاتصال</h2>
+        <div class="adm-card">
+          <div class="adm-card-header">
+            <h2 class="adm-card-title"><span>🏨</span> معلومات الفندق الرسمية والاتصال</h2>
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label for="hotelNameAr">اسم الفندق (عربي)</label>
-              <input type="text" id="hotelNameAr" class="admin-input">
+              <input type="text" id="hotelNameAr" class="adm-input">
             </div>
             <div class="form-group">
-              <label for="hotelSloganAr">الشعار اللفظي (Slogan)</label>
-              <input type="text" id="hotelSloganAr" class="admin-input">
+              <label for="hotelNameEn">اسم الفندق (إنجليزي)</label>
+              <input type="text" id="hotelNameEn" class="adm-input">
             </div>
           </div>
 
           <div class="form-group">
-            <label for="hotelAddressAr">العنوان التفصيلي</label>
-            <input type="text" id="hotelAddressAr" class="admin-input">
+            <label for="hotelSloganAr">الشعار اللفظي (Slogan)</label>
+            <input type="text" id="hotelSloganAr" class="adm-input">
+          </div>
+
+          <div class="form-group">
+            <label for="hotelAddressAr">العنوان الكامل</label>
+            <input type="text" id="hotelAddressAr" class="adm-input">
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label for="hotelWa">رقم الواتساب الرئيسي للحجوزات</label>
-              <input type="text" id="hotelWa" class="admin-input">
+              <input type="text" id="hotelWa" class="adm-input">
             </div>
             <div class="form-group">
-              <label for="hotelPhones">هواتف الاستقبال الأرضية (مفصولة بـ |)</label>
-              <input type="text" id="hotelPhones" class="admin-input">
+              <label for="hotelPhones">هواتف الاستقبال (مفصولة بـ |)</label>
+              <input type="text" id="hotelPhones" class="adm-input">
             </div>
           </div>
 
-          <button type="button" class="admin-btn admin-btn-primary" onclick="switchTab('tab-publish')">
-            <span>التالي:</span> مراجعة ونشر التعديلات &larr;
+          <div class="form-row">
+            <div class="form-group">
+              <label for="hotelCheckIn">وقت تسجيل الدخول (Check-in)</label>
+              <input type="text" id="hotelCheckIn" class="adm-input" value="14:00">
+            </div>
+            <div class="form-group">
+              <label for="hotelCheckOut">وقت تسجيل المغادرة (Check-out)</label>
+              <input type="text" id="hotelCheckOut" class="adm-input" value="12:00">
+            </div>
+          </div>
+
+          <button type="button" class="adm-btn adm-btn-gold" onclick="switchTab('tab-publish')">
+            <span>🚀</span> حفظ ونشر معلومات الفندق
           </button>
         </div>
       </section>
 
-      <!-- TAB 3: Rooms -->
-      <section class="tab-pane" id="tab-rooms">
-        <div class="admin-card">
-          <div class="admin-card-header">
-            <h2 class="admin-card-title"><span>🛏️</span> إدارة الغرف والأسعار والمميزات</h2>
-          </div>
-
-          <p style="color: var(--admin-muted); margin-bottom: 1.5rem; font-size: 0.9rem;">
-            قم بتعديل أسعار الغرف أو مسمياتها وشاراتها الترويجية أدناه، ثم انتقل لتبويب النشر لحفظها مباشرة على GitHub.
-          </p>
-
-          <div id="roomsListContainer">
-            <!-- Dynamic Rooms -->
-          </div>
-
-          <button type="button" class="admin-btn admin-btn-primary" onclick="switchTab('tab-publish')">
-            <span>التالي:</span> مراجعة ونشر التعديلات &larr;
-          </button>
-        </div>
-      </section>
-
-      <!-- TAB 4: Hall -->
+      <!-- ================= TAB 7: TRAINING HALL ================= -->
       <section class="tab-pane" id="tab-hall">
-        <div class="admin-card">
-          <div class="admin-card-header">
-            <h2 class="admin-card-title"><span>🎓</span> قاعة التدريب والفعاليات</h2>
+        <div class="adm-card">
+          <div class="adm-card-header">
+            <h2 class="adm-card-title"><span>🎓</span> قاعة التدريب والفعاليات والمؤتمرات</h2>
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label for="hallTitleAr">عنوان القاعة</label>
-              <input type="text" id="hallTitleAr" class="admin-input">
+              <input type="text" id="hallTitleAr" class="adm-input">
             </div>
             <div class="form-group">
               <label for="hallCapacity">السعة الاستيعابية</label>
-              <input type="text" id="hallCapacity" class="admin-input">
+              <input type="text" id="hallCapacity" class="adm-input">
             </div>
           </div>
 
-          <button type="button" class="admin-btn admin-btn-primary" onclick="switchTab('tab-publish')">
-            <span>التالي:</span> مراجعة ونشر التعديلات &larr;
+          <div class="form-group">
+            <label for="hallSpecs">المواصفات والتجهيزات (كل مواصفة في سطر)</label>
+            <textarea id="hallSpecs" class="adm-textarea" rows="5"></textarea>
+          </div>
+
+          <button type="button" class="adm-btn adm-btn-gold" onclick="switchTab('tab-publish')">
+            <span>🚀</span> حفظ ونشر بيانات القاعة
           </button>
         </div>
       </section>
 
-      <!-- TAB 5: Publish to GitHub -->
+      <!-- ================= TAB 8: TESTIMONIALS ================= -->
+      <section class="tab-pane" id="tab-reviews">
+        <div class="adm-card">
+          <div class="adm-card-header">
+            <h2 class="adm-card-title"><span>⭐</span> تقييمات وآراء النزلاء</h2>
+            <button type="button" class="adm-btn adm-btn-gold adm-btn-sm" onclick="addNewReview()">+ إضافة تقييم جديد</button>
+          </div>
+
+          <div id="reviewsContainer">
+            <!-- Dynamic reviews -->
+          </div>
+
+          <button type="button" class="adm-btn adm-btn-gold" onclick="switchTab('tab-publish')">
+            <span>🚀</span> حفظ ونشر التقييمات
+          </button>
+        </div>
+      </section>
+
+      <!-- ================= TAB 9: GALLERY ================= -->
+      <section class="tab-pane" id="tab-gallery">
+        <div class="adm-card">
+          <div class="adm-card-header">
+            <h2 class="adm-card-title"><span>📸</span> إدارة صور المعرض الحي</h2>
+            <button type="button" class="adm-btn adm-btn-gold adm-btn-sm" onclick="addGalleryItem()">+ إضافة صورة للمعرض</button>
+          </div>
+
+          <div id="galleryContainer">
+            <!-- Dynamic gallery items -->
+          </div>
+
+          <button type="button" class="adm-btn adm-btn-gold" onclick="switchTab('tab-publish')">
+            <span>🚀</span> حفظ ونشر صور المعرض
+          </button>
+        </div>
+      </section>
+
+      <!-- ================= TAB 10: PUBLISH ENGINE ================= -->
       <section class="tab-pane" id="tab-publish">
-        <div class="admin-card">
-          <div class="admin-card-header">
-            <h2 class="admin-card-title"><span>🚀</span> نشر التعديلات وتحديث موقع GitHub Pages</h2>
+        <div class="adm-card">
+          <div class="adm-card-header">
+            <h2 class="adm-card-title"><span>🚀</span> مركز النشر الشامل والمزامنة مع GitHub</h2>
           </div>
 
           <div class="alert-box alert-info">
-            عند النقر على زر النشر، سيقوم النظام بعمل Commit تلقائي إلى ملفات <code>data/*.json</code> في مستودع GitHub الخاص بك. سيقوم GitHub Pages تلقائياً بإعادة بناء ونشر الموقع خلال 30 إلى 60 ثانية!
+            عند النقر على زر النشر، سيقوم المحرك بتحديث كافة ملفات البيانات (الألوان، شريط العروض، معلومات الفندق، الغرف والأسعار، التقييمات، وصور المعرض) في مستودعك <strong>RoseAdenHotel-2</strong> بعمل Commit فوري ومجاني.
           </div>
 
           <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
-            <button type="button" id="publishBtn" class="admin-btn admin-btn-gold" style="font-size: 1.05rem; padding: 0.85rem 2rem;" onclick="publishToGitHub()">
-              <span>🚀</span> حفظ ونشر التعديلات على GitHub الآن
+            <button type="button" id="syncAllBtn" class="adm-btn adm-btn-gold" style="font-size: 1.1rem; padding: 0.95rem 2.2rem;" onclick="syncAllToGitHub()">
+              <span>🚀</span> نشر وحفظ التعديلات الشاملة على GitHub الآن
             </button>
-            <button type="button" class="admin-btn admin-btn-outline" onclick="downloadJsonPackage()">
-              <span>📥</span> تحميل ملفات JSON المعدلة يدوياً
+            <button type="button" class="adm-btn adm-btn-outline" onclick="downloadBackupPackage()">
+              <span>📥</span> تحميل نسخة احتياطية من البيانات (JSON)
             </button>
           </div>
 
-          <div id="publishLog" class="alert-box alert-success" style="display: none; line-height: 1.8;">
+          <div id="syncTerminal" class="sync-terminal" style="display: none;">
+            > جاهز للنشر...
           </div>
         </div>
       </section>
