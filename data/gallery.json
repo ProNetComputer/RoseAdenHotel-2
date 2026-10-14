@@ -1,57 +1,7 @@
 [
   {
-    "title": "مبنى فندق روز عدن 2 السياحي ليلاً",
-    "category": "exterior",
-    "src": "assets/images/building-night.jpg"
-  },
-  {
-    "title": "صالة الاستقبال واللوبي الفاخر",
+    "title": "صورة من فندق روز عدن 2",
     "category": "lobby",
-    "src": "assets/images/lobby-reception.jpg"
-  },
-  {
-    "title": "أجنحة VIP الفاخرة",
-    "category": "rooms",
-    "src": "assets/images/suite-vip.jpg"
-  },
-  {
-    "title": "طيرمانات VIP واستقبال الضيوف",
-    "category": "vip",
-    "src": "assets/images/tirmanah-vip.jpg"
-  },
-  {
-    "title": "قاعة التدريب الحديثة الكبرى",
-    "category": "halls",
-    "src": "assets/images/training-hall.jpg"
-  },
-  {
-    "title": "الشاشة الذكية العملاقة للتدريب",
-    "category": "halls",
-    "src": "assets/images/smart-screen.jpg"
-  },
-  {
-    "title": "قاعة الوجبات والضيافة",
-    "category": "halls",
-    "src": "assets/images/dining-hall.jpg"
-  },
-  {
-    "title": "الغرف العائلية الفاخرة",
-    "category": "rooms",
-    "src": "assets/images/room-family.jpg"
-  },
-  {
-    "title": "غرف سريرين (Twin Room)",
-    "category": "rooms",
-    "src": "assets/images/room-twin.jpg"
-  },
-  {
-    "title": "غرف 3 أسرة واسعة",
-    "category": "rooms",
-    "src": "assets/images/room-triple.jpg"
-  },
-  {
-    "title": "مبنى فندق روز عدن 2 نهاراً",
-    "category": "exterior",
-    "src": "assets/images/building-day.jpg"
+    "src": "assets/images/gallery-1791952739561.jpg"
   }
 ]
