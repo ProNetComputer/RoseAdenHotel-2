@@ -1,0 +1,620 @@
+/* ==========================================================================
+   Rose Aden 2 - State-of-the-Art Pro Admin Dashboard Stylesheet
+   لوحة التحكم الاحترافية الشاملة - فندق روز عدن 2
+   ========================================================================== */
+
+:root {
+  --adm-bg: #090305;
+  --adm-sidebar: #13060b;
+  --adm-card: #1c0a12;
+  --adm-card-elevated: #240d17;
+  --adm-border: rgba(226, 45, 70, 0.25);
+  --adm-border-gold: rgba(212, 175, 55, 0.4);
+  --adm-text: #ffffff;
+  --adm-text-sub: #d6cbd0;
+  --adm-muted: #96838a;
+  --adm-primary: #e22d46;
+  --adm-primary-hover: #be123c;
+  --adm-gold: #d4af37;
+  --adm-gold-light: #f5cd5f;
+  --adm-success: #10b981;
+  --adm-warning: #f59e0b;
+  --adm-danger: #ef4444;
+  --adm-radius: 14px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Cairo', system-ui, -apple-system, sans-serif;
+  background-color: var(--adm-bg);
+  color: var(--adm-text);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  overflow-x: hidden;
+}
+
+/* Sidebar */
+.adm-sidebar {
+  width: 290px;
+  background: var(--adm-sidebar);
+  border-left: 1px solid var(--adm-border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  min-height: 100vh;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.adm-brand {
+  padding: 1.5rem 1.25rem;
+  border-bottom: 1px solid var(--adm-border);
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.adm-brand img {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  border: 1.5px solid var(--adm-gold);
+  object-fit: cover;
+}
+
+.adm-brand h2 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.adm-brand span {
+  font-size: 0.75rem;
+  color: var(--adm-gold);
+  display: block;
+}
+
+.adm-nav {
+  padding: 1.25rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex-grow: 1;
+}
+
+.adm-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.8rem 1.1rem;
+  border-radius: 10px;
+  color: var(--adm-text-sub);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.adm-nav-item:hover {
+  background: rgba(226, 45, 70, 0.12);
+  color: #fff;
+  border-color: var(--adm-border);
+}
+
+.adm-nav-item.active {
+  background: linear-gradient(90deg, rgba(226, 45, 70, 0.22) 0%, rgba(212, 175, 55, 0.15) 100%);
+  color: var(--adm-gold-light);
+  border-color: var(--adm-border-gold);
+  font-weight: 700;
+}
+
+/* Main Area */
+.adm-main {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.adm-topbar {
+  background: var(--adm-sidebar);
+  border-bottom: 1px solid var(--adm-border);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.sync-status {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+  background: rgba(0, 0, 0, 0.45);
+  padding: 0.4rem 1rem;
+  border-radius: 99px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--adm-warning);
+}
+
+.status-dot.connected {
+  background: var(--adm-success);
+  box-shadow: 0 0 10px var(--adm-success);
+}
+
+.adm-content {
+  padding: 2.25rem;
+  max-width: 1180px;
+  width: 100%;
+}
+
+.tab-pane {
+  display: none;
+}
+
+.tab-pane.active {
+  display: block;
+}
+
+/* Cards & View/Edit Containers */
+.adm-card {
+  background: var(--adm-card);
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.adm-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.adm-card-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* View Mode Details Grid */
+.view-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.view-item-box {
+  background: rgba(0, 0, 0, 0.35);
+  padding: 1.1rem 1.25rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.view-item-label {
+  font-size: 0.8rem;
+  color: var(--adm-muted);
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+.view-item-val {
+  font-size: 1.02rem;
+  color: #ffffff;
+  font-weight: 700;
+  word-break: break-word;
+}
+
+/* Form Controls */
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--adm-text-sub);
+  margin-bottom: 0.45rem;
+}
+
+.adm-input, .adm-select, .adm-textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 0.92rem;
+  transition: all 0.2s ease;
+}
+
+.adm-input:focus, .adm-select:focus, .adm-textarea:focus {
+  outline: none;
+  border-color: var(--adm-primary);
+  box-shadow: 0 0 0 3px rgba(226, 45, 70, 0.25);
+}
+
+/* Buttons */
+.adm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.35rem;
+  border-radius: 10px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.adm-btn-primary {
+  background: var(--adm-primary);
+  color: #fff;
+}
+
+.adm-btn-primary:hover {
+  background: var(--adm-primary-hover);
+  transform: translateY(-1px);
+}
+
+.adm-btn-gold {
+  background: var(--adm-gold);
+  color: #000;
+}
+
+.adm-btn-gold:hover {
+  background: var(--adm-gold-light);
+  transform: translateY(-1px);
+}
+
+.adm-btn-outline {
+  background: transparent;
+  border: 1px solid var(--adm-border);
+  color: #fff;
+}
+
+.adm-btn-outline:hover {
+  border-color: var(--adm-primary);
+  color: var(--adm-primary);
+}
+
+.adm-btn-danger {
+  background: var(--adm-danger);
+  color: #fff;
+}
+
+.adm-btn-danger:hover {
+  background: #dc2626;
+}
+
+.adm-btn-sm {
+  padding: 0.4rem 0.85rem;
+  font-size: 0.82rem;
+}
+
+/* Alerts */
+.alert-box {
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.alert-info {
+  background: rgba(56, 182, 255, 0.1);
+  border: 1px solid rgba(56, 182, 255, 0.3);
+  color: #7dd3fc;
+}
+
+.alert-success {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #6ee7b7;
+}
+
+.alert-warning {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #fde68a;
+}
+
+/* Room Cards Grid (View & Management) */
+.adm-rooms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.adm-room-card {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+}
+
+.adm-room-card:hover {
+  border-color: var(--adm-gold);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+}
+
+.adm-room-media {
+  position: relative;
+  height: 200px;
+  background: #000;
+}
+
+.adm-room-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.adm-room-badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: var(--adm-primary);
+  color: #fff;
+  padding: 0.25rem 0.75rem;
+  border-radius: 99px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.adm-room-body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.adm-room-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 0.35rem;
+}
+
+.adm-room-price {
+  font-size: 1rem;
+  color: var(--adm-gold-light);
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.adm-room-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 1.25rem;
+  flex-grow: 1;
+}
+
+.adm-feature-tag {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--adm-text-sub);
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+}
+
+.adm-room-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Modal Popup for Room Editing / Creation */
+.adm-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.adm-modal-backdrop.open {
+  display: flex;
+}
+
+.adm-modal-box {
+  background: var(--adm-card-elevated);
+  border: 1.5px solid var(--adm-border-gold);
+  border-radius: 18px;
+  width: 100%;
+  max-width: 720px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9);
+  padding: 2rem;
+  position: relative;
+}
+
+/* Image Pre-Flight Inspector Box */
+.image-preflight-panel {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1.5px solid var(--adm-border-gold);
+  border-radius: var(--adm-radius);
+  padding: 1.5rem;
+  margin-bottom: 1.75rem;
+}
+
+.image-preview-flex {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.preflight-stage-thumb {
+  width: 100%;
+  height: 160px;
+  border-radius: 12px;
+  border: 1.5px solid var(--adm-gold);
+  object-fit: cover;
+  background: #000;
+}
+
+.preflight-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.preflight-metric-card {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 0.6rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.preflight-metric-title {
+  font-size: 0.72rem;
+  color: var(--adm-muted);
+}
+
+.preflight-metric-value {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.verdict-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.85rem;
+  border-radius: 99px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.verdict-optimal {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid var(--adm-success);
+  color: #6ee7b7;
+}
+
+.verdict-heavy {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid var(--adm-warning);
+  color: #fde68a;
+}
+
+/* Gallery Management Grid */
+.adm-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1rem;
+}
+
+.adm-gallery-card {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--adm-border);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.adm-gallery-card img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  background: #000;
+}
+
+.adm-gallery-card-body {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex-grow: 1;
+}
+
+@media (max-width: 768px) {
+  .image-preview-flex {
+    grid-template-columns: 1fr;
+  }
+  .preflight-stage-thumb {
+    height: 180px;
+  }
+}
+/* شاشة القفل وتسجيل الدخول */
+.login-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: center; z-index: 99999; direction: rtl; }
+.login-card { background: #ffffff; width: 100%; max-width: 420px; padding: 2.5rem 2rem; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); text-align: center; }
+.login-header h2 { margin: 0 0 0.5rem; color: #1e293b; font-size: 1.5rem; }
+.login-header p { color: #64748b; font-size: 0.9rem; margin-bottom: 1.5rem; }
+.form-group { text-align: right; margin-bottom: 1.2rem; }
+.login-card label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #334155; }
+.login-card select, .login-card input { width: 100%; padding: 0.75rem 1rem; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 1rem; outline: none; transition: border-color 0.2s; box-sizing: border-box;}
+.login-card select:focus, .login-card input:focus { border-color: #c5a059; }
+.btn-login { width: 100%; padding: 0.85rem; background: #c5a059; color: #fff; border: none; border-radius: 8px; font-size: 1.05rem; font-weight: bold; cursor: pointer; transition: background 0.2s; }
+.btn-login:hover { background: #b08d48; }
+.login-error { background: #fee2e2; color: #dc2626; padding: 0.75rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem; font-weight: 600; }
+.session-bar { display: flex; justify-content: space-between; align-items: center; background: #1e293b; color: #ffffff; padding: 0.75rem 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; direction: rtl; }
+.role-badge { background: #c5a059; color: #fff; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.85rem; font-weight: bold; margin-left: 0.5rem; }
+.btn-logout { background: #ef4444; color: white; border: none; padding: 0.45rem 1rem; border-radius: 6px; cursor: pointer; font-weight: 600; }
+.restricted-hidden { display: none !important; }

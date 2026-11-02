@@ -1,0 +1,44 @@
+[
+  {
+    "icon": "🌐",
+    "title_ar": "إنترنت فايبر مجاني",
+    "title_en": "High-Speed Fiber Wi-Fi",
+    "desc_ar": "تغطية واي فاي فايبر سريعة ومجانية في جميع أرجاء الفندق والغرف والقاعات.",
+    "desc_en": "High-speed fiber optic Wi-Fi coverage across all rooms, halls, and public areas."
+  },
+  {
+    "icon": "⚡",
+    "title_ar": "كهرباء وتكييف 24/7",
+    "title_en": "24/7 Power & Continuous AC",
+    "desc_ar": "مولدات كهربائية حديثة تعمل على مدار الساعة دون انقطاع لضمان راحتكم التامة.",
+    "desc_en": "Heavy-duty backup generators ensuring uninterrupted power and cool AC 24/7."
+  },
+  {
+    "icon": "🅿️",
+    "title_ar": "موقفان للسيارات بحراسة",
+    "title_en": "Two Monitored Parking Lots",
+    "desc_ar": "موقفان فسيحان للسيارات بحراسة أمنية مستمرة وكاميرات مراقبة رقمية حديثة.",
+    "desc_en": "Two spacious on-site parking lots with 24/7 security guards and CCTV cameras."
+  },
+  {
+    "icon": "✈️",
+    "title_ar": "قرب المطار وخدمة توصيل",
+    "title_en": "Airport Proximity & Shuttle",
+    "desc_ar": "موقع استراتيجي على بعد 5 دقائق من مطار عدن الدولي مع خدمة استقبال وتوصيل مجانية.",
+    "desc_en": "Strategic location 5 minutes from Aden International Airport with complimentary shuttle."
+  },
+  {
+    "icon": "🌊",
+    "title_ar": "إطلالة ساحل أبين الساحرة",
+    "title_en": "Direct Abyan Beach Proximity",
+    "desc_ar": "خطوات معدودة عن شاطئ البحر للاستمتاع بنسيم البحر العليل والأجواء الهادئة.",
+    "desc_en": "Just steps away from Abyan beach, enjoying fresh coastal breeze and peaceful serenity."
+  },
+  {
+    "icon": "🛎️",
+    "title_ar": "خدمة غرف واستقبال 24 ساعة",
+    "title_en": "24-Hour Reception & Room Service",
+    "desc_ar": "فريق استقبال وضيافة متخصص رهن إشارتكم لتلبية كافة متطلباتكم على مدار الساعة.",
+    "desc_en": "Attentive front desk and room service staff ready to assist you at all times."
+  }
+]
