@@ -17,7 +17,7 @@
     "beds_en": "Master King Bed + VIP Lounge Area",
     "capacity_ar": "2 - 3 أشخاص",
     "capacity_en": "2 - 3 Guests",
-    "available": false,
+    "available": true,
     "featured_home": true,
     "show_in_vip_page": false,
     "image": "assets/images/ros2-suite-king-blue.jpg",
