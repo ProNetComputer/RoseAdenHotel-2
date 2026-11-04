@@ -244,9 +244,9 @@
     "title_en": "Comfortable Triple Room",
     "description_ar": "خيار اقتصادي ومريح للمجموعات والأصدقاء بخدمة فندقية متكاملة.",
     "category": "rooms",
-    "group_ar": "الغرف والأجنحة الفندقية",
+    "group_ar": "الغرف والأجنحة",
     "badge_ar": "غرفة ثلاثية",
-    "src": "assets/images/room-triple.jpg",
+    "src": "assets/images/gallery-1793767790133.jpg",
     "show_in_carousel": true,
     "featured": false,
     "visible": true
