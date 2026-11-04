@@ -1,6 +1,12 @@
 [
   {
     "title": "صورة من فندق روز عدن 2",
+    "category": "rooms",
+    "group_ar": "🛏️ الغرف والأجنحة",
+    "src": "assets/images/gallery-1793750892743.jpg"
+  },
+  {
+    "title": "صورة من فندق روز عدن 2",
     "category": "vip",
     "group_ar": "👑 أجنحة وطيرمانات VIP",
     "src": "assets/images/gallery-1793750855178.jpg"
