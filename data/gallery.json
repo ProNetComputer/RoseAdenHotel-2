@@ -49,8 +49,8 @@
   },
   {
     "title": "صورة من فندق روز عدن 2",
-    "category": "vip",
-    "group_ar": "👑 أجنحة وطيرمانات VIP",
+    "category": "rooms",
+    "group_ar": "الغرف والأجنحة",
     "src": "assets/images/gallery-1793750815606.jpg"
   },
   {
@@ -109,8 +109,8 @@
   },
   {
     "title": "مجلس وطيرمانة VIP عربية واسعة للضيافة والاستقبال",
-    "category": "vip",
-    "group_ar": "أجنحة وطيرمانات VIP",
+    "category": "rooms",
+    "group_ar": "الغرف والأجنحة",
     "src": "assets/images/ros2-vip-majlis.jpg"
   },
   {
@@ -148,12 +148,6 @@
     "category": "rooms",
     "group_ar": "الغرف والأجنحة الفندقية",
     "src": "assets/images/room-twin.jpg"
-  },
-  {
-    "title": "غرف 3 أسرة مريحة (Triple Room)",
-    "category": "rooms",
-    "group_ar": "الغرف والأجنحة الفندقية",
-    "src": "assets/images/room-triple.jpg"
   },
   {
     "title": "قاعة التدريب الحديثة الكبرى والمؤتمرات",
