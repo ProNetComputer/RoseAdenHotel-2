@@ -62,7 +62,7 @@
     "capacity_en": "2 - 4 Guests",
     "available": true,
     "featured_home": true,
-    "show_in_vip_page": true,
+    "show_in_vip_page": false,
     "image": "assets/images/room-1793763227470.jpg",
     "extra_images": [
       "assets/images/ros2-suite-king-blue.jpg",
