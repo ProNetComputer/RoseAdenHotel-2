@@ -34,14 +34,14 @@
     "title_ar": "الغرف والأجنحة العائلية الفاخرة",
     "title_en": "Luxury Family Suites",
     "badge_ar": "مثالية للعائلات",
-    "badge_en": "Family Choice",
+    "badge_en": "Special",
     "price_per_night": "أسعار تنافسية",
-    "price_en": "Competitive Rates",
+    "price_en": "Special Rate",
     "beds_ar": "سرير مزدوج كبير + أسرة إضافية وجلسة عائلية",
-    "beds_en": "Large Double Bed + Extra Beds",
+    "beds_en": "Comfortable Bed",
     "capacity_ar": "4 - 5 أشخاص",
-    "capacity_en": "4 - 5 Guests",
-    "image": "assets/images/ros2-suite-vanity-angle.jpg",
+    "capacity_en": "2 Guests",
+    "image": "assets/images/room-1793751196098.jpg",
     "features_ar": [
       "مساحات رحبة وتوزيع ذكي يضمن راحة وخصوصية العائلة",
       "تسريحة حديثة بثلاث مرايا ودواليب تخزين واسعة",
@@ -51,11 +51,9 @@
       "ثلاجة خاصة وغلاية ومشروبات ترحيبية"
     ],
     "features_en": [
-      "Spacious layout ensuring family comfort & privacy",
-      "Modern vanity mirror desk and large wardrobes",
-      "Comfortable sitting area & Smart LED TV",
-      "Unlimited high-speed fiber internet",
-      "24/7 dedicated room service & housekeeping"
+      "Silent Air Conditioning",
+      "Smart Screen TV",
+      "Free Fiber Wi-Fi"
     ]
   },
   {
