@@ -102,8 +102,8 @@
     "capacity_ar": "شخصان (مع إمكانية سرير إضافي)",
     "capacity_en": "2 Guests",
     "available": true,
-    "featured_home": false,
-    "show_in_vip_page": true,
+    "featured_home": true,
+    "show_in_vip_page": false,
     "image": "assets/images/ros2-suite-vanity-angle.jpg",
     "extra_images": [
       "assets/images/ros2-suite-king-blue.jpg"
