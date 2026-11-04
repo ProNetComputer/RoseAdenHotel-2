@@ -5,14 +5,14 @@
     "title_ar": "أجنحة VIP الملكية الفاخرة",
     "title_en": "Royal VIP Suites",
     "badge_ar": "الأكثر فخامة",
-    "badge_en": "Most Luxurious",
+    "badge_en": "Special",
     "price_per_night": "حسب الطلب / أسعار خاصة",
-    "price_en": "Upon Request / Special Rate",
+    "price_en": "Special Rate",
     "beds_ar": "سرير ملكي ماستر كينج (King Bed) + ركن جلوس",
-    "beds_en": "Master King Bed + Lounge Area",
+    "beds_en": "Comfortable Bed",
     "capacity_ar": "2 - 3 أشخاص",
-    "capacity_en": "2 - 3 Guests",
-    "image": "assets/images/ros2-suite-king-blue.jpg",
+    "capacity_en": "2 Guests",
+    "image": "assets/images/room-1793750455421.jpg",
     "features_ar": [
       "سرير ماستر كينج بتصميم مخملي ملكي فاخر",
       "ركن جلوس وأريكة استرخاء مريحة مع تسريحة ومكتب",
@@ -23,12 +23,9 @@
       "تكييف متطور فائق الهدوء وكهرباء 24/7"
     ],
     "features_en": [
-      "Royal velvet Master King bed",
-      "Private sitting sofa area, vanity mirror & desk",
-      "4K Smart TV + High-speed complimentary fiber Wi-Fi",
-      "Luxury marble bathroom with toiletries",
-      "Mini-fridge, kettle & welcome hospitality tray",
-      "24/7 uninterrupted power & whisper-quiet AC"
+      "Silent Air Conditioning",
+      "Smart Screen TV",
+      "Free Fiber Wi-Fi"
     ]
   },
   {
