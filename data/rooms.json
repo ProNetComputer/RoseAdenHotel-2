@@ -134,5 +134,32 @@
       "Smart Screen TV",
       "Free Fiber Wi-Fi"
     ]
+  },
+  {
+    "id": "room-1793751438697",
+    "category": "vip",
+    "title_ar": "طيرمانات ومجالس Vطيرمانات ومجالس VIP لاستقبال الضيوفIP",
+    "title_en": "Deluxe Room",
+    "badge_ar": "🛏️ مجلس عربي ويمني ملكي فسيح بأرقى المفروشات • 👥 يتسع لاستقبال الضيوف واللقاءات الخاصة",
+    "badge_en": "Special",
+    "price_per_night": " 💰 حسب الحجز والمناسبة",
+    "price_en": "Special Rate",
+    "beds_ar": "طيرمانه واجهه بحرية ",
+    "beds_en": "Comfortable Bed",
+    "capacity_ar": "10 أشخاص",
+    "capacity_en": "2 Guests",
+    "image": "assets/images/ros2-room-twin-blue.jpg",
+    "features_ar": [
+      "🛏️ مجلس عربي ويمني ملكي فسيح بأرقى المفروشات • 👥 يتسع لاستقبال الضيوف واللقاءات الخاصة",
+      "مجلس فسيح ومفروش بأحدث الجلسات العربية المريحة",
+      "إطلالة بانورامية على ساحل أبين وأفق مدينة عدن",
+      "تكييف مركزي بارد، شاشات عرض، وإنترنت فايبر",
+      "مثالي لاستقبال كبار الضيوف، رجال الأعمال، والمقيل اليمني الفاخر"
+    ],
+    "features_en": [
+      "Silent Air Conditioning",
+      "Smart Screen TV",
+      "Free Fiber Wi-Fi"
+    ]
   }
 ]
