@@ -202,9 +202,9 @@
     "title_en": "Spacious Royal Blue Triple Room",
     "description_ar": "غرفة ثلاثية فسيحة تضم 3 أسرة مفردة مريحة مثالية للعائلات والوفود.",
     "category": "rooms",
-    "group_ar": "الغرف والأجنحة",
+    "group_ar": "الغرف والأجنحة الفندقية",
     "badge_ar": "غرفة 3 أسرة ديلوكس",
-    "src": "assets/images/gallery-1793765575140.jpg",
+    "src": "assets/images/ros2-room-triple-blue.jpg",
     "show_in_carousel": true,
     "featured": false,
     "visible": true
@@ -230,9 +230,9 @@
     "title_en": "Classic Twin Room",
     "description_ar": "غرفة مزدوجة مريحة مجهزة بكافة وسائل الراحة والإنترنت المجاني.",
     "category": "rooms",
-    "group_ar": "الغرف والأجنحة",
+    "group_ar": "الغرف والأجنحة الفندقية",
     "badge_ar": "غرفة مزدوجة",
-    "src": "assets/images/gallery-1793765642805.jpg",
+    "src": "assets/images/room-twin.jpg",
     "show_in_carousel": true,
     "featured": false,
     "visible": true
