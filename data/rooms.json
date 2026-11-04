@@ -256,7 +256,7 @@
     "capacity_ar": "3 - 4 أشخاص",
     "capacity_en": "3 - 4 Guests",
     "available": true,
-    "featured_home": false,
+    "featured_home": true,
     "show_in_vip_page": false,
     "image": "assets/images/ros2-room-triple-blue.jpg",
     "extra_images": [
