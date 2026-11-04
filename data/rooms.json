@@ -115,14 +115,14 @@
     "title_ar": "طيرمانات ومجالس VIP لاستقبال الضيوف",
     "title_en": "VIP Penthouse & Majlis Lounge",
     "badge_ar": "مجالس ضيافة وإطلالة بحرية",
-    "badge_en": "Sea View & Traditional Luxury",
+    "badge_en": "Special",
     "price_per_night": "حسب الحجز والمناسبة",
-    "price_en": "Upon Reservation",
+    "price_en": "Special Rate",
     "beds_ar": "مجلس عربي ويمني ملكي فسيح بأرقى المفروشات",
-    "beds_en": "Spacious Royal Arabic Majlis",
+    "beds_en": "Comfortable Bed",
     "capacity_ar": "يتسع لاستقبال الضيوف واللقاءات الخاصة",
-    "capacity_en": "Exclusive VIP Gatherings",
-    "image": "assets/images/ros2-vip-majlis.jpg",
+    "capacity_en": "2 Guests",
+    "image": "assets/images/room-1793751301164.jpg",
     "features_ar": [
       "مجلس فسيح ومفروش بأحدث الجلسات العربية المريحة",
       "إطلالة بانورامية على ساحل أبين وأفق مدينة عدن",
@@ -130,10 +130,9 @@
       "مثالي لاستقبال كبار الضيوف، رجال الأعمال، والمقيل اليمني الفاخر"
     ],
     "features_en": [
-      "Spacious lounge furnished with modern comfortable Arabic seating",
-      "Panoramic view of Abyan coast and Aden skyline",
-      "Cool air conditioning, large displays, and fiber internet",
-      "Ideal for VIP guests, executives, and private gatherings"
+      "Silent Air Conditioning",
+      "Smart Screen TV",
+      "Free Fiber Wi-Fi"
     ]
   }
 ]
