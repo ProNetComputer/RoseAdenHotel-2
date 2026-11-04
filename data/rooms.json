@@ -89,14 +89,14 @@
     "title_ar": "غرف 3 أسرة واسعة (Triple Room)",
     "title_en": "Spacious Triple Room",
     "badge_ar": "سعة إضافية وراحة متكاملة",
-    "badge_en": "Extra Space & Comfort",
+    "badge_en": "Special",
     "price_per_night": "أسعار اقتصادية ممتازة",
-    "price_en": "Great Value Rate",
+    "price_en": "Special Rate",
     "beds_ar": "3 أسرة مفردة مجهزة بمفارش قطنية فاخرة",
-    "beds_en": "3 Separate Beds with Luxury Linens",
+    "beds_en": "Comfortable Bed",
     "capacity_ar": "3 - 4 أشخاص",
-    "capacity_en": "3 - 4 Guests",
-    "image": "assets/images/ros2-room-triple-blue.jpg",
+    "capacity_en": "2 Guests",
+    "image": "assets/images/room-1793751227179.jpg",
     "features_ar": [
       "3 أسرة فندقية مريحة بتصميم مخملي أزرق عصري",
       "مساحة داخلية واسعة تتيح سهولة الحركة والاسترخاء",
@@ -104,10 +104,9 @@
       "دواليب ملابس رحبة وخدمة غرف 24 ساعة"
     ],
     "features_en": [
-      "3 comfortable beds with royal blue velvet headboard",
-      "Roomy interior layout for easy movement",
-      "Mini-fridge, Smart LED TV, and free fiber Wi-Fi",
-      "24-hour around-the-clock room service"
+      "Silent Air Conditioning",
+      "Smart Screen TV",
+      "Free Fiber Wi-Fi"
     ]
   },
   {
