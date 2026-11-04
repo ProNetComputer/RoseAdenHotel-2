@@ -103,7 +103,7 @@
     "capacity_en": "2 Guests",
     "available": true,
     "featured_home": true,
-    "show_in_vip_page": false,
+    "show_in_vip_page": true,
     "image": "assets/images/ros2-suite-vanity-angle.jpg",
     "extra_images": [
       "assets/images/ros2-suite-king-blue.jpg"
