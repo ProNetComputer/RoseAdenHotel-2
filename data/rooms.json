@@ -314,5 +314,40 @@
       "خصوصية تامة لكبار الضيوف",
       "موقف سيارات مؤمّن"
     ]
+  },
+  {
+    "id": "room-1793766436837",
+    "category": "tirmanah",
+    "title_ar": "طيرمانات VIP  أختبر الضيافة الفاخرة والخدمات الأستثنائية في أفضل الطيرمانات .",
+    "title_en": "Luxury Suite & Room",
+    "subtitle_ar": "إقامة فندقية فاخرة ومريحة",
+    "description_ar": "أسقبل ضيوفك في أفخم طيرمانات راقية في مدينة عدن وأجعلهم يشعرون  بضيافة أستثنائية",
+    "badge_ar": "جديد ✨طيرمانات VIP  أختبر الضيافة الفاخرة",
+    "badge_en": "Special",
+    "price_per_night": "أسعار تنافسية",
+    "price_en": "Special Rate",
+    "area_ar": "4م²",
+    "view_ar": "إطلالة بحريه",
+    "floor_ar": "الطوابق 8",
+    "beds_ar": "طيرمانة مجلس عربي",
+    "beds_en": "Comfortable Bed",
+    "capacity_ar": "15- 20 شخص",
+    "capacity_en": "2 Guests",
+    "available": true,
+    "featured_home": true,
+    "show_in_vip_page": true,
+    "image": "assets/images/room-1793766432622.jpg",
+    "extra_images": [],
+    "features_ar": [
+      "شاشة عرض ذكية كبيرة، قنوات رياضية وإخبارية",
+      "وإنترنت فايبر  وستار لينك مجاني",
+      "تكييف هادئ 24/7",
+      "ثلاجة ميني بار وغلاية"
+    ],
+    "included_services_ar": [
+      "استقبال من المطار",
+      "واي فاي مجاني",
+      "كهرباء 24/7"
+    ]
   }
 ]
