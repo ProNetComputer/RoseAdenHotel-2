@@ -64,14 +64,14 @@
     "title_ar": "غرف سريرين ديلوكس (Deluxe Twin)",
     "title_en": "Deluxe Twin Room",
     "badge_ar": "الأكثر طلباً لرجال الأعمال",
-    "badge_en": "Popular for Business & Friends",
+    "badge_en": "Special",
     "price_per_night": "أسعار مميزة",
     "price_en": "Special Rate",
     "beds_ar": "سريران منفصلان مريحان + أريكة جلوس جانبية",
-    "beds_en": "2 Separate Beds + Side Sofa",
+    "beds_en": "Comfortable Bed",
     "capacity_ar": "شخصان - 3 أشخاص",
-    "capacity_en": "2 - 3 Guests",
-    "image": "assets/images/ros2-room-twin-blue.jpg",
+    "capacity_en": "2 Guests",
+    "image": "assets/images/room-1793750526358.jpg",
     "features_ar": [
       "سريران منفصلان بمراتب طبية فندقية فائقة الراحة",
       "أريكة جلوس جانبية مريحة وأرضيات رخامية لامعة",
@@ -80,10 +80,9 @@
       "تكييف اسبليت هادئ وحمام خاص متكامل"
     ],
     "features_en": [
-      "2 separate beds with orthopedic hotel mattresses",
-      "Comfortable side sofa and polished marble floors",
-      "Smart flat-screen TV and private mini-fridge",
-      "Superfast complimentary fiber Wi-Fi"
+      "Silent Air Conditioning",
+      "Smart Screen TV",
+      "Free Fiber Wi-Fi"
     ]
   },
   {
