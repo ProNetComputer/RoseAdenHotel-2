@@ -276,43 +276,6 @@
     ]
   },
   {
-    "id": "vip-tirmanah-majlis",
-    "category": "tirmanah",
-    "title_ar": "طيرمانات ومجالس VIP الملكية لإطلالة ساحل أبين",
-    "title_en": "Royal Sea-View VIP Tirmanah & Majlis",
-    "subtitle_ar": "مجالس عربية ويمنية أصيلة بأعلى الفندق لاستقبال كبار الضيوف والمقيل الفاخر",
-    "description_ar": "تتربع طيرمانات ومجالس VIP في الطوابق العليا لفندق روز عدن 2 لتمنحكم إطلالة بانورامية ساحرة على ساحل أبين وأفق مدينة عدن، مع فرش عربي ملكي فاخر، تكييف مركزي بارد، وشاشات عرض كبيرة للقاءات الخاصة واستقبال الضيوف.",
-    "badge_ar": "إطلالة بحرية ومجلس ملكي 🌊👑",
-    "badge_en": "Sea View & Royal Majlis",
-    "price_per_night": "حسب الحجز والمناسبة (يومي / فترة)",
-    "price_en": "Upon Reservation",
-    "area_ar": "85 م²",
-    "view_ar": "إطلالة بانورامية مفتوحة على بحر أبين وعدن",
-    "floor_ar": "الطابق العلوي (Penthouse / Rooftop Level)",
-    "beds_ar": "مجلس عربي ويمني ملكي متكامل بأرقى المفروشات والمداكئ",
-    "beds_en": "Full Royal Arabic & Yemeni Majlis Seating",
-    "capacity_ar": "يتسع من 10 إلى 25 ضيفاً بأريحية تامة",
-    "capacity_en": "10 - 25 VIP Guests",
-    "available": true,
-    "featured_home": true,
-    "show_in_vip_page": true,
-    "image": "assets/images/ros2-vip-majlis.jpg",
-    "extra_images": [
-      "assets/images/tirmanah-vip.jpg"
-    ],
-    "features_ar": [
-      "مجلس يمني وعربي فسيح مفروش بأحدث الجلسات والمداكئ الملكية المريحة",
-      "إطلالة ساحرة على ساحل أبين وجولة الرحاب وأفق مدينة عدن",
-      "منظومة تكييف قوية وهادئة تضمن أجواء منعشة في كل الأوقات"
-    ],
-    "included_services_ar": [
-      "إطلالة بحرية بانورامية",
-      "خدمة ضيافة ومشروبات",
-      "خصوصية تامة لكبار الضيوف",
-      "موقف سيارات مؤمّن"
-    ]
-  },
-  {
     "id": "room-1793766436837",
     "category": "tirmanah",
     "title_ar": "طيرمانات VIP  أختبر الضيافة الفاخرة والخدمات الأستثنائية في أفضل الطيرمانات .",
