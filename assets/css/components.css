@@ -1307,3 +1307,287 @@ html[lang="en"] .hero-car-next {
 
 .lightbox-prev { right: 1rem; }
 .lightbox-next { left: 1rem; }
+
+/* ==========================================================================
+   v10 Enhancements: Stats Bar, Rich Room Specs, Posts & VIP Packages
+   إضافات الإصدار العاشر: شريط الإحصائيات، تفاصيل الغرف الموسعة، والمنشورات
+   ========================================================================== */
+
+.stats-bar-section {
+  padding: 1.5rem 0 2.5rem;
+}
+
+.stats-bar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1.25rem;
+}
+
+.stat-card {
+  background: linear-gradient(145deg, var(--bg-card) 0%, var(--bg-surface-elevated) 100%);
+  border: 1px solid var(--border-gold);
+  border-radius: var(--radius-lg);
+  padding: 1.4rem 1.25rem;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--luxury-gold);
+  box-shadow: var(--shadow-md);
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--luxury-gold-light);
+  line-height: 1.2;
+  margin-bottom: 0.35rem;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+/* Rich Room Card Enhancements */
+.room-availability-pill {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 800;
+  backdrop-filter: blur(8px);
+  z-index: 2;
+}
+
+.room-availability-pill.available {
+  background: rgba(16, 185, 129, 0.88);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.room-availability-pill.unavailable {
+  background: rgba(239, 68, 68, 0.88);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.room-subtitle {
+  font-size: 0.88rem;
+  color: var(--luxury-gold-light);
+  font-weight: 700;
+  margin-bottom: 0.55rem;
+}
+
+.room-desc-text {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.65;
+  margin-bottom: 0.9rem;
+}
+
+.room-specs-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-bottom: 0.9rem;
+}
+
+.room-spec-pill {
+  background: rgba(212, 175, 55, 0.1);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  padding: 0.22rem 0.65rem;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.room-services-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1.15rem;
+  padding-top: 0.65rem;
+  border-top: 1px dashed var(--border-subtle);
+}
+
+.room-service-tag {
+  background: rgba(226, 45, 70, 0.12);
+  color: var(--text-primary);
+  border: 1px solid var(--border-accent);
+  padding: 0.18rem 0.6rem;
+  border-radius: 99px;
+  font-size: 0.74rem;
+  font-weight: 600;
+}
+
+/* Dynamic Posts & Offers Section */
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.post-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  transition: var(--transition);
+}
+
+.post-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--luxury-gold);
+  box-shadow: var(--shadow-lg);
+}
+
+.post-card-media {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+}
+
+.post-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.post-card:hover .post-card-media img {
+  transform: scale(1.06);
+}
+
+.post-badge {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  background: linear-gradient(135deg, var(--rose-primary), var(--rose-dark));
+  color: #fff;
+  padding: 0.28rem 0.85rem;
+  border-radius: 99px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  box-shadow: var(--shadow-sm);
+}
+
+.post-date-pill {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 0.85rem;
+  background: rgba(13, 4, 7, 0.82);
+  color: var(--luxury-gold-light);
+  border: 1px solid var(--border-gold);
+  padding: 0.2rem 0.7rem;
+  border-radius: 99px;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.post-card-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.post-category {
+  font-size: 0.78rem;
+  color: var(--luxury-gold);
+  font-weight: 700;
+  margin-bottom: 0.35rem;
+}
+
+.post-title {
+  font-size: 1.22rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.4rem;
+  line-height: 1.4;
+}
+
+.post-subtitle {
+  font-size: 0.86rem;
+  color: var(--rose-primary);
+  font-weight: 700;
+  margin-bottom: 0.65rem;
+}
+
+.post-content {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 1.25rem;
+  flex-grow: 1;
+}
+
+/* VIP Packages Grid */
+.vip-packages-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+  gap: 2rem;
+}
+
+.vip-pkg-card {
+  background: linear-gradient(160deg, var(--bg-card) 0%, var(--bg-surface-elevated) 100%);
+  border: 1.5px solid var(--border-gold);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  transition: var(--transition);
+}
+
+.vip-pkg-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--luxury-gold);
+  box-shadow: var(--shadow-lg);
+}
+
+.vip-pkg-media {
+  position: relative;
+  height: 210px;
+  overflow: hidden;
+}
+
+.vip-pkg-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.vip-pkg-body {
+  padding: 1.6rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.gallery-overlay {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+.gallery-overlay p {
+  color: #e2d5d9;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

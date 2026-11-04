@@ -1,6 +1,6 @@
 /**
- * Rose Aden 2 Tourist Hotel - Grouped Gallery & Lightbox Engine
- * محرك معرض الصور المقسم حسب المجموعات مع العارض المكبر (Lightbox)
+ * Rose Aden 2 Tourist Hotel - Grouped Gallery & Lightbox Engine (v10 Enhanced)
+ * محرك معرض الصور المقسم حسب المجموعات مع العارض المكبر والوصف التفصيلي لكل عنصر
  */
 
 (function () {
@@ -26,7 +26,10 @@
     try {
       const res = await fetch('data/gallery.json', { cache: 'no-store' });
       if (res.ok) {
-        allGalleryItems = await res.json();
+        const raw = await res.json();
+        allGalleryItems = (raw || [])
+          .filter(item => item.visible !== false)
+          .sort((a, b) => (a.order || 999) - (b.order || 999));
       }
     } catch (e) {
       console.warn('Fallback to existing DOM gallery items:', e);
@@ -59,13 +62,26 @@
     });
   }
 
+  function renderGalleryCard(item, visibleIdx, group) {
+    const badgeLabel = item.badge_ar ? `${group.icon} ${item.badge_ar}` : `${group.icon} ${group.short_ar}`;
+    return `
+      <div class="gallery-item" data-category="${item.category}" onclick="openGalleryLightbox(${visibleIdx})">
+        <span class="gallery-item-badge">${badgeLabel}</span>
+        <img src="${item.src}" alt="${item.title || 'فندق روز عدن 2'}" loading="lazy" onerror="this.src='assets/images/logo.jpg'">
+        <div class="gallery-overlay">
+          <h4>${item.title || ''}</h4>
+          ${item.description_ar ? `<p>${item.description_ar}</p>` : ''}
+        </div>
+      </div>
+    `;
+  }
+
   function renderGalleryContent(filterKey) {
     activeFilter = filterKey;
     const container = document.getElementById('galleryGroupedContainer');
     if (!container) return;
 
     if (filterKey === 'all') {
-      // Render organized by groups
       currentVisibleList = [];
       let html = '';
 
@@ -86,15 +102,7 @@
               ${groupItems.map(item => {
                 const visibleIdx = currentVisibleList.length;
                 currentVisibleList.push(item);
-                return `
-                  <div class="gallery-item" data-category="${item.category}" onclick="openGalleryLightbox(${visibleIdx})">
-                    <span class="gallery-item-badge">${group.icon} ${group.short_ar}</span>
-                    <img src="${item.src}" alt="${item.title || 'فندق روز عدن 2'}" loading="lazy" onerror="this.src='assets/images/logo.jpg'">
-                    <div class="gallery-overlay">
-                      <h4>${item.title || ''}</h4>
-                    </div>
-                  </div>
-                `;
+                return renderGalleryCard(item, visibleIdx, group);
               }).join('')}
             </div>
           </div>
@@ -103,7 +111,6 @@
 
       container.innerHTML = html;
     } else {
-      // Render single filtered group
       const group = getGroupMeta(filterKey);
       currentVisibleList = allGalleryItems.filter(item => item.category === filterKey);
 
@@ -117,15 +124,7 @@
             <span class="gallery-group-count">${currentVisibleList.length} صور</span>
           </div>
           <div class="gallery-grid">
-            ${currentVisibleList.map((item, idx) => `
-              <div class="gallery-item" data-category="${item.category}" onclick="openGalleryLightbox(${idx})">
-                <span class="gallery-item-badge">${group.icon} ${group.short_ar}</span>
-                <img src="${item.src}" alt="${item.title || 'فندق روز عدن 2'}" loading="lazy" onerror="this.src='assets/images/logo.jpg'">
-                <div class="gallery-overlay">
-                  <h4>${item.title || ''}</h4>
-                </div>
-              </div>
-            `).join('')}
+            ${currentVisibleList.map((item, idx) => renderGalleryCard(item, idx, group)).join('')}
           </div>
         </div>
       `;
@@ -144,7 +143,6 @@
     });
   }
 
-  // Lightbox Modal
   function ensureLightboxModal() {
     if (document.getElementById('galleryLightbox')) return;
     const modal = document.createElement('div');
@@ -160,6 +158,7 @@
         </div>
         <div class="lightbox-caption-bar">
           <h3 id="lightboxTitle"></h3>
+          <p id="lightboxDesc" style="color: #d6cbd0; font-size: 0.92rem; margin: 0.35rem auto; max-width: 720px;"></p>
           <span id="lightboxMeta"></span>
         </div>
       </div>
@@ -202,10 +201,12 @@
     const group = getGroupMeta(item.category);
     const img = document.getElementById('lightboxMainImg');
     const title = document.getElementById('lightboxTitle');
+    const desc = document.getElementById('lightboxDesc');
     const meta = document.getElementById('lightboxMeta');
 
     if (img) img.src = item.src;
     if (title) title.textContent = item.title || 'فندق روز عدن 2';
+    if (desc) desc.textContent = item.description_ar || '';
     if (meta) meta.textContent = `${group.icon} ${group.title_ar} — صورة ${currentLightboxIndex + 1} من ${currentVisibleList.length}`;
   }
 

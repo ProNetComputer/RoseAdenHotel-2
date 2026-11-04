@@ -1,6 +1,6 @@
 /**
- * Rose Aden 2 Hotel - Enterprise Admin CMS v4.0 (CORS-Safe Atomic Git Sync Engine)
- * محرك لوحة التحكم الاحترافية: مزامنة ذرية عبر GitHub Git Trees API بدون أخطاء CORS أو تضارب SHA
+ * Rose Aden 2 Hotel - Enterprise Admin CMS v10.0
+ * محرك لوحة التحكم الشاملة: إدارة المستخدمين وكلمات المرور، محتويات الصفحات الـ 8، المنشورات، الغرف، والمعرض مع مزامنة ذرية عبر GitHub API
  */
 
 (function () {
@@ -14,15 +14,75 @@
     token: localStorage.getItem('rose_gh_token') || 'ghp_brEIi45WzJNmxsEJBUi33tKqJPD2XE2exfUe'
   };
 
+  // Default Users & Roles Fallback
+  const DEFAULT_USERS = {
+    developer: {
+      role: "developer",
+      title: "المطور (Developer)",
+      name_ar: "م. عمار الأسدي - برونت كمبيوتر",
+      password: "Dev@2026",
+      allowedSections: ["all"],
+      canEditPrices: true,
+      canDelete: true,
+      canEditTheme: true,
+      canManageUsers: true,
+      availabilityOnly: false,
+      description: "صلاحية كاملة 100%: إدارة جميع الأقسام، الصفحات، المنشورات، المعرض، الهوية، المستخدمين، والربط البرمجي مع GitHub."
+    },
+    manager: {
+      role: "manager",
+      title: "المدير العام (Manager)",
+      name_ar: "إدارة فندق روز عدن 2",
+      password: "Manager@2026",
+      allowedSections: ["tab-hotel", "tab-pages", "tab-rooms", "tab-gallery", "tab-hall", "tab-reviews", "tab-users", "tab-publish"],
+      canEditPrices: true,
+      canDelete: true,
+      canEditTheme: false,
+      canManageUsers: true,
+      availabilityOnly: false,
+      description: "إدارة شاملة لبيانات الفندق، محتويات الصفحات والمنشورات، الغرف والأسعار، المعرض، التقييمات، وتغيير كلمات المرور."
+    },
+    supervisor: {
+      role: "supervisor",
+      title: "المشرف الفندقي (Supervisor)",
+      name_ar: "مشرف الفترة",
+      password: "Super@2026",
+      allowedSections: ["tab-pages", "tab-rooms", "tab-gallery", "tab-hall", "tab-reviews", "tab-publish"],
+      canEditPrices: false,
+      canDelete: false,
+      canEditTheme: false,
+      canManageUsers: false,
+      availabilityOnly: false,
+      description: "إدارة المحتوى، المنشورات، صور المعرض، القاعة، والتقييمات (بدون صلاحية حذف العناصر أو تعديل الأسعار)."
+    },
+    reception: {
+      role: "reception",
+      title: "موظف الاستقبال (Reception)",
+      name_ar: "قسم الاستقبال والحجوزات",
+      password: "Rec@2026",
+      allowedSections: ["tab-rooms", "tab-hall", "tab-publish"],
+      canEditPrices: false,
+      canDelete: false,
+      canEditTheme: false,
+      canManageUsers: false,
+      availabilityOnly: true,
+      description: "تحديث حالة توفر الغرف والأجنحة والقاعة فقط دون تعديل الأسعار أو حذف البيانات."
+    }
+  };
+
   // In-Memory Datasets
+  let usersData = loadCachedUsers();
   let hotelData = null;
   let roomsData = null;
   let themeData = null;
   let hallData = null;
   let reviewsData = null;
   let galleryData = null;
+  let amenitiesData = null;
+  let pagesContentData = null;
 
   let activeAdminGalleryFilter = 'all';
+  let currentSelectedPageKey = 'home';
   let hasUnsavedChanges = false;
 
   // Pre-flight state for Gallery Image Uploader
@@ -37,12 +97,35 @@
     isOptimized: false
   };
 
-  // Room modal state
+  // Modal editing states
   let currentEditingRoomIndex = -1;
   let roomImageUploadBase64 = null;
 
+  let currentEditingGalleryIndex = -1;
+  let galleryModalImageUploadBase64 = null;
+
+  let currentEditingPostIndex = -1;
+  let postModalImageUploadBase64 = null;
+
+  function loadCachedUsers() {
+    try {
+      const raw = localStorage.getItem('rose_admin_users_cache');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed && parsed.developer) return parsed;
+      }
+    } catch (e) {}
+    return JSON.parse(JSON.stringify(DEFAULT_USERS));
+  }
+
+  function cacheUsersLocally(uData) {
+    try {
+      localStorage.setItem('rose_admin_users_cache', JSON.stringify(uData));
+    } catch (e) {}
+  }
+
   // =========================================================================
-  // 1. CORS-Safe GitHub API Helpers (No Pragma / No Cache-Control headers!)
+  // 1. CORS-Safe GitHub API Helpers
   // =========================================================================
   function getGitHubHeaders(isJson = false) {
     const headers = {
@@ -88,7 +171,6 @@
     if (bar) bar.style.display = 'none';
   }
 
-  // Fetch latest file SHA safely (CORS-compliant)
   async function getFreshFileSha(path) {
     const url = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${path}?ref=${encodeURIComponent(config.branch)}`;
     try {
@@ -107,7 +189,6 @@
     return null;
   }
 
-  // Commit a single binary or text file via Contents API with automatic 409 retry
   async function commitBinaryFileToGitHub(path, base64Content, message, retryCount = 0) {
     const url = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${path}`;
     const sha = await getFreshFileSha(path);
@@ -148,35 +229,27 @@
     return commitBinaryFileToGitHub(path, b64, message);
   }
 
-  // Atomic Multi-File Commit via GitHub Git Data API (Zero SHA conflicts!)
   async function commitMultipleFilesAtomically(filesMap, commitMessage) {
     const baseApi = `https://api.github.com/repos/${config.owner}/${config.repo}`;
 
-    // 1. Get current branch reference
     const refRes = await fetch(`${baseApi}/git/ref/heads/${encodeURIComponent(config.branch)}`, {
       method: 'GET',
       cache: 'no-store',
       headers: getGitHubHeaders(false)
     });
-    if (!refRes.ok) {
-      throw new Error('تعذر قراءة مرجع الفرع من GitHub');
-    }
+    if (!refRes.ok) throw new Error('تعذر قراءة مرجع الفرع من GitHub');
     const refData = await refRes.json();
     const latestCommitSha = refData.object.sha;
 
-    // 2. Get current commit to find base tree SHA
     const commitRes = await fetch(`${baseApi}/git/commits/${latestCommitSha}`, {
       method: 'GET',
       cache: 'no-store',
       headers: getGitHubHeaders(false)
     });
-    if (!commitRes.ok) {
-      throw new Error('تعذر قراءة الشجرة الأساسية من GitHub');
-    }
+    if (!commitRes.ok) throw new Error('تعذر قراءة الشجرة الأساسية من GitHub');
     const commitData = await commitRes.json();
     const baseTreeSha = commitData.tree.sha;
 
-    // 3. Build tree array
     const treeItems = Object.keys(filesMap).map(filePath => ({
       path: filePath,
       mode: '100644',
@@ -184,7 +257,6 @@
       content: filesMap[filePath]
     }));
 
-    // 4. Create new tree
     const treeRes = await fetch(`${baseApi}/git/trees`, {
       method: 'POST',
       cache: 'no-store',
@@ -200,7 +272,6 @@
     }
     const newTreeData = await treeRes.json();
 
-    // 5. Create new commit
     const newCommitRes = await fetch(`${baseApi}/git/commits`, {
       method: 'POST',
       cache: 'no-store',
@@ -217,7 +288,6 @@
     }
     const newCommitData = await newCommitRes.json();
 
-    // 6. Update branch ref pointer
     const updateRefRes = await fetch(`${baseApi}/git/refs/heads/${encodeURIComponent(config.branch)}`, {
       method: 'PATCH',
       cache: 'no-store',
@@ -235,8 +305,32 @@
     return newCommitData;
   }
 
+  // Helper to compress uploaded image via HTML5 Canvas
+  function compressImageFromFile(file, maxWidth = 1600, quality = 0.85, callback) {
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.naturalWidth;
+        let h = img.naturalHeight;
+        if (w > maxWidth) {
+          h = Math.round((maxWidth / w) * h);
+          w = maxWidth;
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        const compressedUrl = canvas.toDataURL('image/jpeg', quality);
+        callback(compressedUrl, compressedUrl.split(',')[1]);
+      };
+      img.src = evt.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
   // =========================================================================
-  // 2. Navigation & Connection Testing
+  // 2. Navigation, Sub-tabs & GitHub Connection
   // =========================================================================
   window.switchTab = function (tabId) {
     document.querySelectorAll('.adm-nav-item').forEach(el => el.classList.remove('active'));
@@ -246,6 +340,30 @@
     const navBtn = document.querySelector(`[data-tab="${tabId}"]`);
     if (targetTab) targetTab.classList.add('active');
     if (navBtn) navBtn.classList.add('active');
+  };
+
+  window.switchPagesSubTab = function (subId) {
+    document.querySelectorAll('.pages-subpane').forEach(el => {
+      el.style.display = el.id === subId ? 'block' : 'none';
+    });
+    const mapBtns = {
+      'sub-pages-texts': 'subTabBtnPages',
+      'sub-posts-manager': 'subTabBtnPosts',
+      'sub-vip-packages': 'subTabBtnVipPkgs',
+      'sub-amenities-manager': 'subTabBtnAmenities'
+    };
+    Object.entries(mapBtns).forEach(([paneId, btnId]) => {
+      const btn = document.getElementById(btnId);
+      if (btn) {
+        if (paneId === subId) {
+          btn.classList.add('adm-btn-gold');
+          btn.classList.remove('adm-btn-outline');
+        } else {
+          btn.classList.remove('adm-btn-gold');
+          btn.classList.add('adm-btn-outline');
+        }
+      }
+    });
   };
 
   window.testGitHubConnection = async function () {
@@ -280,10 +398,10 @@
       }
     } catch (err) {
       if (statusDot) statusDot.className = 'status-dot';
-      if (statusText) statusText.textContent = 'خطأ في الاتصال بـ GitHub';
+      if (statusText) statusText.textContent = 'الوضع المحلي / تحقق من رمز GitHub';
       if (alertBox) {
         alertBox.className = 'alert-box alert-info';
-        alertBox.textContent = 'تعذر الاتصال بـ GitHub. يرجى مراجعة اسم المستودع وصلاحية الرمز (Token).';
+        alertBox.textContent = 'تعذر الاتصال المباشر بـ GitHub حالياً. يرجى مراجعة اسم المستودع وصلاحية الرمز (Token).';
       }
       return false;
     }
@@ -306,10 +424,9 @@
   };
 
   // =========================================================================
-  // 3. Load Initial Data (From GitHub Live API first, fallback to local JSON)
+  // 3. Load All 9 Datasets (GitHub API first -> Local JSON fallback)
   // =========================================================================
   async function fetchJsonFileSmart(relPath) {
-    // Try fetching from GitHub API first so admin always sees latest committed state
     if (config.owner && config.repo && config.token) {
       try {
         const ghUrl = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${relPath}?ref=${encodeURIComponent(config.branch)}`;
@@ -325,9 +442,7 @@
             return JSON.parse(jsonText);
           }
         }
-      } catch (e) {
-        // Fallback to local file
-      }
+      } catch (e) {}
     }
 
     const localRes = await fetch(`../${relPath}`, { cache: 'no-store' });
@@ -346,21 +461,48 @@
 
   async function loadInitialData() {
     try {
-      const [hData, rData, thData, hlData, rvData, gData] = await Promise.all([
+      const [hData, rData, thData, hlData, rvData, gData, amData, pcData, uData] = await Promise.all([
         fetchJsonFileSmart('data/hotel-info.json').catch(() => null),
         fetchJsonFileSmart('data/rooms.json').catch(() => null),
         fetchJsonFileSmart('data/theme.json').catch(() => null),
         fetchJsonFileSmart('data/hall.json').catch(() => null),
         fetchJsonFileSmart('data/reviews.json').catch(() => null),
-        fetchJsonFileSmart('data/gallery.json').catch(() => null)
+        fetchJsonFileSmart('data/gallery.json').catch(() => null),
+        fetchJsonFileSmart('data/amenities.json').catch(() => null),
+        fetchJsonFileSmart('data/pages-content.json').catch(() => null),
+        fetchJsonFileSmart('data/users.json').catch(() => null)
       ]);
 
-      hotelData = hData || getDefaultHotelInfo();
+      hotelData = hData || {
+        name_ar: 'فندق روز عدن 2 السياحي',
+        name_en: 'Rose Aden 2 Tourist Hotel',
+        slogan_ar: 'حيث يلتقي البحر بالفخامة... تبدأ أجمل لحظاتك',
+        address_ar: 'العريش - ساحل أبين - جوار جولة الرحاب - عدن',
+        whatsapp: '780000656',
+        phones: ['02-278880', '02-278881', '02-278882', '02-278885', '02-278888'],
+        check_in: '14:00',
+        check_out: '12:00'
+      };
       roomsData = rData || [];
-      themeData = thData || getDefaultTheme();
+      themeData = thData || {
+        rose_primary: "#e22d46",
+        rose_dark: "#be123c",
+        luxury_gold: "#d4af37",
+        luxury_gold_light: "#f5cd5f",
+        font_arabic: "'Cairo', system-ui, sans-serif",
+        border_radius: "18px",
+        announcement: { enabled: true, text_ar: "", link: "", btn_text: "احجز الآن" }
+      };
       hallData = hlData || { title_ar: 'قاعة التدريب والمؤتمرات', capacity: '50 - 70 مشاركاً', specs_ar: [] };
       reviewsData = rvData || [];
       galleryData = gData || [];
+      amenitiesData = amData || [];
+      pagesContentData = pcData || { stats: [], pages: {}, vip_packages: [], posts: [] };
+
+      if (uData && uData.developer) {
+        usersData = uData;
+        cacheUsersLocally(usersData);
+      }
 
       renderHotelInfoView();
       renderThemeView();
@@ -368,44 +510,688 @@
       renderHallView();
       renderReviewsView();
       renderGalleryGrid();
+      loadPageIntoEditor(currentSelectedPageKey);
+      renderPostsAdminGrid();
+      renderVipPackagesAdmin();
+      renderAmenitiesAdmin();
+      renderUsersCards();
       clearUnsaved();
+
+      const savedRole = sessionStorage.getItem("pronet_admin_role");
+      if (savedRole && usersData[savedRole]) {
+        applyRolePermissions(usersData[savedRole]);
+      }
     } catch (err) {
       console.warn('Error loading initial data:', err);
     }
   }
 
-  function getDefaultHotelInfo() {
-    return {
-      name_ar: 'فندق روز عدن 2 السياحي',
-      name_en: 'Rose Aden 2 Tourist Hotel',
-      slogan_ar: 'حيث يلتقي البحر بالفخامة... تبدأ أجمل لحظاتك',
-      address_ar: 'العريش - ساحل أبين - جوار جولة الرحاب - عدن',
-      whatsapp: '780000656',
-      phones: ['02-278880', '02-278881', '02-278882', '02-278885', '02-278888'],
-      check_in: '14:00',
-      check_out: '12:00'
-    };
+  // =========================================================================
+  // 4. Authentication, Users & Password Change Window + GitHub Sync
+  // =========================================================================
+  function getUserPassword(roleKey) {
+    const u = usersData[roleKey];
+    if (!u) return '';
+    return u.password || u.defaultPassPlain || '';
   }
 
-  function getDefaultTheme() {
-    return {
-      rose_primary: "#e22d46",
-      rose_dark: "#be123c",
-      luxury_gold: "#d4af37",
-      luxury_gold_light: "#f5cd5f",
-      font_arabic: "'Cairo', system-ui, sans-serif",
-      border_radius: "18px",
-      announcement: {
-        enabled: true,
-        text_ar: "✨ عرض خاص بمناسبة الموسم: خصم مميز على أجنحة VIP وطيرمانات ساحل أبين!",
-        link: "https://wa.me/967780000656",
-        btn_text: "احجز بالعرض الآن"
-      }
-    };
+  function initAdminAuth() {
+    const loginOverlay = document.getElementById("admin-login-overlay");
+    const loginForm = document.getElementById("admin-login-form");
+    const loginError = document.getElementById("login-error");
+    const logoutBtn = document.getElementById("btn-logout");
+
+    if (!loginOverlay) return;
+
+    const savedRole = sessionStorage.getItem("pronet_admin_role");
+    if (savedRole && usersData[savedRole]) {
+      unlockDashboard(savedRole);
+    }
+
+    if (loginForm) {
+      loginForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const role = document.getElementById("login-role").value;
+        const password = document.getElementById("login-password").value;
+        const targetPassword = getUserPassword(role);
+
+        if (usersData[role] && password === targetPassword) {
+          sessionStorage.setItem("pronet_admin_role", role);
+          loginError.style.display = "none";
+          loginForm.reset();
+          unlockDashboard(role);
+        } else {
+          loginError.style.display = "block";
+        }
+      });
+    }
+
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", () => {
+        sessionStorage.removeItem("pronet_admin_role");
+        location.reload();
+      });
+    }
   }
+
+  function unlockDashboard(roleKey) {
+    const user = usersData[roleKey] || DEFAULT_USERS[roleKey];
+    if (!user) return;
+    const loginOverlay = document.getElementById("admin-login-overlay");
+    const sessionBar = document.getElementById("user-session-bar");
+    const roleBadge = document.getElementById("current-role-badge");
+    const welcomeText = document.getElementById("welcome-text");
+    const passModalBtn = document.getElementById("btn-open-pass-modal");
+
+    if (loginOverlay) loginOverlay.style.display = "none";
+    if (sessionBar) sessionBar.style.display = "flex";
+    if (roleBadge) roleBadge.textContent = user.title;
+    if (welcomeText) welcomeText.textContent = `مرحباً بك (${user.name_ar || user.title}) — الصلاحيات مفعلة`;
+    if (passModalBtn) {
+      passModalBtn.style.display = (user.canManageUsers || user.allowedSections.includes("all")) ? "inline-flex" : "none";
+    }
+    applyRolePermissions(user);
+  }
+
+  function applyRolePermissions(user) {
+    if (!user) return;
+    const allowed = user.allowedSections || ["all"];
+    document.querySelectorAll("[data-section]").forEach((el) => {
+      const sectionName = el.getAttribute("data-section");
+      if (!allowed.includes("all") && !allowed.includes(sectionName)) {
+        el.classList.add("restricted-hidden");
+      } else {
+        el.classList.remove("restricted-hidden");
+      }
+    });
+
+    if (!user.canEditPrices) {
+      document.querySelectorAll('input[name*="price"], .price-input').forEach((input) => {
+        input.setAttribute("readonly", true);
+        input.style.opacity = "0.65";
+      });
+    } else {
+      document.querySelectorAll('input[name*="price"], .price-input').forEach((input) => {
+        input.removeAttribute("readonly");
+        input.style.opacity = "1";
+      });
+    }
+
+    if (!user.canDelete) {
+      document.querySelectorAll(".btn-delete, .btn-add-new, .delete-btn, .btn-remove").forEach((btn) => {
+        btn.classList.add("restricted-hidden");
+      });
+    } else {
+      document.querySelectorAll(".btn-delete, .btn-add-new, .delete-btn, .btn-remove").forEach((btn) => {
+        btn.classList.remove("restricted-hidden");
+      });
+    }
+  }
+
+  function buildUsersCardsHtml(prefix) {
+    const roleKeys = ['developer', 'manager', 'supervisor', 'reception'];
+    return roleKeys.map(rKey => {
+      const u = usersData[rKey] || DEFAULT_USERS[rKey];
+      const passVal = u.password || u.defaultPassPlain || '';
+      const inputId = `${prefix}_pass_${rKey}`;
+      const nameId = `${prefix}_name_${rKey}`;
+      return `
+        <div class="user-role-card">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <strong style="color: var(--adm-gold-light); font-size: 1.02rem;">🔐 ${u.title}</strong>
+            <span class="adm-pill-tag">${rKey}</span>
+          </div>
+          <p style="font-size: 0.78rem; color: var(--adm-muted); line-height: 1.5;">${u.description || ''}</p>
+          <div>
+            <label style="display: block; font-size: 0.8rem; color: var(--adm-text-sub); margin-bottom: 0.3rem;">اسم المسؤول / المسمى:</label>
+            <input type="text" id="${nameId}" class="adm-input" style="padding: 0.45rem 0.7rem; font-size: 0.86rem;" value="${u.name_ar || ''}" oninput="updateUserField('${rKey}', 'name_ar', this.value)">
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.8rem; color: var(--adm-text-sub); margin-bottom: 0.3rem;">كلمة المرور المعتمدة:</label>
+            <div class="pass-input-wrap">
+              <input type="password" id="${inputId}" class="adm-input" style="padding: 0.45rem 0.7rem; font-size: 0.9rem; font-weight: 700; color: #6ee7b7;" value="${passVal}" oninput="updateUserField('${rKey}', 'password', this.value)">
+              <button type="button" class="adm-btn adm-btn-outline adm-btn-sm" onclick="togglePassVisibility('${inputId}')" title="إظهار / إخفاء">👁️</button>
+              <button type="button" class="adm-btn adm-btn-outline adm-btn-sm" onclick="copyRolePassword('${rKey}')" title="نسخ كلمة المرور">📋</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function renderUsersCards() {
+    const tabGrid = document.getElementById('usersTabCardsGrid');
+    if (tabGrid) tabGrid.innerHTML = buildUsersCardsHtml('tab');
+    const modalGrid = document.getElementById('passwordModalCardsGrid');
+    if (modalGrid) modalGrid.innerHTML = buildUsersCardsHtml('mdl');
+  }
+
+  window.openPasswordModal = function () {
+    renderUsersCards();
+    const statusBox = document.getElementById('passwordModalStatus');
+    if (statusBox) statusBox.style.display = 'none';
+    const modal = document.getElementById('passwordModalBackdrop');
+    if (modal) modal.classList.add('open');
+  };
+
+  window.closePasswordModal = function () {
+    const modal = document.getElementById('passwordModalBackdrop');
+    if (modal) modal.classList.remove('open');
+  };
+
+  window.togglePassVisibility = function (inputId) {
+    const el = document.getElementById(inputId);
+    if (!el) return;
+    el.type = el.type === 'password' ? 'text' : 'password';
+  };
+
+  window.copyRolePassword = function (roleKey) {
+    const pwd = getUserPassword(roleKey);
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(pwd);
+      alert(`تم نسخ كلمة مرور (${usersData[roleKey]?.title}): ${pwd}`);
+    }
+  };
+
+  window.updateUserField = function (roleKey, field, val) {
+    if (!usersData[roleKey]) return;
+    usersData[roleKey][field] = val;
+    if (field === 'password') {
+      usersData[roleKey].defaultPassPlain = val;
+    }
+    cacheUsersLocally(usersData);
+    // Sync value across both tab and modal inputs
+    ['tab', 'mdl'].forEach(prefix => {
+      const targetId = field === 'password' ? `${prefix}_pass_${roleKey}` : `${prefix}_name_${roleKey}`;
+      const el = document.getElementById(targetId);
+      if (el && el.value !== val) el.value = val;
+    });
+    markUnsaved();
+  };
+
+  window.saveUsersPasswordsToGitHub = async function (statusBoxId) {
+    cacheUsersLocally(usersData);
+    const statusBox = document.getElementById(statusBoxId || 'passwordModalStatus');
+    if (statusBox) {
+      statusBox.style.display = 'block';
+      statusBox.className = 'alert-box alert-info';
+      statusBox.innerHTML = '⏳ جاري حفظ كلمات المرور ومزامنة ملف <code>data/users.json</code> مع مستودع GitHub...';
+    }
+
+    try {
+      await commitTextFileToGitHub('data/users.json', JSON.stringify(usersData, null, 2), 'تحديث كلمات مرور وحسابات لوحة التحكم عبر بوابة الإدارة');
+      clearUnsaved();
+      if (statusBox) {
+        statusBox.className = 'alert-box alert-success';
+        statusBox.innerHTML = '✓ تم حفظ كلمات المرور الجديدة محلياً ومزامنتها مع GitHub بنجاح!';
+      }
+    } catch (err) {
+      if (statusBox) {
+        statusBox.className = 'alert-box alert-warning';
+        statusBox.innerHTML = `✓ تم حفظ كلمات المرور الجديدة في المتصفح فوراً، وتعذر النشر السحابي اللحظي (${err.message}). يمكنك النشر من مركز النشر الشامل.`;
+      }
+    }
+  };
 
   // =========================================================================
-  // 4. Hotel General Info: View Mode vs Edit Mode
+  // 5. Pages Content, Posts, VIP Packages & Amenities Manager (#tab-pages)
+  // =========================================================================
+  window.loadPageIntoEditor = function (pageKey) {
+    currentSelectedPageKey = pageKey || 'home';
+    if (!pagesContentData || !pagesContentData.pages) return;
+    const pCfg = pagesContentData.pages[currentSelectedPageKey] || {};
+
+    setVal('pageSelectorDropdown', currentSelectedPageKey);
+    setVal('pgHeroBadge', pCfg.hero_badge_ar || '');
+    setVal('pgHeroTitle', pCfg.hero_title_ar || '');
+    setVal('pgHeroSubtitle', pCfg.hero_subtitle_ar || '');
+    setVal('pgIntroBadge', pCfg.intro_badge_ar || pCfg.highlights_badge_ar || '');
+    setVal('pgIntroTitle', pCfg.intro_title_ar || pCfg.highlights_title_ar || '');
+    setVal('pgIntroDesc', pCfg.intro_desc_ar || pCfg.highlights_desc_ar || '');
+    setVal('pgIntroExtra', pCfg.intro_extra_ar || '');
+
+    const homeExtra = document.getElementById('homePageExtraFields');
+    if (homeExtra) {
+      if (currentSelectedPageKey === 'home') {
+        homeExtra.style.display = 'block';
+        setVal('pgHomeRoomsTitle', pCfg.rooms_section_title_ar || '');
+        setVal('pgHomeRoomsDesc', pCfg.rooms_section_desc_ar || '');
+        setVal('pgHomePostsTitle', pCfg.posts_section_title_ar || '');
+        setVal('pgHomePostsDesc', pCfg.posts_section_desc_ar || '');
+        renderStatsEditor();
+      } else {
+        homeExtra.style.display = 'none';
+      }
+    }
+  };
+
+  function renderStatsEditor() {
+    const container = document.getElementById('statsEditorContainer');
+    if (!container || !pagesContentData) return;
+    const stats = pagesContentData.stats || [];
+    container.innerHTML = `
+      <label style="display:block; font-size:0.85rem; color:var(--adm-gold); margin-bottom:0.5rem;">📊 أرقام شريط الإحصائيات في الصفحة الرئيسية:</label>
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:0.75rem;">
+        ${stats.map((st, idx) => `
+          <div style="background:rgba(0,0,0,0.4); padding:0.75rem; border-radius:8px; border:1px solid rgba(255,255,255,0.08);">
+            <input type="text" class="adm-input" style="margin-bottom:0.4rem; font-weight:800; color:var(--adm-gold-light);" value="${st.value || ''}" placeholder="الرقم (مثال: +8)" oninput="updateStatField(${idx}, 'value', this.value)">
+            <input type="text" class="adm-input" style="font-size:0.82rem;" value="${st.label_ar || ''}" placeholder="الوصف" oninput="updateStatField(${idx}, 'label_ar', this.value)">
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  window.updateStatField = function (idx, field, val) {
+    if (!pagesContentData || !pagesContentData.stats || !pagesContentData.stats[idx]) return;
+    pagesContentData.stats[idx][field] = val;
+    markUnsaved();
+  };
+
+  function collectCurrentPageEditorFields() {
+    if (!pagesContentData) return;
+    if (!pagesContentData.pages) pagesContentData.pages = {};
+    if (!pagesContentData.pages[currentSelectedPageKey]) {
+      pagesContentData.pages[currentSelectedPageKey] = { page_key: currentSelectedPageKey };
+    }
+    const pCfg = pagesContentData.pages[currentSelectedPageKey];
+    pCfg.hero_badge_ar = getVal('pgHeroBadge');
+    pCfg.hero_title_ar = getVal('pgHeroTitle');
+    pCfg.hero_subtitle_ar = getVal('pgHeroSubtitle');
+
+    if (currentSelectedPageKey === 'home') {
+      pCfg.highlights_badge_ar = getVal('pgIntroBadge');
+      pCfg.highlights_title_ar = getVal('pgIntroTitle');
+      pCfg.highlights_desc_ar = getVal('pgIntroDesc');
+      pCfg.rooms_section_title_ar = getVal('pgHomeRoomsTitle');
+      pCfg.rooms_section_desc_ar = getVal('pgHomeRoomsDesc');
+      pCfg.posts_section_title_ar = getVal('pgHomePostsTitle');
+      pCfg.posts_section_desc_ar = getVal('pgHomePostsDesc');
+    } else {
+      pCfg.intro_badge_ar = getVal('pgIntroBadge');
+      pCfg.intro_title_ar = getVal('pgIntroTitle');
+      pCfg.intro_desc_ar = getVal('pgIntroDesc');
+      pCfg.intro_extra_ar = getVal('pgIntroExtra');
+    }
+  }
+
+  window.saveSelectedPageContentToGitHub = async function () {
+    collectCurrentPageEditorFields();
+    await savePagesContentToGitHub(`تحديث محتوى ونصوص صفحة (${currentSelectedPageKey})`, 'pageContentSaveStatus');
+  };
+
+  window.savePagesContentToGitHub = async function (commitMsg, statusBoxId) {
+    const statusBox = document.getElementById(statusBoxId || 'pageContentSaveStatus');
+    if (statusBox) {
+      statusBox.style.display = 'block';
+      statusBox.className = 'alert-box alert-info';
+      statusBox.innerHTML = '⏳ جاري حفظ ونشر ملف محتويات الصفحات والمنشورات <code>data/pages-content.json</code> على GitHub...';
+    }
+
+    try {
+      await commitTextFileToGitHub('data/pages-content.json', JSON.stringify(pagesContentData, null, 2), commitMsg || 'تحديث محتويات الصفحات والمنشورات عبر لوحة التحكم');
+      clearUnsaved();
+      if (statusBox) {
+        statusBox.className = 'alert-box alert-success';
+        statusBox.innerHTML = '✓ تم حفظ ونشر التعديلات على GitHub بنجاح!';
+        setTimeout(() => { statusBox.style.display = 'none'; }, 1800);
+      } else {
+        alert('✓ تم حفظ ونشر التعديلات على GitHub بنجاح!');
+      }
+    } catch (err) {
+      markUnsaved();
+      if (statusBox) {
+        statusBox.className = 'alert-box alert-warning';
+        statusBox.innerHTML = `❌ تعذر النشر اللحظي: ${err.message}`;
+      } else {
+        alert(`❌ خطأ: ${err.message}`);
+      }
+    }
+  };
+
+  // Posts & Page Content Blocks Manager
+  const PAGE_LABELS_AR = {
+    'home': '🏠 الرئيسية',
+    'rooms': '🛏️ الغرف والأجنحة',
+    'vip-suites': '👑 طيرمانات VIP',
+    'about': '🏨 عن الفندق',
+    'training-hall': '🎓 قاعة التدريب',
+    'gallery': '📸 المعرض',
+    'location': '📍 الموقع',
+    'contact': '📞 الاتصال',
+    'all': '🌐 جميع الصفحات'
+  };
+
+  function renderPostsAdminGrid() {
+    const container = document.getElementById('postsCardsGrid');
+    if (!container || !pagesContentData) return;
+    const posts = pagesContentData.posts || [];
+
+    container.innerHTML = posts.map((post, idx) => {
+      const pagesBadges = (post.target_pages || []).map(p => `<span class="adm-pill-tag">${PAGE_LABELS_AR[p] || p}</span>`).join(' ');
+      const isVis = post.visible !== false;
+      return `
+        <div class="adm-room-card">
+          <div class="adm-room-media">
+            <img src="../${post.image || 'assets/images/building-day.jpg'}" alt="${post.title_ar}" onerror="this.src='../assets/images/building-day.jpg'">
+            <span class="adm-room-badge">${post.badge_ar || 'منشور'}</span>
+          </div>
+          <div class="adm-room-body">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
+              <span style="font-size:0.78rem; color:var(--adm-gold); font-weight:700;">${post.category_ar || 'عرض / منشور'}</span>
+              <span style="font-size:0.75rem; font-weight:800; color:${isVis ? '#10b981' : '#94a3b8'};">${isVis ? '🟢 ظاهر بالموقع' : '⚪ مخفي'}</span>
+            </div>
+            <div class="adm-room-title">${post.title_ar || ''}</div>
+            <div style="font-size:0.82rem; color:var(--adm-text-sub); margin-bottom:0.65rem;">${post.content_ar || ''}</div>
+            <div style="margin-bottom:0.75rem;">
+              <div style="font-size:0.74rem; color:var(--adm-muted); margin-bottom:0.25rem;">يظهر في الصفحات:</div>
+              <div style="display:flex; gap:0.35rem; flex-wrap:wrap;">${pagesBadges}</div>
+            </div>
+            <div class="adm-room-actions">
+              <button type="button" class="adm-btn adm-btn-gold adm-btn-sm" onclick="openPostModal(${idx})">✏️ تعديل المنشور</button>
+              <button type="button" class="adm-btn adm-btn-outline adm-btn-sm" onclick="togglePostVisibility(${idx})">${isVis ? 'إخفاء' : 'إظهار'}</button>
+              <button type="button" class="adm-btn adm-btn-danger adm-btn-sm btn-delete" onclick="deletePostItem(${idx})">🗑️</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  window.openPostModal = function (idx) {
+    currentEditingPostIndex = idx;
+    postModalImageUploadBase64 = null;
+    const modal = document.getElementById('postModalBackdrop');
+    const header = document.getElementById('postModalHeaderTitle');
+    const preview = document.getElementById('postModalImgPreview');
+    const statusBox = document.getElementById('postModalStatus');
+    const fileInput = document.getElementById('postModalFileInput');
+
+    if (statusBox) statusBox.style.display = 'none';
+    if (fileInput) fileInput.value = '';
+
+    if (idx === -1) {
+      header.textContent = '➕ إضافة منشور أو عرض ترويجي جديد';
+      setVal('postModalTitleAr', '');
+      setVal('postModalSubtitleAr', '');
+      setVal('postModalBadgeAr', '✨ عرض جديد');
+      setVal('postModalCategoryAr', 'عروض الفندق');
+      setVal('postModalDateAr', 'متاح الآن');
+      setVal('postModalContentAr', '');
+      setVal('postModalCtaText', 'تواصل واحجز عبر واتساب');
+      setVal('postModalCtaLink', 'https://wa.me/967780000656');
+      setVal('postModalImgPath', 'assets/images/ros2-exterior-night-neon.jpg');
+      preview.src = '../assets/images/ros2-exterior-night-neon.jpg';
+      document.getElementById('postModalVisible').checked = true;
+      document.querySelectorAll('.post-target-page-chk').forEach(chk => {
+        chk.checked = (chk.value === 'home');
+      });
+    } else {
+      const post = pagesContentData.posts[idx];
+      header.textContent = `✏️ تعديل المنشور: ${post.title_ar}`;
+      setVal('postModalTitleAr', post.title_ar || '');
+      setVal('postModalSubtitleAr', post.subtitle_ar || '');
+      setVal('postModalBadgeAr', post.badge_ar || '');
+      setVal('postModalCategoryAr', post.category_ar || '');
+      setVal('postModalDateAr', post.date_ar || '');
+      setVal('postModalContentAr', post.content_ar || '');
+      setVal('postModalCtaText', post.cta_text_ar || '');
+      setVal('postModalCtaLink', post.cta_link || '');
+      setVal('postModalImgPath', post.image || 'assets/images/building-day.jpg');
+      preview.src = `../${post.image || 'assets/images/building-day.jpg'}`;
+      document.getElementById('postModalVisible').checked = post.visible !== false;
+      const targets = post.target_pages || ['home'];
+      document.querySelectorAll('.post-target-page-chk').forEach(chk => {
+        chk.checked = targets.includes(chk.value);
+      });
+    }
+
+    modal.classList.add('open');
+  };
+
+  window.closePostModal = function () {
+    document.getElementById('postModalBackdrop').classList.remove('open');
+  };
+
+  window.handlePostModalImageFile = function (e) {
+    const file = e.target.files[0];
+    const preview = document.getElementById('postModalImgPreview');
+    if (!file || !preview) return;
+    compressImageFromFile(file, 1600, 0.85, (dataUrl, b64) => {
+      preview.src = dataUrl;
+      postModalImageUploadBase64 = b64;
+    });
+  };
+
+  window.savePostModalData = async function () {
+    const title = getVal('postModalTitleAr').trim();
+    if (!title) {
+      alert('يرجى إدخال عنوان المنشور أو العرض.');
+      return;
+    }
+
+    const saveBtn = document.getElementById('postModalSaveBtn');
+    const statusBox = document.getElementById('postModalStatus');
+    if (saveBtn) saveBtn.disabled = true;
+    if (statusBox) {
+      statusBox.style.display = 'block';
+      statusBox.className = 'alert-box alert-info';
+      statusBox.innerHTML = '⏳ جاري حفظ المنشور ومزامنته مع GitHub...';
+    }
+
+    try {
+      let imgPath = getVal('postModalImgPath').trim() || 'assets/images/ros2-exterior-night-neon.jpg';
+      if (postModalImageUploadBase64) {
+        const newFile = `post-${Date.now()}.jpg`;
+        imgPath = `assets/images/${newFile}`;
+        await commitBinaryFileToGitHub(imgPath, postModalImageUploadBase64, `Upload post image: ${newFile}`);
+      }
+
+      const selectedPages = [];
+      document.querySelectorAll('.post-target-page-chk:checked').forEach(chk => {
+        selectedPages.push(chk.value);
+      });
+      if (selectedPages.length === 0) selectedPages.push('home');
+
+      if (!pagesContentData.posts) pagesContentData.posts = [];
+
+      const postObj = {
+        id: currentEditingPostIndex === -1 ? `post-${Date.now()}` : (pagesContentData.posts[currentEditingPostIndex].id || `post-${Date.now()}`),
+        title_ar: title,
+        subtitle_ar: getVal('postModalSubtitleAr').trim(),
+        badge_ar: getVal('postModalBadgeAr').trim(),
+        category_ar: getVal('postModalCategoryAr').trim(),
+        date_ar: getVal('postModalDateAr').trim(),
+        content_ar: getVal('postModalContentAr').trim(),
+        cta_text_ar: getVal('postModalCtaText').trim() || 'تواصل واحجز الآن',
+        cta_link: getVal('postModalCtaLink').trim() || 'https://wa.me/967780000656',
+        image: imgPath,
+        target_pages: selectedPages,
+        visible: document.getElementById('postModalVisible').checked,
+        order: currentEditingPostIndex === -1 ? (pagesContentData.posts.length + 1) : (pagesContentData.posts[currentEditingPostIndex].order || (currentEditingPostIndex + 1))
+      };
+
+      if (currentEditingPostIndex === -1) {
+        pagesContentData.posts.unshift(postObj);
+      } else {
+        pagesContentData.posts[currentEditingPostIndex] = postObj;
+      }
+
+      await commitTextFileToGitHub('data/pages-content.json', JSON.stringify(pagesContentData, null, 2), `Update post: ${title}`);
+      renderPostsAdminGrid();
+      clearUnsaved();
+
+      if (statusBox) {
+        statusBox.className = 'alert-box alert-success';
+        statusBox.innerHTML = '✓ تم حفظ ونشر المنشور بنجاح!';
+      }
+      setTimeout(() => { closePostModal(); }, 1000);
+    } catch (err) {
+      markUnsaved();
+      renderPostsAdminGrid();
+      if (statusBox) {
+        statusBox.className = 'alert-box alert-warning';
+        statusBox.innerHTML = `❌ خطأ أثناء النشر: ${err.message}`;
+      }
+    } finally {
+      if (saveBtn) saveBtn.disabled = false;
+    }
+  };
+
+  window.togglePostVisibility = async function (idx) {
+    if (!pagesContentData || !pagesContentData.posts || !pagesContentData.posts[idx]) return;
+    pagesContentData.posts[idx].visible = pagesContentData.posts[idx].visible === false ? true : false;
+    renderPostsAdminGrid();
+    markUnsaved();
+  };
+
+  window.deletePostItem = async function (idx) {
+    if (!pagesContentData || !pagesContentData.posts || !pagesContentData.posts[idx]) return;
+    const item = pagesContentData.posts[idx];
+    if (confirm(`هل أنت متأكد من حذف المنشور "${item.title_ar}"؟`)) {
+      pagesContentData.posts.splice(idx, 1);
+      renderPostsAdminGrid();
+      markUnsaved();
+    }
+  };
+
+  // VIP Packages Manager
+  function renderVipPackagesAdmin() {
+    const container = document.getElementById('vipPackagesAdminContainer');
+    if (!container || !pagesContentData) return;
+    const pkgs = pagesContentData.vip_packages || [];
+
+    container.innerHTML = pkgs.map((pkg, idx) => `
+      <div class="view-item-box" style="margin-bottom: 1rem;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+          <strong style="color:var(--adm-gold-light); font-size:1rem;">${pkg.icon || '👑'} ${pkg.title_ar || 'باقة VIP'}</strong>
+          <button type="button" class="adm-btn adm-btn-danger adm-btn-sm btn-delete" onclick="deleteVipPackage(${idx})">🗑️ حذف الباقة</button>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>عنوان الباقة</label>
+            <input type="text" class="adm-input" value="${pkg.title_ar || ''}" oninput="updateVipPkgField(${idx}, 'title_ar', this.value)">
+          </div>
+          <div class="form-group">
+            <label>الشارة (Badge) والأيقونة</label>
+            <div style="display:flex; gap:0.5rem;">
+              <input type="text" class="adm-input" style="width:70px;" value="${pkg.icon || '👑'}" oninput="updateVipPkgField(${idx}, 'icon', this.value)">
+              <input type="text" class="adm-input" value="${pkg.badge_ar || ''}" oninput="updateVipPkgField(${idx}, 'badge_ar', this.value)">
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>وصف الباقة</label>
+          <textarea class="adm-textarea" rows="2" oninput="updateVipPkgField(${idx}, 'desc_ar', this.value)">${pkg.desc_ar || ''}</textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>مميزات الباقة (افصل بينها بـ |)</label>
+            <input type="text" class="adm-input" value="${(pkg.features_ar || []).join(' | ')}" oninput="updateVipPkgField(${idx}, 'features_ar', this.value.split('|').map(s=>s.trim()).filter(Boolean))">
+          </div>
+          <div class="form-group">
+            <label>مسار صورة الباقة</label>
+            <input type="text" class="adm-input" value="${pkg.image || 'assets/images/ros2-vip-majlis.jpg'}" oninput="updateVipPkgField(${idx}, 'image', this.value)">
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  window.updateVipPkgField = function (idx, field, val) {
+    if (!pagesContentData || !pagesContentData.vip_packages || !pagesContentData.vip_packages[idx]) return;
+    pagesContentData.vip_packages[idx][field] = val;
+    markUnsaved();
+  };
+
+  window.addNewVipPackage = function () {
+    if (!pagesContentData.vip_packages) pagesContentData.vip_packages = [];
+    pagesContentData.vip_packages.push({
+      id: `vpkg-${Date.now()}`,
+      icon: "👑",
+      badge_ar: "باقة VIP خاصة",
+      title_ar: "باقة ضيافة وإقامة ملكية جديدة",
+      desc_ar: "تفاصيل الباقة ومزايا الإقامة والضيافة.",
+      features_ar: ["إقامة فاخرة", "ضيافة ترحيبية", "إنترنت فايبر مجاني"],
+      cta_text: "احجز الباقة عبر واتساب",
+      image: "assets/images/ros2-suite-king-blue.jpg"
+    });
+    renderVipPackagesAdmin();
+    markUnsaved();
+  };
+
+  window.deleteVipPackage = function (idx) {
+    if (!pagesContentData || !pagesContentData.vip_packages) return;
+    if (confirm('هل أنت متأكد من حذف باقة VIP هذه؟')) {
+      pagesContentData.vip_packages.splice(idx, 1);
+      renderVipPackagesAdmin();
+      markUnsaved();
+    }
+  };
+
+  // Amenities Manager
+  function renderAmenitiesAdmin() {
+    const container = document.getElementById('amenitiesAdminContainer');
+    if (!container || !amenitiesData) return;
+
+    container.innerHTML = `
+      <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:1rem;">
+        ${amenitiesData.map((am, idx) => `
+          <div class="view-item-box">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+              <div style="display:flex; gap:0.5rem; align-items:center; width:100%;">
+                <input type="text" class="adm-input" style="width:58px; text-align:center; font-size:1.3rem; padding:0.3rem;" value="${am.icon || '✨'}" oninput="updateAmenityField(${idx}, 'icon', this.value)">
+                <input type="text" class="adm-input" style="font-weight:700;" value="${am.title_ar || ''}" oninput="updateAmenityField(${idx}, 'title_ar', this.value)">
+              </div>
+              <button type="button" class="adm-btn adm-btn-danger adm-btn-sm btn-delete" style="margin-right:0.5rem;" onclick="deleteAmenityItem(${idx})">🗑️</button>
+            </div>
+            <textarea class="adm-textarea" rows="2" style="font-size:0.85rem;" oninput="updateAmenityField(${idx}, 'desc_ar', this.value)">${am.desc_ar || ''}</textarea>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  window.updateAmenityField = function (idx, field, val) {
+    if (!amenitiesData || !amenitiesData[idx]) return;
+    amenitiesData[idx][field] = val;
+    markUnsaved();
+  };
+
+  window.addNewAmenityItem = function () {
+    if (!amenitiesData) amenitiesData = [];
+    amenitiesData.push({
+      id: `am-${Date.now()}`,
+      icon: "✨",
+      title_ar: "خدمة فندقية جديدة",
+      title_en: "New Hotel Service",
+      desc_ar: "وصف الخدمة أو المرفق الفندقي."
+    });
+    renderAmenitiesAdmin();
+    markUnsaved();
+  };
+
+  window.deleteAmenityItem = function (idx) {
+    if (!amenitiesData || !amenitiesData[idx]) return;
+    if (confirm('هل تريد حذف هذا المرفق؟')) {
+      amenitiesData.splice(idx, 1);
+      renderAmenitiesAdmin();
+      markUnsaved();
+    }
+  };
+
+  window.saveAmenitiesToGitHub = async function () {
+    try {
+      await commitTextFileToGitHub('data/amenities.json', JSON.stringify(amenitiesData, null, 2), 'تحديث المرافق والخدمات الفندقية عبر لوحة التحكم');
+      clearUnsaved();
+      alert('✓ تم حفظ ونشر المرافق والخدمات الفندقية على GitHub بنجاح!');
+    } catch (e) {
+      alert(`❌ خطأ أثناء الحفظ: ${e.message}`);
+    }
+  };
+
+  // =========================================================================
+  // 6. Hotel General Info & Theme (#tab-hotel & #tab-theme)
   // =========================================================================
   function renderHotelInfoView() {
     if (!hotelData) return;
@@ -509,9 +1295,6 @@
     }
   };
 
-  // =========================================================================
-  // 5. Theme, Brand Colors & Announcement: View Mode vs Edit Mode
-  // =========================================================================
   function renderThemeView() {
     if (!themeData) return;
     const container = document.getElementById('themeViewContainer');
@@ -585,13 +1368,6 @@
     renderThemeView();
   };
 
-  window.applyColorPreset = function (primaryHex, goldHex) {
-    setVal('thmPrimaryPicker', primaryHex);
-    setVal('thmPrimaryHex', primaryHex);
-    setVal('thmGoldPicker', goldHex);
-    setVal('thmGoldHex', goldHex);
-  };
-
   function collectThemeFromEditForm() {
     const editBox = document.getElementById('themeEditMode');
     if (editBox && editBox.style.display !== 'none' && themeData) {
@@ -639,40 +1415,66 @@
   };
 
   // =========================================================================
-  // 6. Rooms & Suites Management (Cards View + Edit/Add Modal + Image Upload)
+  // 7. Expanded Rooms, Suites & VIP Tirmanah Manager (#tab-rooms)
   // =========================================================================
   function renderRoomsGrid() {
     const container = document.getElementById('roomsCardsGrid');
+    const countBadge = document.getElementById('roomsCountBadge');
     if (!container || !roomsData) return;
 
-    container.innerHTML = roomsData.map((room, idx) => `
-      <div class="adm-room-card" data-idx="${idx}">
-        <div class="adm-room-media">
-          <img src="../${room.image}" alt="${room.title_ar}" onerror="this.src='../assets/images/suite-vip.jpg'">
-          <span class="adm-room-badge">${room.badge_ar || 'مميز'}</span>
+    if (countBadge) countBadge.textContent = `${roomsData.length} فئات`;
+
+    container.innerHTML = roomsData.map((room, idx) => {
+      const isAvail = room.available !== false;
+      return `
+        <div class="adm-room-card" data-idx="${idx}">
+          <div class="adm-room-media">
+            <img src="../${room.image}" alt="${room.title_ar}" onerror="this.src='../assets/images/suite-vip.jpg'">
+            <span class="adm-room-badge">${room.badge_ar || 'مميز'}</span>
+          </div>
+          <div class="adm-room-body">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
+              <span class="adm-pill-tag">${room.area_ar || 'مساحة واسعة'} • ${room.category || 'standard'}</span>
+              <label class="checkbox-label" style="font-size:0.78rem; color:${isAvail ? '#10b981' : '#ef4444'}; font-weight:800;">
+                <input type="checkbox" class="availability-toggle" ${isAvail ? 'checked' : ''} onchange="toggleRoomAvailabilityQuick(${idx}, this.checked)">
+                <span>${isAvail ? '🟢 متاح للحجز' : '🔴 مشغول'}</span>
+              </label>
+            </div>
+            <div class="adm-room-title">${room.title_ar}</div>
+            ${room.subtitle_ar ? `<div style="font-size:0.8rem; color:var(--adm-gold-light); margin-bottom:0.35rem;">${room.subtitle_ar}</div>` : ''}
+            <div class="adm-room-price">💰 ${room.price_per_night}</div>
+            <div style="font-size: 0.8rem; color: var(--adm-muted); margin-bottom: 0.5rem;">
+              <span>🛏️ ${room.beds_ar || ''}</span> • <span>👥 ${room.capacity_ar || ''}</span>
+              ${room.view_ar ? `<br><span>🌅 ${room.view_ar}</span>` : ''}
+            </div>
+            <div class="adm-room-features">
+              ${(room.features_ar || []).slice(0, 4).map(f => `<span class="adm-feature-tag">${f}</span>`).join('')}
+              ${(room.features_ar || []).length > 4 ? `<span class="adm-feature-tag">+${(room.features_ar.length - 4)} أخرى</span>` : ''}
+            </div>
+            <div class="adm-room-actions">
+              <button type="button" class="adm-btn adm-btn-gold adm-btn-sm" onclick="openRoomModal(${idx})">
+                <span>✏️</span> تحرير كامل التفاصيل والصورة
+              </button>
+              <button type="button" class="adm-btn adm-btn-danger adm-btn-sm btn-delete" onclick="deleteRoomItem(${idx})">
+                <span>🗑️</span> حذف
+              </button>
+            </div>
+          </div>
         </div>
-        <div class="adm-room-body">
-          <div class="adm-room-title">${room.title_ar}</div>
-          <div class="adm-room-price">💰 ${room.price_per_night}</div>
-          <div style="font-size: 0.82rem; color: var(--adm-muted); margin-bottom: 0.5rem;">
-            <span>🛏️ ${room.beds_ar || ''}</span> • <span>👥 ${room.capacity_ar || ''}</span>
-          </div>
-          <div class="adm-room-features">
-            ${(room.features_ar || []).slice(0, 4).map(f => `<span class="adm-feature-tag">${f}</span>`).join('')}
-            ${(room.features_ar || []).length > 4 ? `<span class="adm-feature-tag">+${(room.features_ar.length - 4)} أخرى</span>` : ''}
-          </div>
-          <div class="adm-room-actions">
-            <button type="button" class="adm-btn adm-btn-gold adm-btn-sm" onclick="openRoomModal(${idx})">
-              <span>✏️</span> تعديل الغرفة والصورة
-            </button>
-            <button type="button" class="adm-btn adm-btn-danger adm-btn-sm" onclick="deleteRoomItem(${idx})">
-              <span>🗑️</span> حذف
-            </button>
-          </div>
-        </div>
-      </div>
-    `).join('');
+      `;
+    }).join('');
   }
+
+  window.toggleRoomAvailabilityQuick = async function (idx, isAvail) {
+    if (!roomsData || !roomsData[idx]) return;
+    roomsData[idx].available = isAvail;
+    renderRoomsGrid();
+    try {
+      await commitTextFileToGitHub('data/rooms.json', JSON.stringify(roomsData, null, 2), `Update availability: ${roomsData[idx].title_ar}`);
+    } catch (e) {
+      markUnsaved();
+    }
+  };
 
   window.openRoomModal = function (idx) {
     currentEditingRoomIndex = idx;
@@ -687,28 +1489,46 @@
     if (fileInput) fileInput.value = '';
 
     if (idx === -1) {
-      title.textContent = '➕ إضافة غرفة أو جناح فندقي جديد';
+      title.textContent = '➕ إضافة غرفة أو جناح أو طيرمانة VIP جديدة';
       setVal('modalRoomTitleAr', '');
+      setVal('modalRoomSubtitleAr', 'إقامة فندقية فاخرة ومريحة');
+      setVal('modalRoomDescAr', '');
       setVal('modalRoomPrice', 'أسعار تنافسية');
-      setVal('modalRoomBadge', 'جديد');
+      setVal('modalRoomBadge', 'جديد ✨');
+      setVal('modalRoomArea', '48 م²');
+      setVal('modalRoomView', 'إطلالة خارجية');
+      setVal('modalRoomFloor', 'الطوابق 2 - 5');
       setVal('modalRoomBeds', 'سرير مزدوج مريح');
-      setVal('modalRoomCap', '2 أشخاص');
+      setVal('modalRoomCap', '2 - 3 أشخاص');
       setVal('modalRoomCategory', 'standard');
-      setVal('modalRoomFeatures', 'تكييف هادئ\nشاشة ذكية\nواي فاي فايبر مجاني');
+      setVal('modalRoomFeatures', 'تكييف هادئ 24/7\nشاشة ذكية 4K\nإنترنت فايبر مجاني\nثلاجة ميني بار وغلاية');
+      setVal('modalRoomServices', 'استقبال من المطار، واي فاي مجاني، كهرباء 24/7');
       setVal('modalRoomImgPath', 'assets/images/ros2-room-twin-blue.jpg');
       preview.src = '../assets/images/ros2-room-twin-blue.jpg';
+      document.getElementById('modalRoomAvailable').checked = true;
+      document.getElementById('modalRoomFeaturedHome').checked = true;
+      document.getElementById('modalRoomShowVip').checked = false;
     } else {
       const room = roomsData[idx];
-      title.textContent = `✏️ تعديل بيانات: ${room.title_ar}`;
+      title.textContent = `✏️ تحرير كامل بيانات: ${room.title_ar}`;
       setVal('modalRoomTitleAr', room.title_ar || '');
+      setVal('modalRoomSubtitleAr', room.subtitle_ar || '');
+      setVal('modalRoomDescAr', room.description_ar || '');
       setVal('modalRoomPrice', room.price_per_night || '');
       setVal('modalRoomBadge', room.badge_ar || '');
+      setVal('modalRoomArea', room.area_ar || '');
+      setVal('modalRoomView', room.view_ar || '');
+      setVal('modalRoomFloor', room.floor_ar || '');
       setVal('modalRoomBeds', room.beds_ar || '');
       setVal('modalRoomCap', room.capacity_ar || '');
       setVal('modalRoomCategory', room.category || 'standard');
       setVal('modalRoomFeatures', (room.features_ar || []).join('\n'));
+      setVal('modalRoomServices', (room.included_services_ar || []).join('، '));
       setVal('modalRoomImgPath', room.image || '');
       preview.src = `../${room.image}`;
+      document.getElementById('modalRoomAvailable').checked = room.available !== false;
+      document.getElementById('modalRoomFeaturedHome').checked = room.featured_home !== false;
+      document.getElementById('modalRoomShowVip').checked = !!room.show_in_vip_page || room.category === 'vip' || room.category === 'tirmanah';
     }
 
     modal.classList.add('open');
@@ -722,36 +1542,16 @@
     const file = e.target.files[0];
     const preview = document.getElementById('modalRoomImgPreview');
     if (!file || !preview) return;
-
-    const reader = new FileReader();
-    reader.onload = (evt) => {
-      const img = new Image();
-      img.onload = () => {
-        // Auto-optimize room image to max 1600px width JPEG 85%
-        const maxWidth = 1600;
-        let w = img.naturalWidth;
-        let h = img.naturalHeight;
-        if (w > maxWidth) {
-          h = Math.round((maxWidth / w) * h);
-          w = maxWidth;
-        }
-        const canvas = document.createElement('canvas');
-        canvas.width = w;
-        canvas.height = h;
-        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-        const compressedUrl = canvas.toDataURL('image/jpeg', 0.85);
-        preview.src = compressedUrl;
-        roomImageUploadBase64 = compressedUrl.split(',')[1];
-      };
-      img.src = evt.target.result;
-    };
-    reader.readAsDataURL(file);
+    compressImageFromFile(file, 1600, 0.85, (dataUrl, b64) => {
+      preview.src = dataUrl;
+      roomImageUploadBase64 = b64;
+    });
   };
 
   window.saveRoomModalData = async function () {
     const title = getVal('modalRoomTitleAr').trim();
     if (!title) {
-      alert('يرجى كتابة اسم الغرفة.');
+      alert('يرجى كتابة اسم الغرفة أو الجناح.');
       return;
     }
 
@@ -761,11 +1561,11 @@
     if (statusBox) {
       statusBox.style.display = 'block';
       statusBox.className = 'alert-box alert-info';
-      statusBox.innerHTML = 'جاري حفظ بيانات الغرفة ورفع الصورة...';
+      statusBox.innerHTML = '⏳ جاري حفظ بيانات الغرفة ورفع الصورة...';
     }
 
     try {
-      let imagePath = getVal('modalRoomImgPath') || 'assets/images/suite-vip.jpg';
+      let imagePath = getVal('modalRoomImgPath').trim() || 'assets/images/suite-vip.jpg';
 
       if (roomImageUploadBase64) {
         const newFileName = `room-${Date.now()}.jpg`;
@@ -774,22 +1574,37 @@
         await commitBinaryFileToGitHub(imagePath, roomImageUploadBase64, `Upload room image: ${newFileName}`);
       }
 
+      const existing = currentEditingRoomIndex >= 0 ? roomsData[currentEditingRoomIndex] : {};
+      const servicesArr = (getVal('modalRoomServices') || '')
+        .split(/[،,|]/)
+        .map(s => s.trim())
+        .filter(Boolean);
+
       const roomPayload = {
-        id: currentEditingRoomIndex === -1 ? `room-${Date.now()}` : roomsData[currentEditingRoomIndex].id,
+        id: currentEditingRoomIndex === -1 ? `room-${Date.now()}` : (existing.id || `room-${Date.now()}`),
         category: getVal('modalRoomCategory') || 'standard',
         title_ar: title,
-        title_en: currentEditingRoomIndex === -1 ? 'Deluxe Room' : (roomsData[currentEditingRoomIndex].title_en || 'Deluxe Room'),
-        badge_ar: getVal('modalRoomBadge') || 'مميز',
-        badge_en: 'Special',
-        price_per_night: getVal('modalRoomPrice') || 'حسب الطلب',
-        price_en: 'Special Rate',
-        beds_ar: getVal('modalRoomBeds') || 'سرير مريح',
-        beds_en: 'Comfortable Bed',
-        capacity_ar: getVal('modalRoomCap') || '2 أشخاص',
-        capacity_en: '2 Guests',
+        title_en: existing.title_en || 'Luxury Suite & Room',
+        subtitle_ar: getVal('modalRoomSubtitleAr').trim(),
+        description_ar: getVal('modalRoomDescAr').trim(),
+        badge_ar: getVal('modalRoomBadge').trim() || 'مميز',
+        badge_en: existing.badge_en || 'Special',
+        price_per_night: getVal('modalRoomPrice').trim() || 'حسب الطلب',
+        price_en: existing.price_en || 'Special Rate',
+        area_ar: getVal('modalRoomArea').trim(),
+        view_ar: getVal('modalRoomView').trim(),
+        floor_ar: getVal('modalRoomFloor').trim(),
+        beds_ar: getVal('modalRoomBeds').trim() || 'سرير مريح',
+        beds_en: existing.beds_en || 'Comfortable Bed',
+        capacity_ar: getVal('modalRoomCap').trim() || '2 أشخاص',
+        capacity_en: existing.capacity_en || '2 Guests',
+        available: document.getElementById('modalRoomAvailable').checked,
+        featured_home: document.getElementById('modalRoomFeaturedHome').checked,
+        show_in_vip_page: document.getElementById('modalRoomShowVip').checked,
         image: imagePath,
+        extra_images: existing.extra_images || [],
         features_ar: (getVal('modalRoomFeatures') || '').split('\n').map(s => s.trim()).filter(Boolean),
-        features_en: ['Silent Air Conditioning', 'Smart Screen TV', 'Free Fiber Wi-Fi']
+        included_services_ar: servicesArr
       };
 
       if (currentEditingRoomIndex === -1) {
@@ -798,19 +1613,21 @@
         roomsData[currentEditingRoomIndex] = roomPayload;
       }
 
-      if (statusBox) statusBox.innerHTML = 'جاري تحديث ملف الغرف <code>data/rooms.json</code> على GitHub...';
+      if (statusBox) statusBox.innerHTML = 'جاري تحديث ملف الغرف والأجنحة <code>data/rooms.json</code> على GitHub...';
       await commitTextFileToGitHub('data/rooms.json', JSON.stringify(roomsData, null, 2), `Update rooms.json: ${title}`);
 
       if (statusBox) {
         statusBox.className = 'alert-box alert-success';
-        statusBox.innerHTML = '✓ تم حفظ ونشر الغرفة بنجاح على الموقع!';
+        statusBox.innerHTML = '✓ تم حفظ ونشر بيانات الغرفة بنجاح على الموقع!';
       }
 
       setTimeout(() => {
         closeRoomModal();
         renderRoomsGrid();
-      }, 1100);
+      }, 1000);
     } catch (err) {
+      markUnsaved();
+      renderRoomsGrid();
       if (statusBox) {
         statusBox.className = 'alert-box alert-warning';
         statusBox.innerHTML = `❌ حدث خطأ: ${err.message}`;
@@ -835,7 +1652,7 @@
   };
 
   // =========================================================================
-  // 7. Smart Gallery Manager (Grouped Display + Pre-Flight Image Optimizer)
+  // 8. Comprehensive Gallery & Per-Item Metadata Editor (#tab-gallery)
   // =========================================================================
   window.inspectSelectedGalleryFile = function (e) {
     const file = e.target.files[0];
@@ -943,24 +1760,24 @@
       return;
     }
 
-    const titleInput = document.getElementById('proGalleryTitle');
-    const categorySelect = document.getElementById('proGalleryCategory');
+    const title = getVal('proGalleryTitle').trim() || 'صورة من فندق روز عدن 2';
+    const badge = getVal('proGalleryBadge').trim() || 'لقطة مميزة';
+    const desc = getVal('proGalleryDesc').trim() || '';
+    const category = getVal('proGalleryCategory') || 'rooms';
+    const inCarousel = document.getElementById('proGalleryInCarousel') ? document.getElementById('proGalleryInCarousel').checked : true;
+
     const statusBox = document.getElementById('proGalleryUploadStatus');
     const uploadBtn = document.getElementById('proGalleryUploadBtn');
 
-    const title = (titleInput ? titleInput.value.trim() : '') || 'صورة من فندق روز عدن 2';
-    const category = categorySelect ? categorySelect.value : 'rooms';
-
     const fileName = `gallery-${Date.now()}.jpg`;
     const targetPath = `assets/images/${fileName}`;
-
     const base64ToUpload = preflightState.isOptimized ? preflightState.optimizedBase64 : preflightState.originalBase64;
 
     if (uploadBtn) uploadBtn.disabled = true;
     if (statusBox) {
       statusBox.style.display = 'block';
       statusBox.className = 'alert-box alert-info';
-      statusBox.innerHTML = `جاري رفع ملف الصورة <code>${targetPath}</code> إلى مستودع GitHub...`;
+      statusBox.innerHTML = `⏳ جاري رفع ملف الصورة <code>${targetPath}</code> إلى مستودع GitHub...`;
     }
 
     try {
@@ -968,26 +1785,37 @@
 
       if (!galleryData) galleryData = [];
       galleryData.unshift({
+        id: `gal-${Date.now()}`,
+        order: 1,
         title: title,
+        title_en: "Rose Aden 2 Hotel Photo",
+        description_ar: desc,
         category: category,
-        group_ar: getCategoryArabic(category),
-        src: targetPath
+        group_ar: getCategoryArabic(category).replace(/^[^\s]+\s/, ''),
+        badge_ar: badge,
+        src: targetPath,
+        show_in_carousel: inCarousel,
+        featured: true,
+        visible: true
       });
+      galleryData.forEach((it, i) => { it.order = i + 1; });
 
       if (statusBox) statusBox.innerHTML = 'جاري تحديث ونشر <code>data/gallery.json</code> على GitHub...';
       await commitTextFileToGitHub('data/gallery.json', JSON.stringify(galleryData, null, 2), `Add gallery photo: ${title}`);
 
       if (statusBox) {
         statusBox.className = 'alert-box alert-success';
-        statusBox.innerHTML = `✓ تم رفع ونشر الصورة بنجاح في مجموعة <strong>${getCategoryArabic(category)}</strong>!`;
+        statusBox.innerHTML = `✓ تم رفع ونشر الصورة وكامل بياناتها بنجاح في مجموعة <strong>${getCategoryArabic(category)}</strong>!`;
       }
 
       document.getElementById('proGalleryFileInput').value = '';
-      if (titleInput) titleInput.value = '';
+      setVal('proGalleryTitle', '');
+      setVal('proGalleryBadge', '');
+      setVal('proGalleryDesc', '');
       setTimeout(() => {
         document.getElementById('imagePreflightPanel').style.display = 'none';
         renderGalleryGrid();
-      }, 1400);
+      }, 1300);
     } catch (err) {
       if (statusBox) {
         statusBox.className = 'alert-box alert-warning';
@@ -1026,7 +1854,6 @@
     if (badge) badge.textContent = `${galleryData.length} صورة`;
     if (!container) return;
 
-    // Update filter counts
     const cats = ['exterior', 'lobby', 'vip', 'rooms', 'halls'];
     const allBtn = document.querySelector('.adm-gal-filter-btn[data-gfilter="all"]');
     if (allBtn) allBtn.textContent = `الكل (${galleryData.length})`;
@@ -1040,29 +1867,53 @@
       ? galleryData.map((item, idx) => ({ item, idx }))
       : galleryData.map((item, idx) => ({ item, idx })).filter(x => x.item.category === activeAdminGalleryFilter);
 
-    container.innerHTML = filtered.map(({ item: g, idx }) => `
-      <div class="adm-gallery-card" data-gidx="${idx}">
-        <div style="position: relative;">
-          <img src="../${g.src}" alt="${g.title}" onerror="this.src='../assets/images/building-day.jpg'">
-          <span style="position: absolute; top: 0.5rem; right: 0.5rem; background: rgba(0,0,0,0.8); color: var(--adm-gold-light); padding: 0.2rem 0.65rem; border-radius: 99px; font-size: 0.72rem; font-weight: 700; border: 1px solid var(--adm-border-gold);">
-            ${getCategoryArabic(g.category)}
-          </span>
-        </div>
-        <div class="adm-gallery-card-body">
-          <input type="text" class="adm-input" value="${g.title || ''}" style="padding: 0.35rem 0.6rem; font-size: 0.85rem;" onchange="updateGalleryItemField(${idx}, 'title', this.value)">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
-            <select class="adm-select" style="padding: 0.25rem 0.5rem; font-size: 0.8rem; width: auto;" onchange="updateGalleryItemField(${idx}, 'category', this.value)">
-              <option value="exterior" ${g.category === 'exterior' ? 'selected' : ''}>🏛️ الواجهة والمبنى</option>
-              <option value="lobby" ${g.category === 'lobby' ? 'selected' : ''}>🛎️ الاستقبال واللوبي</option>
-              <option value="vip" ${g.category === 'vip' ? 'selected' : ''}>👑 طيرمانات VIP</option>
-              <option value="rooms" ${g.category === 'rooms' ? 'selected' : ''}>🛏️ الغرف والأجنحة</option>
-              <option value="halls" ${g.category === 'halls' ? 'selected' : ''}>🎓 القاعات والوجبات</option>
-            </select>
-            <button type="button" class="adm-btn adm-btn-danger adm-btn-sm" onclick="deleteGalleryItem(${idx})">حذف</button>
+    container.innerHTML = filtered.map(({ item: g, idx }) => {
+      const isVis = g.visible !== false;
+      const inCar = g.show_in_carousel !== false;
+      return `
+        <div class="adm-gallery-card" data-gidx="${idx}" style="opacity: ${isVis ? '1' : '0.6'};">
+          <div style="position: relative;">
+            <img src="../${g.src}" alt="${g.title}" onerror="this.src='../assets/images/building-day.jpg'">
+            <span style="position: absolute; top: 0.5rem; right: 0.5rem; background: rgba(0,0,0,0.82); color: var(--adm-gold-light); padding: 0.2rem 0.65rem; border-radius: 99px; font-size: 0.72rem; font-weight: 700; border: 1px solid var(--adm-border-gold);">
+              #${g.order || (idx + 1)} • ${getCategoryArabic(g.category)}
+            </span>
+            ${g.badge_ar ? `<span style="position: absolute; bottom: 0.5rem; right: 0.5rem; background: rgba(226,45,70,0.88); color:#fff; padding: 0.15rem 0.55rem; border-radius: 99px; font-size: 0.7rem; font-weight:700;">${g.badge_ar}</span>` : ''}
+          </div>
+          <div class="adm-gallery-card-body">
+            <input type="text" class="adm-input" value="${g.title || ''}" placeholder="عنوان الصورة" style="padding: 0.35rem 0.6rem; font-size: 0.85rem; font-weight:700;" onchange="updateGalleryItemField(${idx}, 'title', this.value)">
+            <input type="text" class="adm-input" value="${g.description_ar || ''}" placeholder="وصف الصورة (يظهر في المعرض والكاروسيل)" style="padding: 0.3rem 0.6rem; font-size: 0.78rem; color: var(--adm-text-sub);" onchange="updateGalleryItemField(${idx}, 'description_ar', this.value)">
+            
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:0.4rem; margin-top:0.25rem;">
+              <select class="adm-select" style="padding: 0.25rem 0.5rem; font-size: 0.78rem; flex-grow:1;" onchange="updateGalleryItemField(${idx}, 'category', this.value)">
+                <option value="exterior" ${g.category === 'exterior' ? 'selected' : ''}>🏛️ الواجهة والمبنى</option>
+                <option value="lobby" ${g.category === 'lobby' ? 'selected' : ''}>🛎️ الاستقبال واللوبي</option>
+                <option value="vip" ${g.category === 'vip' ? 'selected' : ''}>👑 طيرمانات VIP</option>
+                <option value="rooms" ${g.category === 'rooms' ? 'selected' : ''}>🛏️ الغرف والأجنحة</option>
+                <option value="halls" ${g.category === 'halls' ? 'selected' : ''}>🎓 القاعات والوجبات</option>
+              </select>
+              <button type="button" class="adm-btn adm-btn-outline adm-btn-sm" style="padding:0.25rem 0.45rem;" onclick="moveGalleryItemOrder(${idx}, -1)" title="تحريك لأعلى">⬆️</button>
+              <button type="button" class="adm-btn adm-btn-outline adm-btn-sm" style="padding:0.25rem 0.45rem;" onclick="moveGalleryItemOrder(${idx}, 1)" title="تحريك لأسفل">⬇️</button>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; padding:0.35rem 0; border-top:1px solid rgba(255,255,255,0.06);">
+              <label style="display:flex; align-items:center; gap:0.3rem; cursor:pointer; color:#cbd5e1;">
+                <input type="checkbox" ${isVis ? 'checked' : ''} onchange="updateGalleryItemField(${idx}, 'visible', this.checked)"> 👁️ ظاهر
+              </label>
+              <label style="display:flex; align-items:center; gap:0.3rem; cursor:pointer; color:var(--adm-gold-light);">
+                <input type="checkbox" ${inCar ? 'checked' : ''} onchange="updateGalleryItemField(${idx}, 'show_in_carousel', this.checked)"> 🎠 بالكاروسيل
+              </label>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.4rem; margin-top: auto;">
+              <button type="button" class="adm-btn adm-btn-gold adm-btn-sm" style="flex-grow:1; justify-content:center;" onclick="openGalleryItemModal(${idx})">
+                ✏️ تعديل كامل والصورة
+              </button>
+              <button type="button" class="adm-btn adm-btn-danger adm-btn-sm btn-delete" onclick="deleteGalleryItem(${idx})">🗑️</button>
+            </div>
           </div>
         </div>
-      </div>
-    `).join('');
+      `;
+    }).join('');
   }
 
   window.updateGalleryItemField = function (idx, field, val) {
@@ -1070,16 +1921,132 @@
     galleryData[idx][field] = val;
     if (field === 'category') {
       galleryData[idx].group_ar = getCategoryArabic(val).replace(/^[^\s]+\s/, '');
-      renderGalleryGrid();
     }
+    renderGalleryGrid();
     markUnsaved();
+  };
+
+  window.moveGalleryItemOrder = function (idx, dir) {
+    if (!galleryData) return;
+    const targetIdx = idx + dir;
+    if (targetIdx < 0 || targetIdx >= galleryData.length) return;
+    const temp = galleryData[idx];
+    galleryData[idx] = galleryData[targetIdx];
+    galleryData[targetIdx] = temp;
+    galleryData.forEach((it, i) => { it.order = i + 1; });
+    renderGalleryGrid();
+    markUnsaved();
+  };
+
+  // Full Gallery Item Modal Editor
+  window.openGalleryItemModal = function (idx) {
+    if (!galleryData || !galleryData[idx]) return;
+    currentEditingGalleryIndex = idx;
+    galleryModalImageUploadBase64 = null;
+    const g = galleryData[idx];
+
+    const statusBox = document.getElementById('galModalStatus');
+    const fileInput = document.getElementById('galModalFileInput');
+    if (statusBox) statusBox.style.display = 'none';
+    if (fileInput) fileInput.value = '';
+
+    document.getElementById('galModalHeaderTitle').textContent = `🖼️ تحرير كامل بيانات العنصر #${idx + 1}: ${g.title || ''}`;
+    document.getElementById('galModalImgPreview').src = `../${g.src}`;
+    setVal('galModalImgPath', g.src || '');
+    setVal('galModalTitleAr', g.title || '');
+    setVal('galModalTitleEn', g.title_en || '');
+    setVal('galModalDescAr', g.description_ar || '');
+    setVal('galModalCategory', g.category || 'rooms');
+    setVal('galModalBadgeAr', g.badge_ar || '');
+    setVal('galModalOrder', g.order || (idx + 1));
+    document.getElementById('galModalVisible').checked = g.visible !== false;
+    document.getElementById('galModalCarousel').checked = g.show_in_carousel !== false;
+
+    document.getElementById('galleryItemModalBackdrop').classList.add('open');
+  };
+
+  window.closeGalleryItemModal = function () {
+    document.getElementById('galleryItemModalBackdrop').classList.remove('open');
+  };
+
+  window.handleGalleryModalImageFile = function (e) {
+    const file = e.target.files[0];
+    const preview = document.getElementById('galModalImgPreview');
+    if (!file || !preview) return;
+    compressImageFromFile(file, 1600, 0.85, (dataUrl, b64) => {
+      preview.src = dataUrl;
+      galleryModalImageUploadBase64 = b64;
+    });
+  };
+
+  window.saveGalleryItemModalData = async function () {
+    if (currentEditingGalleryIndex < 0 || !galleryData[currentEditingGalleryIndex]) return;
+    const title = getVal('galModalTitleAr').trim();
+    if (!title) {
+      alert('يرجى إدخال عنوان الصورة.');
+      return;
+    }
+
+    const saveBtn = document.getElementById('galModalSaveBtn');
+    const statusBox = document.getElementById('galModalStatus');
+    if (saveBtn) saveBtn.disabled = true;
+    if (statusBox) {
+      statusBox.style.display = 'block';
+      statusBox.className = 'alert-box alert-info';
+      statusBox.innerHTML = '⏳ جاري حفظ بيانات العنصر ومزامنته مع GitHub...';
+    }
+
+    try {
+      const item = galleryData[currentEditingGalleryIndex];
+      let imgPath = getVal('galModalImgPath').trim() || item.src;
+
+      if (galleryModalImageUploadBase64) {
+        const newFile = `gallery-${Date.now()}.jpg`;
+        imgPath = `assets/images/${newFile}`;
+        if (statusBox) statusBox.innerHTML = `جاري رفع الصورة البديلة <code>${imgPath}</code> إلى GitHub...`;
+        await commitBinaryFileToGitHub(imgPath, galleryModalImageUploadBase64, `Replace gallery image: ${newFile}`);
+      }
+
+      const cat = getVal('galModalCategory') || 'rooms';
+      item.title = title;
+      item.title_en = getVal('galModalTitleEn').trim() || item.title_en || 'Rose Aden 2 Hotel';
+      item.description_ar = getVal('galModalDescAr').trim();
+      item.category = cat;
+      item.group_ar = getCategoryArabic(cat).replace(/^[^\s]+\s/, '');
+      item.badge_ar = getVal('galModalBadgeAr').trim();
+      item.order = parseInt(getVal('galModalOrder'), 10) || (currentEditingGalleryIndex + 1);
+      item.visible = document.getElementById('galModalVisible').checked;
+      item.show_in_carousel = document.getElementById('galModalCarousel').checked;
+      item.src = imgPath;
+
+      galleryData.sort((a, b) => (a.order || 999) - (b.order || 999));
+
+      await commitTextFileToGitHub('data/gallery.json', JSON.stringify(galleryData, null, 2), `Update gallery item: ${title}`);
+      renderGalleryGrid();
+      clearUnsaved();
+
+      if (statusBox) {
+        statusBox.className = 'alert-box alert-success';
+        statusBox.innerHTML = '✓ تم حفظ ونشر بيانات وصورة العنصر على GitHub بنجاح!';
+      }
+      setTimeout(() => { closeGalleryItemModal(); }, 1000);
+    } catch (err) {
+      markUnsaved();
+      renderGalleryGrid();
+      if (statusBox) {
+        statusBox.className = 'alert-box alert-warning';
+        statusBox.innerHTML = `❌ خطأ أثناء النشر: ${err.message}`;
+      }
+    } finally {
+      if (saveBtn) saveBtn.disabled = false;
+    }
   };
 
   window.saveGalleryChangesToGitHub = async function () {
     try {
-      await commitTextFileToGitHub('data/gallery.json', JSON.stringify(galleryData, null, 2), 'تحديث ترتيب ومجموعات معرض الصور عبر لوحة التحكم');
+      await commitTextFileToGitHub('data/gallery.json', JSON.stringify(galleryData, null, 2), 'تحديث بيانات وترتيب ومجموعات معرض الصور عبر لوحة التحكم');
       clearUnsaved();
-      alert('✓ تم حفظ ونشر تعديلات المعرض على GitHub بنجاح!');
+      alert('✓ تم حفظ ونشر كافة تعديلات المعرض على GitHub بنجاح!');
     } catch (e) {
       alert(`❌ خطأ أثناء الحفظ: ${e.message}`);
     }
@@ -1100,7 +2067,7 @@
   };
 
   // =========================================================================
-  // 8. Training Hall & Reviews (View & Edit Modes)
+  // 9. Training Hall & Reviews (#tab-hall & #tab-reviews)
   // =========================================================================
   function renderHallView() {
     if (!hallData) return;
@@ -1191,7 +2158,7 @@
           <span style="color: var(--adm-gold);">${'★'.repeat(rev.rating || 5)}</span>
         </div>
         <p style="color: var(--adm-text-sub); font-size: 0.9rem; margin-bottom: 0.75rem;">"${rev.comment_ar}"</p>
-        <button type="button" class="adm-btn adm-btn-danger adm-btn-sm" onclick="deleteReviewItem(${idx})">حذف التقييم</button>
+        <button type="button" class="adm-btn adm-btn-danger adm-btn-sm btn-delete" onclick="deleteReviewItem(${idx})">حذف التقييم</button>
       </div>
     `).join('');
   }
@@ -1231,12 +2198,14 @@
   };
 
   // =========================================================================
-  // 9. Atomic Global Sync & Publish Engine (Zero CORS / Zero SHA Errors!)
+  // 10. Atomic Global Sync & Publish Engine (All 9 JSON Datasets!)
   // =========================================================================
   function harvestAllOpenForms() {
     collectHotelInfoFromEditForm();
     collectThemeFromEditForm();
     collectHallFromEditForm();
+    collectCurrentPageEditorFields();
+    cacheUsersLocally(usersData);
   }
 
   window.syncAllToGitHub = async function () {
@@ -1246,7 +2215,6 @@
       return;
     }
 
-    // Harvest any open edit forms first so nothing is missed
     harvestAllOpenForms();
 
     const terminal = document.getElementById('syncTerminal');
@@ -1254,32 +2222,31 @@
     if (syncBtn) syncBtn.disabled = true;
     if (terminal) {
       terminal.style.display = 'block';
-      terminal.innerHTML = `> [${new Date().toLocaleTimeString()}] بدء المزامنة الذرية الموحدة لكافة ملفات الموقع مع GitHub...<br>`;
+      terminal.innerHTML = `> [${new Date().toLocaleTimeString()}] بدء المزامنة الذرية الموحدة لكافة ملفات الموقع الـ 9 مع GitHub...<br>`;
     }
 
     const filesPayload = {
       'data/theme.json': JSON.stringify(themeData, null, 2),
       'data/hotel-info.json': JSON.stringify(hotelData, null, 2),
+      'data/pages-content.json': JSON.stringify(pagesContentData, null, 2),
       'data/rooms.json': JSON.stringify(roomsData, null, 2),
+      'data/amenities.json': JSON.stringify(amenitiesData, null, 2),
       'data/hall.json': JSON.stringify(hallData, null, 2),
       'data/reviews.json': JSON.stringify(reviewsData, null, 2),
-      'data/gallery.json': JSON.stringify(galleryData, null, 2)
+      'data/gallery.json': JSON.stringify(galleryData, null, 2),
+      'data/users.json': JSON.stringify(usersData, null, 2)
     };
 
     try {
-      logTerminal('> جاري تجميع ملفات البيانات الـ 6 (الهوية، الفندق، الغرف، القاعة، التقييمات، المعرض)...');
+      logTerminal('> جاري تجميع ملفات البيانات الـ 9 (الهوية، الفندق، الصفحات والمنشورات، الغرف، المرافق، القاعة، التقييمات، المعرض، وكلمات المرور)...');
       try {
-        // Attempt Atomic Git Tree Commit (1 single commit for all 6 files!)
         const commitRes = await commitMultipleFilesAtomically(
           filesPayload,
-          'تحديث شامل لبيانات وهوية ومعرض فندق روز عدن 2 عبر لوحة التحكم'
+          'تحديث شامل لبيانات وصفحات ومنشورات ومعرض وحسابات فندق روز عدن 2 (v10)'
         );
-        logTerminal('✓ تم تحديث data/theme.json (الهوية والألوان وشريط العروض).');
-        logTerminal('✓ تم تحديث data/hotel-info.json (بيانات الفندق والاتصال).');
-        logTerminal('✓ تم تحديث data/rooms.json (الغرف والأسعار والمميزات).');
-        logTerminal('✓ تم تحديث data/hall.json (قاعة التدريب والمؤتمرات).');
-        logTerminal('✓ تم تحديث data/reviews.json (تقييمات وآراء النزلاء).');
-        logTerminal('✓ تم تحديث data/gallery.json (معرض الصور والمجموعات).');
+        Object.keys(filesPayload).forEach(fp => {
+          logTerminal(`✓ تم تحديث ${fp} بنجاح.`);
+        });
         logTerminal(`> رقم الـ Commit الموحد: <code>${(commitRes.sha || '').slice(0, 8)}</code>`);
       } catch (atomicErr) {
         console.warn('Atomic commit fallback to sequential:', atomicErr);
@@ -1288,7 +2255,7 @@
           logTerminal(`> نشر ${filePath}...`);
           await commitTextFileToGitHub(filePath, content, `Sync ${filePath}`);
           logTerminal(`✓ تم تحديث ${filePath}.`);
-          await new Promise(r => setTimeout(r, 600));
+          await new Promise(r => setTimeout(r, 500));
         }
       }
 
@@ -1297,7 +2264,7 @@
       renderThemeView();
       renderHallView();
 
-      logTerminal(`<br><span style="color:#10b981; font-weight:bold;">🎉 اكتملت المزامنة والنشر بنجاح 100% بدون أي أخطاء!</span>`);
+      logTerminal(`<br><span style="color:#10b981; font-weight:bold;">🎉 اكتملت المزامنة والنشر الشامل بنجاح 100% بدون أي أخطاء!</span>`);
       logTerminal(`> يقوم GitHub Pages الآن بتحديث الموقع الحي: <a href="https://${config.owner.toLowerCase()}.github.io/${config.repo}/" target="_blank" style="color:#d4af37;">https://${config.owner.toLowerCase()}.github.io/${config.repo}/</a>`);
     } catch (err) {
       logTerminal(`<br><span style="color:#ef4444; font-weight:bold;">❌ حدث خطأ أثناء النشر: ${err.message}</span>`);
@@ -1314,7 +2281,6 @@
     }
   }
 
-  // Color Utilities
   function darkenColor(hex) {
     try {
       const col = parseInt(hex.replace('#', ''), 16);
@@ -1335,16 +2301,18 @@
     } catch (e) { return hex; }
   }
 
-  // Backup Download
   window.downloadBackupPackage = function () {
     harvestAllOpenForms();
     downloadFile('theme.json', themeData);
     downloadFile('hotel-info.json', hotelData);
+    downloadFile('pages-content.json', pagesContentData);
     downloadFile('rooms.json', roomsData);
+    downloadFile('amenities.json', amenitiesData);
     downloadFile('hall.json', hallData);
     downloadFile('reviews.json', reviewsData);
     downloadFile('gallery.json', galleryData);
-    alert('تم تنزيل جميع ملفات البيانات بنجاح كنسخة احتياطية!');
+    downloadFile('users.json', usersData);
+    alert('تم تنزيل جميع ملفات البيانات الـ 9 بنجاح كنسخة احتياطية!');
   };
 
   function downloadFile(name, obj) {
@@ -1367,99 +2335,15 @@
     return el ? el.value : '';
   }
 
-  // Initialize on DOM Ready
   document.addEventListener('DOMContentLoaded', () => {
     setVal('ghOwner', config.owner);
     setVal('ghRepo', config.repo);
     setVal('ghBranch', config.branch);
     setVal('ghToken', config.token);
 
+    initAdminAuth();
+    renderUsersCards();
     testGitHubConnection();
     loadInitialData();
   });
 })();
-
-// إعدادات المستخدمين الأربعة والصلاحيات
-const ADMIN_USERS = {
-  developer: { title: "المطور (Developer)", defaultPassPlain: "Dev@2026", allowedSections: ["all"], canEditPrices: true, canDelete: true, canEditTheme: true },
-  manager: { title: "المدير (Manager)", defaultPassPlain: "Manager@2026", allowedSections: ["hotel-info", "rooms", "vip-suites", "hall", "amenities", "reviews", "gallery"], canEditPrices: true, canDelete: true, canEditTheme: false },
-  supervisor: { title: "المشرف (Supervisor)", defaultPassPlain: "Super@2026", allowedSections: ["rooms", "vip-suites", "hall", "gallery", "reviews"], canEditPrices: false, canDelete: false, canEditTheme: false },
-  reception: { title: "الاستقبال (Reception)", defaultPassPlain: "Rec@2026", allowedSections: ["rooms", "vip-suites", "hall"], canEditPrices: false, canDelete: false, canEditTheme: false, availabilityOnly: true }
-};
-
-document.addEventListener("DOMContentLoaded", () => {
-  const loginOverlay = document.getElementById("admin-login-overlay");
-  const loginForm = document.getElementById("admin-login-form");
-  const loginError = document.getElementById("login-error");
-  const sessionBar = document.getElementById("user-session-bar");
-  const roleBadge = document.getElementById("current-role-badge");
-  const welcomeText = document.getElementById("welcome-text");
-  const logoutBtn = document.getElementById("btn-logout");
-
-  if (!loginOverlay) return; // If script runs on non-admin page
-
-  const savedRole = sessionStorage.getItem("pronet_admin_role");
-  if (savedRole && ADMIN_USERS[savedRole]) {
-    unlockDashboard(savedRole);
-  }
-
-  loginForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const role = document.getElementById("login-role").value;
-    const password = document.getElementById("login-password").value;
-    const targetPassword = ADMIN_USERS[role]?.defaultPassPlain;
-
-    if (ADMIN_USERS[role] && password === targetPassword) {
-      sessionStorage.setItem("pronet_admin_role", role);
-      loginError.style.display = "none";
-      loginForm.reset();
-      unlockDashboard(role);
-    } else {
-      loginError.style.display = "block";
-    }
-  });
-
-  logoutBtn.addEventListener("click", () => {
-    sessionStorage.removeItem("pronet_admin_role");
-    location.reload();
-  });
-
-  function unlockDashboard(roleKey) {
-    const user = ADMIN_USERS[roleKey];
-    loginOverlay.style.display = "none";
-    sessionBar.style.display = "flex";
-    roleBadge.textContent = user.title;
-    welcomeText.textContent = `مرحباً بك في لوحة التحكم - الصلاحيات مفعلة`;
-    applyRolePermissions(user);
-  }
-
-  function applyRolePermissions(user) {
-    document.querySelectorAll("[data-section]").forEach((el) => {
-      const sectionName = el.getAttribute("data-section");
-      if (!user.allowedSections.includes("all") && !user.allowedSections.includes(sectionName)) {
-        el.classList.add("restricted-hidden");
-      } else {
-        el.classList.remove("restricted-hidden");
-      }
-    });
-
-    if (!user.canEditPrices) {
-      document.querySelectorAll('input[name*="price"], input[type="number"], .price-input').forEach((input) => {
-        input.setAttribute("readonly", true);
-        input.style.backgroundColor = "#f1f5f9";
-      });
-    }
-
-    if (!user.canDelete) {
-      document.querySelectorAll(".btn-delete, .btn-add-new, .delete-btn, .btn-remove").forEach((btn) => {
-        btn.classList.add("restricted-hidden");
-      });
-    }
-
-    if (user.availabilityOnly) {
-      document.querySelectorAll("input:not(.availability-toggle):not([type='checkbox']), textarea").forEach((field) => {
-        if (field.id !== "login-password") field.setAttribute("disabled", true);
-      });
-    }
-  }
-});

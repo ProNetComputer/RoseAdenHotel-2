@@ -4,21 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>عن الفندق | فندق روز عدن 2 السياحي</title>
-  <meta name="description" content="فندق روز عدن 2 السياحي - العريش، ساحل أبين، عدن. أرقى غرف وأجنحة VIP، طيرمانات بإطلالة بحرية، قاعة تدريب مجهزة بأحدث الشاشات الذكية، وإنترنت فايبر عالي السرعة.">
+  <meta name="description" content="نبذة عن فندق روز عدن 2 السياحي - العريش، ساحل أبين، عدن. صرح فندقي حديث يجمع بين الضيافة الأصيلة والراحة العصرية.">
   <link rel="icon" type="image/jpeg" href="assets/images/favicon.jpg">
-  
-  <!-- Google Fonts: Cairo & Poppins -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
-  <!-- Modular Stylesheets -->
   <link rel="stylesheet" href="assets/css/variables.css">
   <link rel="stylesheet" href="assets/css/main.css">
   <link rel="stylesheet" href="assets/css/components.css">
   <link rel="stylesheet" href="assets/css/responsive.css">
 </head>
-<body>
+<body data-page="about">
 
   <!-- Top Announcement & Contact Bar -->
   <div class="top-bar">
@@ -74,8 +70,9 @@
 
   <div class="page-hero">
     <div class="container">
-      <h1 class="page-hero-title">نبذة عن فندق روز عدن 2</h1>
-      <p class="page-hero-subtitle">صرح سياحي حديث يجمع بين عبق الضيافة اليمنية الأصيلة وأعلى معايير الراحة العصرية</p>
+      <span class="hero-badge" data-page-bind="hero_badge_ar">تعرف على صرحنا الفندقي</span>
+      <h1 class="page-hero-title" data-page-bind="hero_title_ar">نبذة عن فندق روز عدن 2 السياحي</h1>
+      <p class="page-hero-subtitle" data-page-bind="hero_subtitle_ar">صرح سياحي حديث يجمع بين عبق الضيافة اليمنية الأصيلة وأعلى معايير الراحة الفندقية العصرية في قلب عدن</p>
       <div class="breadcrumbs">
         <a href="index.html">الرئيسية</a> &gt; <span>عن الفندق</span>
       </div>
@@ -86,16 +83,16 @@
     <div class="container">
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3.5rem; align-items: center; margin-bottom: 4rem;">
         <div>
-          <span class="section-badge">أهلاً بكم في فندق روز عدن 2</span>
-          <h2 class="section-title" style="text-align: right;">إقامة استثنائية وأجواء ساحرة</h2>
-          <p style="font-size: 1.05rem; line-height: 1.8; color: var(--text-secondary); margin-bottom: 1.25rem;">
-            يقع فندق روز عدن 2 في منطقة العريش الاستراتيجية على ساحل أبين مباشرة في العاصمة عدن، بجوار جولة الرحاب، مما يجعله على بُعد دقائق معدودة من مطار عدن الدولي وشريان الحركة بين مديريات المحافظة.
+          <span class="section-badge" data-page-bind="intro_badge_ar">أهلاً بكم في فندق روز عدن 2</span>
+          <h2 class="section-title" style="text-align: right;" data-page-bind="intro_title_ar">إقامة استثنائية وأجواء ساحلية ساحرة على مدار العام</h2>
+          <p style="font-size: 1.05rem; line-height: 1.8; color: var(--text-secondary); margin-bottom: 1.25rem;" data-page-bind="intro_desc_ar">
+            يقع فندق روز عدن 2 السياحي في منطقة العريش الاستراتيجية على ساحل أبين مباشرة في العاصمة عدن، بجوار جولة الرحاب، مما يجعله على بُعد 5 دقائق فقط من مطار عدن الدولي وشريان الحركة الرئيسي بين مديريات المحافظة.
           </p>
-          <p style="font-size: 1.02rem; line-height: 1.8; color: var(--text-muted); margin-bottom: 1.5rem;">
-            صُمم الفندق بعناية فائقة ليلبي متطلبات السياح، رجال الأعمال، العائلات، والمنظمات المحلية والدولية، موفراً بهو استقبال فخم بالثريات الكريستالية، غرفاً فسيحة وأجنحة VIP ملكية، بالإضافة إلى طيرمانات ومجالس بإطلالة ساحرة.
+          <p style="font-size: 1.02rem; line-height: 1.8; color: var(--text-muted); margin-bottom: 1.5rem;" data-page-bind="intro_extra_ar">
+            صُمم الفندق بعناية فائقة ليلبي متطلبات السياح، رجال الأعمال، العائلات، والمنظمات المحلية والدولية، موفراً بهو استقبال فخم بالثريات الكريستالية، غرفاً فسيحة وأجنحة VIP ملكية، بالإضافة إلى طيرمانات ومجالس علوية بإطلالة بحرية وقاعة مؤتمرات متطورة.
           </p>
-          <div style="display: flex; gap: 1rem;">
-            <a href="rooms.html" class="btn btn-primary">استعراض الغرف والأجنحة</a>
+          <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <a href="rooms.html" class="btn btn-primary">استعراض الغرف والأجنحة (8 فئات)</a>
             <a href="gallery.html" class="btn btn-outline">جولة في معرض الصور</a>
           </div>
         </div>
@@ -108,44 +105,81 @@
         </div>
       </div>
 
-      <div class="amenities-grid">
-        
+      <div class="section-header">
+        <span class="section-badge">خدماتنا ومرافقنا</span>
+        <h2 class="section-title">المرافق والخدمات الفندقية المتكاملة</h2>
+      </div>
+
+      <div class="amenities-grid" id="aboutAmenitiesGrid">
         <div class="amenity-card">
           <div class="amenity-icon">🌐</div>
-          <h3 class="amenity-title">إنترنت فايبر مجاني</h3>
-          <p class="amenity-desc">تغطية واي فاي فايبر سريعة ومجانية في جميع أرجاء الفندق والغرف والقاعات.</p>
+          <h3 class="amenity-title">إنترنت فايبر مجاني فائق السرعة</h3>
+          <p class="amenity-desc">تغطية واي فاي فايبر سريعة ومجانية في جميع أرجاء الفندق والغرف والأجنحة وقاعات التدريب.</p>
         </div>
-        
         <div class="amenity-card">
           <div class="amenity-icon">⚡</div>
-          <h3 class="amenity-title">كهرباء وتكييف 24/7</h3>
-          <p class="amenity-desc">مولدات كهربائية حديثة تعمل على مدار الساعة دون انقطاع لضمان راحتكم التامة.</p>
+          <h3 class="amenity-title">كهرباء وتكييف مستمر 24/7</h3>
+          <p class="amenity-desc">مولدات كهربائية حديثة ومنظومة طاقة احتياطية تعمل على مدار الساعة دون انقطاع لضمان راحتكم التامة.</p>
         </div>
-        
         <div class="amenity-card">
           <div class="amenity-icon">🅿️</div>
-          <h3 class="amenity-title">موقفان للسيارات بحراسة</h3>
-          <p class="amenity-desc">موقفان فسيحان للسيارات بحراسة أمنية مستمرة وكاميرات مراقبة رقمية حديثة.</p>
+          <h3 class="amenity-title">موقفان فسيحان للسيارات بحراسة</h3>
+          <p class="amenity-desc">موقفان خاصان للسيارات بحراسة أمنية مستمرة وكاميرات مراقبة رقمية حديثة على مدار 24 ساعة.</p>
         </div>
-        
         <div class="amenity-card">
           <div class="amenity-icon">✈️</div>
-          <h3 class="amenity-title">قرب المطار وخدمة توصيل</h3>
-          <p class="amenity-desc">موقع استراتيجي على بعد 5 دقائق من مطار عدن الدولي مع خدمة استقبال وتوصيل مجانية.</p>
+          <h3 class="amenity-title">5 دقائق عن المطار وتوصيل مجاني</h3>
+          <p class="amenity-desc">موقع استراتيجي على بُعد 5 دقائق من مطار عدن الدولي مع خدمة استقبال وتوصيل مجانية للنزلاء.</p>
         </div>
-        
         <div class="amenity-card">
           <div class="amenity-icon">🌊</div>
           <h3 class="amenity-title">إطلالة ساحل أبين الساحرة</h3>
-          <p class="amenity-desc">خطوات معدودة عن شاطئ البحر للاستمتاع بنسيم البحر العليل والأجواء الهادئة.</p>
+          <p class="amenity-desc">خطوات معدودة عن شاطئ ساحل أبين للاستمتاع بنسيم البحر العليل والإطلالات البانورامية الهادئة.</p>
         </div>
-        
         <div class="amenity-card">
           <div class="amenity-icon">🛎️</div>
           <h3 class="amenity-title">خدمة غرف واستقبال 24 ساعة</h3>
-          <p class="amenity-desc">فريق استقبال وضيافة متخصص رهن إشارتكم لتلبية كافة متطلباتكم على مدار الساعة.</p>
+          <p class="amenity-desc">فريق استقبال وضيافة متخصص رهن إشارتكم لتلبية كافة متطلباتكم على مدار الساعة بابتسامة واحترافية.</p>
         </div>
-        
+        <div class="amenity-card">
+          <div class="amenity-icon">🎓</div>
+          <h3 class="amenity-title">قاعة تدريب ومؤتمرات ذكية وصالة وجبات</h3>
+          <p class="amenity-desc">قاعة كبرى تتسع لـ 70 مشاركاً مجهزة بشاشة تفاعلية عملاقة ونظام صوتي وصالة مستقلة للوجبات والـ Coffee Break.</p>
+        </div>
+        <div class="amenity-card">
+          <div class="amenity-icon">👑</div>
+          <h3 class="amenity-title">طيرمانات ومجالس VIP لكبار الضيوف</h3>
+          <p class="amenity-desc">مجالس عربية ويمنية فاخرة في الطوابق العليا بإطلالة بحرية مفتوحة لاستقبال الوفود واللقاءات الخاصة.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dynamic Page Posts & Promotions Section -->
+  <section class="section" id="pagePostsSection" style="display: block;">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge" data-page-bind="posts_section_badge_ar">أخبار وخدمات الفندق</span>
+        <h2 class="section-title" data-page-bind="posts_section_title_ar">منشورات وباقات فندق روز عدن 2</h2>
+        <p class="section-desc" data-page-bind="posts_section_desc_ar">تعرف على أحدث خدمات الاستضافة الفندقية والمؤتمرات</p>
+      </div>
+      <div class="posts-grid" id="pagePostsGrid">
+        <article class="post-card">
+          <div class="post-card-media">
+            <img src="assets/images/training-hall.jpg" alt="باقات متكاملة لاستضافة الدورات التدريبية وورش عمل المنظمات" loading="lazy">
+            <span class="post-badge">🎓 للمنظمات والشركات</span>
+            <span class="post-date-pill">📅 حجوزات مفتوحة</span>
+          </div>
+          <div class="post-card-body">
+            <div class="post-category">قاعات ومؤتمرات</div>
+            <h3 class="post-title">باقات متكاملة لاستضافة الدورات التدريبية وورش عمل المنظمات</h3>
+            <div class="post-subtitle">قاعة ذكية تتسع لـ 70 مشاركاً + صالة وجبات واستراحات قهوة مستقلة</div>
+            <p class="post-content">جهزنا قاعة التدريب والمؤتمرات الكبرى بأحدث شاشة تفاعلية عملاقة، نظام صوتي لاسلكي محيطي، إنترنت فايبر مخصص لاجتماعات الفيديو، وصالة طعام مستقلة لتقديم وجبات الغداء واستراحات القهوة (Coffee Breaks) بأعلى معايير الضيافة.</p>
+            <a href="https://wa.me/967780000656?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D9%86%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%B9%D8%B1%D8%B6%20%D8%B3%D8%B9%D8%B1%20%D9%84%D8%AD%D8%AC%D8%B2%20%D9%82%D8%A7%D8%B9%D8%A9%20%D8%A7%D9%84%D8%AA%D8%AF%D8%B1%D9%8A%D8%A8" target="_blank" class="btn btn-whatsapp btn-sm" style="width: 100%;">
+              <span>💬</span> اطلب عرض سعر للقاعة
+            </a>
+          </div>
+        </article>
       </div>
     </div>
   </section>
@@ -175,7 +209,7 @@
           <ul>
             <li><a href="index.html">الصفحة الرئيسية</a></li>
             <li><a href="about.html">نبذة عن الفندق</a></li>
-            <li><a href="rooms.html">الغرف والأجنحة</a></li>
+            <li><a href="rooms.html">الغرف والأجنحة (8 فئات)</a></li>
             <li><a href="vip-suites.html">طيرمانات وأجنحة VIP</a></li>
             <li><a href="training-hall.html">قاعة التدريب والمؤتمرات</a></li>
             <li><a href="gallery.html">معرض الصور (21 لقطة)</a></li>
@@ -189,7 +223,7 @@
             <li><span>🌐</span> إنترنت فايبر مجاني</li>
             <li><span>🅿️</span> موقفان بحراسة وكاميرات</li>
             <li><span>✈️</span> 5 دقائق عن مطار عدن</li>
-            <li><span>📺</span> شاشات ذكية متطورة</li>
+            <li><span>👑</span> طيرمانات ومجالس VIP</li>
             <li><span>🍽️</span> صالة وجبات وضيافة</li>
           </ul>
         </div>

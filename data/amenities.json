@@ -1,44 +1,58 @@
 [
   {
+    "id": "am-1",
     "icon": "🌐",
-    "title_ar": "إنترنت فايبر مجاني",
+    "title_ar": "إنترنت فايبر مجاني فائق السرعة",
     "title_en": "High-Speed Fiber Wi-Fi",
-    "desc_ar": "تغطية واي فاي فايبر سريعة ومجانية في جميع أرجاء الفندق والغرف والقاعات.",
-    "desc_en": "High-speed fiber optic Wi-Fi coverage across all rooms, halls, and public areas."
+    "desc_ar": "تغطية واي فاي فايبر سريعة ومجانية في جميع أرجاء الفندق والغرف والأجنحة وقاعات التدريب."
   },
   {
+    "id": "am-2",
     "icon": "⚡",
-    "title_ar": "كهرباء وتكييف 24/7",
+    "title_ar": "كهرباء وتكييف مستمر 24/7",
     "title_en": "24/7 Power & Continuous AC",
-    "desc_ar": "مولدات كهربائية حديثة تعمل على مدار الساعة دون انقطاع لضمان راحتكم التامة.",
-    "desc_en": "Heavy-duty backup generators ensuring uninterrupted power and cool AC 24/7."
+    "desc_ar": "مولدات كهربائية حديثة ومنظومة طاقة احتياطية تعمل على مدار الساعة دون انقطاع لضمان راحتكم التامة."
   },
   {
+    "id": "am-3",
     "icon": "🅿️",
-    "title_ar": "موقفان للسيارات بحراسة",
+    "title_ar": "موقفان فسيحان للسيارات بحراسة",
     "title_en": "Two Monitored Parking Lots",
-    "desc_ar": "موقفان فسيحان للسيارات بحراسة أمنية مستمرة وكاميرات مراقبة رقمية حديثة.",
-    "desc_en": "Two spacious on-site parking lots with 24/7 security guards and CCTV cameras."
+    "desc_ar": "موقفان خاصان للسيارات بحراسة أمنية مستمرة وكاميرات مراقبة رقمية حديثة على مدار 24 ساعة."
   },
   {
+    "id": "am-4",
     "icon": "✈️",
-    "title_ar": "قرب المطار وخدمة توصيل",
-    "title_en": "Airport Proximity & Shuttle",
-    "desc_ar": "موقع استراتيجي على بعد 5 دقائق من مطار عدن الدولي مع خدمة استقبال وتوصيل مجانية.",
-    "desc_en": "Strategic location 5 minutes from Aden International Airport with complimentary shuttle."
+    "title_ar": "5 دقائق عن المطار وتوصيل مجاني",
+    "title_en": "Airport Proximity & Free Shuttle",
+    "desc_ar": "موقع استراتيجي على بُعد 5 دقائق من مطار عدن الدولي مع خدمة استقبال وتوصيل مجانية للنزلاء."
   },
   {
+    "id": "am-5",
     "icon": "🌊",
     "title_ar": "إطلالة ساحل أبين الساحرة",
-    "title_en": "Direct Abyan Beach Proximity",
-    "desc_ar": "خطوات معدودة عن شاطئ البحر للاستمتاع بنسيم البحر العليل والأجواء الهادئة.",
-    "desc_en": "Just steps away from Abyan beach, enjoying fresh coastal breeze and peaceful serenity."
+    "title_en": "Abyan Beach Proximity & View",
+    "desc_ar": "خطوات معدودة عن شاطئ ساحل أبين للاستمتاع بنسيم البحر العليل والإطلالات البانورامية الهادئة."
   },
   {
+    "id": "am-6",
     "icon": "🛎️",
     "title_ar": "خدمة غرف واستقبال 24 ساعة",
     "title_en": "24-Hour Reception & Room Service",
-    "desc_ar": "فريق استقبال وضيافة متخصص رهن إشارتكم لتلبية كافة متطلباتكم على مدار الساعة.",
-    "desc_en": "Attentive front desk and room service staff ready to assist you at all times."
+    "desc_ar": "فريق استقبال وضيافة متخصص رهن إشارتكم لتلبية كافة متطلباتكم على مدار الساعة بابتسامة واحترافية."
+  },
+  {
+    "id": "am-7",
+    "icon": "🎓",
+    "title_ar": "قاعة تدريب ومؤتمرات ذكية وصالة وجبات",
+    "title_en": "Smart Conference Hall & Dining",
+    "desc_ar": "قاعة كبرى تتسع لـ 70 مشاركاً مجهزة بشاشة تفاعلية عملاقة ونظام صوتي وصالة مستقلة للوجبات والـ Coffee Break."
+  },
+  {
+    "id": "am-8",
+    "icon": "👑",
+    "title_ar": "طيرمانات ومجالس VIP لكبار الضيوف",
+    "title_en": "Royal VIP Majlis & Penthouse Lounges",
+    "desc_ar": "مجالس عربية ويمنية فاخرة في الطوابق العليا بإطلالة بحرية مفتوحة لاستقبال الوفود واللقاءات الخاصة."
   }
 ]

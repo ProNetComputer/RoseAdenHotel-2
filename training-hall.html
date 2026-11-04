@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="assets/css/components.css">
   <link rel="stylesheet" href="assets/css/responsive.css">
 </head>
-<body>
+<body data-page="training-hall">
 
   <!-- Top Announcement & Contact Bar -->
   <div class="top-bar">
@@ -74,8 +74,8 @@
 
   <div class="page-hero">
     <div class="container">
-      <h1 class="page-hero-title">قاعة التدريب والفعاليات والمؤتمرات</h1>
-      <p class="page-hero-subtitle">تجهيزات متطورة وشاشة ذكية تفاعلية عملاقة وصالة وجبات مستقلة تلبي تطلعات المنظمات والشركات</p>
+      <h1 class="page-hero-title" data-page-bind="hero_title_ar">قاعة التدريب والفعاليات والمؤتمرات</h1>
+      <p class="page-hero-subtitle" data-page-bind="hero_subtitle_ar">تجهيزات متطورة وشاشة ذكية تفاعلية عملاقة وصالة وجبات مستقلة تلبي تطلعات المنظمات والشركات</p>
       <div class="breadcrumbs">
         <a href="index.html">الرئيسية</a> &gt; <span>قاعة التدريب</span>
       </div>
@@ -138,6 +138,35 @@
             <span>💬</span> حجز القاعة وتنسيق الفعالية عبر واتساب
           </a>
         </div>
+      </div>
+    </div>
+  </section>
+
+    <!-- Dynamic Page Posts & Promotions Section -->
+  <section class="section" id="pagePostsSection" style="display: block;">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge" data-page-bind="posts_section_badge_ar">أحدث العروض والمنشورات</span>
+        <h2 class="section-title" data-page-bind="posts_section_title_ar">عروض ومنشورات فندق روز عدن 2</h2>
+        <p class="section-desc" data-page-bind="posts_section_desc_ar">تابع أحدث العروض الموسمية والباقات الفندقية المخصصة لضيوفنا</p>
+      </div>
+      <div class="posts-grid" id="pagePostsGrid">
+        <article class="post-card">
+          <div class="post-card-media">
+            <img src="assets/images/training-hall.jpg" alt="باقات متكاملة لاستضافة الدورات التدريبية وورش عمل المنظمات" loading="lazy">
+            <span class="post-badge">🎓 للمنظمات والشركات</span>
+            <span class="post-date-pill">📅 حجوزات مفتوحة</span>
+          </div>
+          <div class="post-card-body">
+            <div class="post-category">قاعات ومؤتمرات</div>
+            <h3 class="post-title">باقات متكاملة لاستضافة الدورات التدريبية وورش عمل المنظمات</h3>
+            <div class="post-subtitle">قاعة ذكية تتسع لـ 70 مشاركاً + صالة وجبات واستراحات قهوة مستقلة</div>
+            <p class="post-content">جهزنا قاعة التدريب والمؤتمرات الكبرى بأحدث شاشة تفاعلية عملاقة، نظام صوتي لاسلكي محيطي، إنترنت فايبر مخصص لاجتماعات الفيديو، وصالة طعام مستقلة لتقديم وجبات الغداء واستراحات القهوة (Coffee Breaks) بأعلى معايير الضيافة.</p>
+            <a href="https://wa.me/967780000656?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D9%86%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%B9%D8%B1%D8%B6%20%D8%B3%D8%B9%D8%B1%20%D9%84%D8%AD%D8%AC%D8%B2%20%D9%82%D8%A7%D8%B9%D8%A9%20%D8%A7%D9%84%D8%AA%D8%AF%D8%B1%D9%8A%D8%A8" target="_blank" class="btn btn-whatsapp btn-sm" style="width: 100%;">
+              <span>💬</span> اطلب عرض سعر للقاعة
+            </a>
+          </div>
+        </article>
       </div>
     </div>
   </section>

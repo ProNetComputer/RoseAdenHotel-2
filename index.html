@@ -6,19 +6,15 @@
   <title>فندق روز عدن 2 السياحي | الصفحة الرئيسية</title>
   <meta name="description" content="فندق روز عدن 2 السياحي - العريش، ساحل أبين، عدن. أرقى غرف وأجنحة VIP، طيرمانات بإطلالة بحرية، قاعة تدريب مجهزة بأحدث الشاشات الذكية، وإنترنت فايبر عالي السرعة.">
   <link rel="icon" type="image/jpeg" href="assets/images/favicon.jpg">
-  
-  <!-- Google Fonts: Cairo & Poppins -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
-  <!-- Modular Stylesheets -->
   <link rel="stylesheet" href="assets/css/variables.css">
   <link rel="stylesheet" href="assets/css/main.css">
   <link rel="stylesheet" href="assets/css/components.css">
   <link rel="stylesheet" href="assets/css/responsive.css">
 </head>
-<body>
+<body data-page="home">
 
   <!-- Top Announcement & Contact Bar -->
   <div class="top-bar">
@@ -75,17 +71,20 @@
   <!-- Hero Section -->
   <section class="hero-home">
     <div class="hero-home-content">
-      <div class="hero-badge">✨ فندق روز عدن 2 السياحي - العريش جوار جولة الرحاب</div>
-      <h2 class="hero-home-title">حيث يلتقي البحر بالفخامة...<br><span>تبدأ أجمل لحظاتك</span></h2>
-      <p class="hero-home-desc">
-        استمتع بإقامة استثنائية في فندق روز عدن 2 السياحي المطل على الساحل؛ أثاث راقٍ، أجهزة حديثة، غرف وأجنحة VIP واسعة، قاعات تدريب مجهزة بشاشات عملاقة، وإنترنت فايبر عالي السرعة مجاناً.
+      <div class="hero-badge" data-page-bind="hero_badge_ar">✨ فندق روز عدن 2 السياحي - العريش جوار جولة الرحاب</div>
+      <h2 class="hero-home-title" data-page-bind="hero_title_ar">حيث يلتقي البحر بالفخامة...<br><span>تبدأ أجمل لحظاتك</span></h2>
+      <p class="hero-home-desc" data-page-bind="hero_subtitle_ar">
+        استمتع بإقامة استثنائية في فندق روز عدن 2 السياحي المطل على ساحل أبين؛ أثاث ملكي راقٍ، أجنحة وطيرمانات VIP بانورامية، قاعات تدريب مجهزة بشاشات ذكية عملاقة، وكهرباء وإنترنت فايبر عالي السرعة 24/7.
       </p>
       <div class="hero-actions">
         <a href="https://wa.me/967780000656?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%A7%D9%84%D8%AD%D8%AC%D8%B2%20%D9%81%D9%8A%20%D9%81%D9%86%D8%AF%D9%82%20%D8%B1%D9%88%D8%B2%20%D8%B9%D8%AF%D9%86%202" class="btn btn-whatsapp btn-lg" target="_blank">
           <span>💬</span> حجز فوري عبر واتساب
         </a>
         <a href="rooms.html" class="btn btn-gold btn-lg">
-          <span>🛏️</span> استكشف الغرف والأسعار
+          <span>🛏️</span> استكشف الغرف والأجنحة (8 فئات)
+        </a>
+        <a href="vip-suites.html" class="btn btn-outline btn-lg" style="border-color: var(--luxury-gold); color: #fff;">
+          <span>👑</span> طيرمانات وأجنحة VIP
         </a>
       </div>
     </div>
@@ -126,6 +125,7 @@
         <div class="carousel-bottom-bar">
           <div class="carousel-info-text">
             <h3 class="carousel-active-title" id="carouselActiveTitle">إضاءة واجهة مبنى فندق روز عدن 2 السياحي ليلاً</h3>
+            <p id="carouselActiveDesc" style="font-size: 0.85rem; color: #d6cbd0; margin-bottom: 0.25rem;">واجهة الفندق المعمارية المضاءة ليلاً على شارع العريش الساحلي بجوار جولة الرحاب.</p>
             <span class="carousel-active-counter" id="carouselActiveCounter">لقطة رقم 1 من إجمالي 21 صورة في المعرض</span>
           </div>
           <div style="display: flex; align-items: center; gap: 1rem;">
@@ -145,10 +145,10 @@
       <form onsubmit="handleQuickBook(event)">
         <div class="booking-grid">
           <div class="form-group">
-            <label for="bkRoomType">نوع الإقامة</label>
+            <label for="bkRoomType">نوع الإقامة أو القاعة</label>
             <select id="bkRoomType" class="form-select">
-              <option value="أجنحة VIP الملكية الفاخرة">أجنحة VIP الملكية الفاخرة</option><option value="الغرف والأجنحة العائلية الفاخرة">الغرف والأجنحة العائلية الفاخرة</option><option value="غرف سريرين ديلوكس (Deluxe Twin)">غرف سريرين ديلوكس (Deluxe Twin)</option><option value="غرف 3 أسرة واسعة (Triple Room)">غرف 3 أسرة واسعة (Triple Room)</option><option value="طيرمانات ومجالس VIP لاستقبال الضيوف">طيرمانات ومجالس VIP لاستقبال الضيوف</option>
-              <option value="حجز قاعة التدريب والمؤتمرات">قاعة التدريب والمؤتمرات</option>
+              <option value="الأجنحة الملكية الفاخرة (Royal VIP King Suite)">الأجنحة الملكية الفاخرة (Royal VIP King Suite)</option><option value="الجناح الرئاسي الخاص (Presidential VIP Suite)">الجناح الرئاسي الخاص (Presidential VIP Suite)</option><option value="جناح العرسان ورجال الأعمال الديلوكس (Executive Suite)">جناح العرسان ورجال الأعمال الديلوكس (Executive Suite)</option><option value="الأجنحة والغرف العائلية الكبرى (Grand Family Suite)">الأجنحة والغرف العائلية الكبرى (Grand Family Suite)</option><option value="غرف سريرين ديلوكس الملكية (Royal Blue Deluxe Twin)">غرف سريرين ديلوكس الملكية (Royal Blue Deluxe Twin)</option><option value="غرف سريرين بريميوم العصرية (Premium Grey Twin Room)">غرف سريرين بريميوم العصرية (Premium Grey Twin Room)</option><option value="غرف 3 أسرة ديلوكس واسعة (Deluxe Triple Room)">غرف 3 أسرة ديلوكس واسعة (Deluxe Triple Room)</option><option value="طيرمانات ومجالس VIP الملكية لإطلالة ساحل أبين">طيرمانات ومجالس VIP الملكية لإطلالة ساحل أبين</option>
+              <option value="حجز قاعة التدريب والمؤتمرات">قاعة التدريب والمؤتمرات الكبرى</option>
             </select>
           </div>
           <div class="form-group">
@@ -165,7 +165,7 @@
               <option value="1">نزيل واحد</option>
               <option value="2">نزيلان</option>
               <option value="3">3 نزلاء</option>
-              <option value="4+">عائلة (4 أشخاص فأكثر)</option>
+              <option value="4+">عائلة / وفد (4 أشخاص فأكثر)</option>
             </select>
           </div>
           <div>
@@ -178,132 +178,300 @@
     </div>
   </div>
 
-  <!-- Featured Highlights Section -->
-  <section class="section">
+  <!-- Hotel Key Stats Strip -->
+  <section class="stats-bar-section">
     <div class="container">
-      <div class="section-header">
-        <span class="section-badge">لماذا تختار فندق روز عدن 2؟</span>
-        <h2 class="section-title">فخامة متكاملة وضيافة أصيلة</h2>
-        <p class="section-desc">موقع استراتيجي يجمع بين هدوء الساحل وقربه من المطار والخدمات الحيوية في عدن</p>
-      </div>
-
-      <div class="amenities-grid">
-        
-        <div class="amenity-card">
-          <div class="amenity-icon">🌐</div>
-          <h3 class="amenity-title">إنترنت فايبر مجاني</h3>
-          <p class="amenity-desc">تغطية واي فاي فايبر سريعة ومجانية في جميع أرجاء الفندق والغرف والقاعات.</p>
+      <div class="stats-bar-grid" id="hotelStatsGrid">
+        <div class="stat-card">
+          <div class="stat-value">+8</div>
+          <div class="stat-label">فئات أجنحة وغرف وطيرمانات VIP</div>
         </div>
-        
-        <div class="amenity-card">
-          <div class="amenity-icon">⚡</div>
-          <h3 class="amenity-title">كهرباء وتكييف 24/7</h3>
-          <p class="amenity-desc">مولدات كهربائية حديثة تعمل على مدار الساعة دون انقطاع لضمان راحتكم التامة.</p>
+        <div class="stat-card">
+          <div class="stat-value">70</div>
+          <div class="stat-label">مشاركاً سعة قاعة التدريب والمؤتمرات</div>
         </div>
-        
-        <div class="amenity-card">
-          <div class="amenity-icon">🅿️</div>
-          <h3 class="amenity-title">موقفان للسيارات بحراسة</h3>
-          <p class="amenity-desc">موقفان فسيحان للسيارات بحراسة أمنية مستمرة وكاميرات مراقبة رقمية حديثة.</p>
+        <div class="stat-card">
+          <div class="stat-value">24/7</div>
+          <div class="stat-label">كهرباء وتكييف وإنترنت فايبر مستمر</div>
         </div>
-        
+        <div class="stat-card">
+          <div class="stat-value">5 دقائق</div>
+          <div class="stat-label">فقط عن مطار عدن الدولي وساحل أبين</div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Featured Rooms Preview -->
+  <!-- Featured Rooms & Suites Preview -->
   <section class="section alt-bg">
     <div class="container">
       <div class="section-header">
-        <span class="section-badge">أرقى خيارات الإقامة</span>
-        <h2 class="section-title">الغرف والأجنحة الفندقية</h2>
-        <p class="section-desc">مجهزة بأحدث مفروشات الراحة، أجهزة التكييف الهادئة، وشاشات العرض الذكية</p>
+        <span class="section-badge" data-page-bind="rooms_section_badge_ar">أرقى خيارات الإقامة الفندقية</span>
+        <h2 class="section-title" data-page-bind="rooms_section_title_ar">الأجنحة الملكية والغرف وطيرمانات VIP</h2>
+        <p class="section-desc" data-page-bind="rooms_section_desc_ar">تشكيلة متكاملة من الأجنحة الرئاسية، أجنحة العرسان، الغرف العائلية، وغرف رجال الأعمال بأعلى معايير النظافة والرفاهية</p>
       </div>
 
       <div class="rooms-grid" id="featuredRoomsGrid">
-        
-        <div class="room-card" id="vip-suite">
+        <div class="room-card" id="vip-royal-king-suite" data-category="vip">
           <div class="room-card-media">
-            <img src="assets/images/ros2-suite-king-blue.jpg" alt="أجنحة VIP الملكية الفاخرة" loading="lazy">
-            <span class="room-badge">الأكثر فخامة</span>
+            <img src="assets/images/ros2-suite-king-blue.jpg" alt="الأجنحة الملكية الفاخرة (Royal VIP King Suite)" loading="lazy">
+            <span class="room-badge">الأكثر فخامة 👑</span>
+            <span class="room-availability-pill available">🟢 متاح للحجز</span>
           </div>
           <div class="room-card-body">
-            <h3 class="room-title">أجنحة VIP الملكية الفاخرة</h3>
+            <h3 class="room-title">الأجنحة الملكية الفاخرة (Royal VIP King Suite)</h3>
+            <div class="room-subtitle">أعلى درجات الفخامة والخصوصية لكبار الشخصيات والعرسان</div>
+            
+            <div class="room-specs-pills"><span class="room-spec-pill">📐 المساحة: 65 م²</span><span class="room-spec-pill">🌅 إطلالة بحرية وأفق العريش</span></div>
             <div class="room-meta">
-              <span>🛏️ سرير ملكي ماستر كينج (King Bed) + ركن جلوس</span>
+              <span>🛏️ سرير ملكي ماستر كينج (King Bed) + ركن جلوس فاخر</span>
               <span>👥 2 - 3 أشخاص</span>
             </div>
-            <ul class="room-features-list">
-              <li>سرير ماستر كينج بتصميم مخملي ملكي فاخر</li><li>ركن جلوس وأريكة استرخاء مريحة مع تسريحة ومكتب</li><li>إطلالة ساحرة وأجواء هادئة عالية الخصوصية</li><li>شاشة ذكية 4K + إنترنت فايبر فائق السرعة مجاناً</li>
-            </ul>
+            <ul class="room-features-list"><li>سرير ماستر كينج ملكي بمراتب فندقية طبية ومفارش قطنية فاخرة</li><li>ركن جلوس وأريكة استرخاء مريحة لاستقبال الضيوف داخل الجناح</li><li>تسريحة حديثة مضاءة ومكتب عمل مخصص لرجال الأعمال</li><li>شاشة ذكية 55 بوصة فائقة الوضوح 4K مع قنوات فضائية وترفيهية</li><li>إنترنت فايبر مجاني فائق السرعة بنقطة وصول مخصصة</li></ul>
+            
             <div class="room-card-footer">
               <div class="room-price-box">
                 <span class="room-price-label">سعر الليلة:</span>
-                <span class="room-price-val">حسب الطلب / أسعار خاصة</span>
+                <span class="room-price-val">حسب الطلب / أسعار خاصة لكبار الضيوف</span>
               </div>
-              <button onclick="bookSpecificRoom('أجنحة VIP الملكية الفاخرة')" class="btn btn-whatsapp btn-sm">
+              <button onclick="bookSpecificRoom('الأجنحة الملكية الفاخرة (Royal VIP King Suite)')" class="btn btn-whatsapp btn-sm">
                 <span>💬</span> احجز الآن
               </button>
             </div>
           </div>
         </div>
-        
-        <div class="room-card" id="family-room">
+        <div class="room-card" id="vip-presidential-suite" data-category="vip">
           <div class="room-card-media">
-            <img src="assets/images/ros2-suite-vanity-angle.jpg" alt="الغرف والأجنحة العائلية الفاخرة" loading="lazy">
-            <span class="room-badge">مثالية للعائلات</span>
+            <img src="assets/images/suite-vip.jpg" alt="الجناح الرئاسي الخاص (Presidential VIP Suite)" loading="lazy">
+            <span class="room-badge">جناح رئاسي VIP</span>
+            <span class="room-availability-pill available">🟢 متاح للحجز</span>
           </div>
           <div class="room-card-body">
-            <h3 class="room-title">الغرف والأجنحة العائلية الفاخرة</h3>
+            <h3 class="room-title">الجناح الرئاسي الخاص (Presidential VIP Suite)</h3>
+            <div class="room-subtitle">تصميم كلاسيكي ملكي بمساحة رحبة وتجهيزات متكاملة للوفود والمسؤولين</div>
+            
+            <div class="room-specs-pills"><span class="room-spec-pill">📐 المساحة: 75 م²</span><span class="room-spec-pill">🌅 إطلالة مفتوحة على الساحل والجولة</span></div>
             <div class="room-meta">
-              <span>🛏️ سرير مزدوج كبير + أسرة إضافية وجلسة عائلية</span>
-              <span>👥 4 - 5 أشخاص</span>
+              <span>🛏️ سرير ماستر كينج كبير + صالون جلوس متكامل</span>
+              <span>👥 2 - 4 أشخاص</span>
             </div>
-            <ul class="room-features-list">
-              <li>مساحات رحبة وتوزيع ذكي يضمن راحة وخصوصية العائلة</li><li>تسريحة حديثة بثلاث مرايا ودواليب تخزين واسعة</li><li>منطقة جلوس مريحة وشاشة تلفاز ذكية بقنوات فضائية</li><li>إنترنت فايبر غير محدود فائق السرعة</li>
-            </ul>
+            <ul class="room-features-list"><li>مساحة ملكية فسيحة مع صالون جلوس مستقل لاستقبال الزوار</li><li>أثاث فندقي فاخر وإضاءة دافئة متعددة المستويات</li><li>خزنة أمان رقمية، دولاب ملابس كبير، وركن تحضير القهوة</li><li>تكييف مزدوج فائق الهدوء يعمل على مدار الساعة</li><li>أولوية في خدمة الغرف والغسيل والكي السريع</li></ul>
+            
             <div class="room-card-footer">
               <div class="room-price-box">
                 <span class="room-price-label">سعر الليلة:</span>
-                <span class="room-price-val">أسعار تنافسية</span>
+                <span class="room-price-val">حسب الطلب / باقات خاصة للمنظمات والشركات</span>
               </div>
-              <button onclick="bookSpecificRoom('الغرف والأجنحة العائلية الفاخرة')" class="btn btn-whatsapp btn-sm">
+              <button onclick="bookSpecificRoom('الجناح الرئاسي الخاص (Presidential VIP Suite)')" class="btn btn-whatsapp btn-sm">
                 <span>💬</span> احجز الآن
               </button>
             </div>
           </div>
         </div>
-        
-        <div class="room-card" id="twin-room-deluxe">
+        <div class="room-card" id="luxury-family-suite" data-category="family">
           <div class="room-card-media">
-            <img src="assets/images/ros2-room-twin-blue.jpg" alt="غرف سريرين ديلوكس (Deluxe Twin)" loading="lazy">
-            <span class="room-badge">الأكثر طلباً لرجال الأعمال</span>
+            <img src="assets/images/room-family.jpg" alt="الأجنحة والغرف العائلية الكبرى (Grand Family Suite)" loading="lazy">
+            <span class="room-badge">خيار العائلات الأول 👨‍👩‍👧‍👦</span>
+            <span class="room-availability-pill available">🟢 متاح للحجز</span>
           </div>
           <div class="room-card-body">
-            <h3 class="room-title">غرف سريرين ديلوكس (Deluxe Twin)</h3>
+            <h3 class="room-title">الأجنحة والغرف العائلية الكبرى (Grand Family Suite)</h3>
+            <div class="room-subtitle">مساحات رحبة وخصوصية تامة تضمن راحة جميع أفراد العائلة</div>
+            
+            <div class="room-specs-pills"><span class="room-spec-pill">📐 المساحة: 60 م²</span><span class="room-spec-pill">🌅 إطلالة على المدينة والساحل</span></div>
+            <div class="room-meta">
+              <span>🛏️ سرير مزدوج كبير + أسرة مفردة إضافية + جلسة عائلية</span>
+              <span>👥 4 - 6 أشخاص</span>
+            </div>
+            <ul class="room-features-list"><li>مساحة داخلية واسعة تمنح العائلة حرية الحركة والاسترخاء</li><li>أسرة متعددة بمراتب طبية مريحة ومفارش فندقية معقمة</li><li>جلسة عائلية مريحة مع شاشة تلفاز ذكية بقنوات العائلة والأطفال</li><li>ثلاجة تبريد كبيرة، غلاية مياه، وطاولة طعام جانبية</li><li>إنترنت فايبر غير محدود يغطي كافة الأجهزة في الغرفة</li></ul>
+            
+            <div class="room-card-footer">
+              <div class="room-price-box">
+                <span class="room-price-label">سعر الليلة:</span>
+                <span class="room-price-val">أسعار عائلية تنافسية</span>
+              </div>
+              <button onclick="bookSpecificRoom('الأجنحة والغرف العائلية الكبرى (Grand Family Suite)')" class="btn btn-whatsapp btn-sm">
+                <span>💬</span> احجز الآن
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="room-card" id="deluxe-twin-blue" data-category="standard">
+          <div class="room-card-media">
+            <img src="assets/images/ros2-room-twin-blue.jpg" alt="غرف سريرين ديلوكس الملكية (Royal Blue Deluxe Twin)" loading="lazy">
+            <span class="room-badge">الأكثر طلباً لرجال الأعمال 💼</span>
+            <span class="room-availability-pill available">🟢 متاح للحجز</span>
+          </div>
+          <div class="room-card-body">
+            <h3 class="room-title">غرف سريرين ديلوكس الملكية (Royal Blue Deluxe Twin)</h3>
+            <div class="room-subtitle">تصميم مخملي أزرق عصري مثالي لرجال الأعمال والزملاء</div>
+            
+            <div class="room-specs-pills"><span class="room-spec-pill">📐 المساحة: 42 م²</span><span class="room-spec-pill">🌅 إطلالة خارجية مضيئة</span></div>
             <div class="room-meta">
               <span>🛏️ سريران منفصلان مريحان + أريكة جلوس جانبية</span>
               <span>👥 شخصان - 3 أشخاص</span>
             </div>
-            <ul class="room-features-list">
-              <li>سريران منفصلان بمراتب طبية فندقية فائقة الراحة</li><li>أريكة جلوس جانبية مريحة وأرضيات رخامية لامعة</li><li>شاشة ذكية مسطحة وثلاجة ميني بار خاصة</li><li>واي فاي فايبر مجاني وسريع جداً لرجال الأعمال</li>
-            </ul>
+            <ul class="room-features-list"><li>سريران منفصلان بمراتب طبية فندقية عالية الجودة</li><li>أريكة جلوس جانبية مريحة وطاولة قهوة</li><li>شاشة ذكية مسطحة وثلاجة ميني بار خاصة</li><li>واي فاي فايبر مجاني وسريع جداً لإنجاز الأعمال والاجتماعات</li><li>تكييف اسبليت هادئ وحمام خاص متكامل</li></ul>
+            
             <div class="room-card-footer">
               <div class="room-price-box">
                 <span class="room-price-label">سعر الليلة:</span>
                 <span class="room-price-val">أسعار مميزة</span>
               </div>
-              <button onclick="bookSpecificRoom('غرف سريرين ديلوكس (Deluxe Twin)')" class="btn btn-whatsapp btn-sm">
+              <button onclick="bookSpecificRoom('غرف سريرين ديلوكس الملكية (Royal Blue Deluxe Twin)')" class="btn btn-whatsapp btn-sm">
                 <span>💬</span> احجز الآن
               </button>
             </div>
           </div>
         </div>
-        
+        <div class="room-card" id="vip-tirmanah-majlis" data-category="tirmanah">
+          <div class="room-card-media">
+            <img src="assets/images/ros2-vip-majlis.jpg" alt="طيرمانات ومجالس VIP الملكية لإطلالة ساحل أبين" loading="lazy">
+            <span class="room-badge">إطلالة بحرية ومجلس ملكي 🌊👑</span>
+            <span class="room-availability-pill available">🟢 متاح للحجز</span>
+          </div>
+          <div class="room-card-body">
+            <h3 class="room-title">طيرمانات ومجالس VIP الملكية لإطلالة ساحل أبين</h3>
+            <div class="room-subtitle">مجالس عربية ويمنية أصيلة بأعلى الفندق لاستقبال كبار الضيوف والمقيل الفاخر</div>
+            
+            <div class="room-specs-pills"><span class="room-spec-pill">📐 المساحة: 85 م²</span><span class="room-spec-pill">🌅 إطلالة بانورامية مفتوحة على بحر أبين وعدن</span></div>
+            <div class="room-meta">
+              <span>🛏️ مجلس عربي ويمني ملكي متكامل بأرقى المفروشات والمداكئ</span>
+              <span>👥 يتسع من 10 إلى 25 ضيفاً بأريحية تامة</span>
+            </div>
+            <ul class="room-features-list"><li>مجلس يمني وعربي فسيح مفروش بأحدث الجلسات والمداكئ الملكية المريحة</li><li>إطلالة علوية ساحرة على ساحل أبين وجولة الرحاب وأفق مدينة عدن</li><li>منظومة تكييف قوية وهادئة تضمن أجواء منعشة في كل الأوقات</li><li>شاشة عرض ذكية كبيرة، قنوات رياضية وإخبارية، وإنترنت فايبر خاص</li><li>خدمة ضيافة مخصصة (شاي عدني، قهوة، مشروبات باردة، ووجبات خاصة عند الطلب)</li></ul>
+            
+            <div class="room-card-footer">
+              <div class="room-price-box">
+                <span class="room-price-label">سعر الليلة:</span>
+                <span class="room-price-val">حسب الحجز والمناسبة (يومي / فترة)</span>
+              </div>
+              <button onclick="bookSpecificRoom('طيرمانات ومجالس VIP الملكية لإطلالة ساحل أبين')" class="btn btn-whatsapp btn-sm">
+                <span>💬</span> احجز الآن
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div style="text-align: center; margin-top: 3rem;">
-        <a href="rooms.html" class="btn btn-outline btn-lg">عرض جميع خيارات الغرف والأجنحة (5 فئات) &larr;</a>
+      <div style="text-align: center; margin-top: 3rem; display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+        <a href="rooms.html" class="btn btn-gold btn-lg">استعراض جميع الغرف والأجنحة (8 فئات كاملة) &larr;</a>
+        <a href="vip-suites.html" class="btn btn-outline btn-lg">جولة في طيرمانات وأجنحة VIP &larr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dynamic Page Posts & Promotions Section -->
+  <section class="section" id="pagePostsSection" style="display: block;">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge" data-page-bind="posts_section_badge_ar">أحدث العروض والمنشورات والأخبار</span>
+        <h2 class="section-title" data-page-bind="posts_section_title_ar">عروض الموسم وباقات الضيافة في روز عدن 2</h2>
+        <p class="section-desc" data-page-bind="posts_section_desc_ar">تابع أحدث العروض الترويجية، باقات العرسان، وخدمات استضافة المؤتمرات والوفود</p>
+      </div>
+      <div class="posts-grid" id="pagePostsGrid">
+        <article class="post-card">
+          <div class="post-card-media">
+            <img src="assets/images/ros2-exterior-night-neon.jpg" alt="خصم موسمي خاص على أجنحة VIP وطيرمانات ساحل أبين" loading="lazy">
+            <span class="post-badge">🔥 عرض خاص</span>
+            <span class="post-date-pill">📅 متاح الآن</span>
+          </div>
+          <div class="post-card-body">
+            <div class="post-category">عروض الإقامة</div>
+            <h3 class="post-title">خصم موسمي خاص على أجنحة VIP وطيرمانات ساحل أبين</h3>
+            <div class="post-subtitle">عرض لفترة محدودة للنزلاء والعائلات ورجال الأعمال</div>
+            <p class="post-content">يسر فندق روز عدن 2 السياحي تقديم خصومات خاصة ومميزة على حجوزات الأجنحة الملكية والغرف العائلية وطيرمانات VIP المطلة على ساحل أبين، شاملة خدمة التوصيل المجاني من المطار وإنترنت الفايبر المفتوح.</p>
+            <a href="https://wa.me/967780000656?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%A7%D9%84%D8%AD%D8%AC%D8%B2%20%D9%88%D8%A7%D9%84%D8%A7%D8%B3%D8%AA%D9%81%D8%A7%D8%AF%D8%A9%20%D9%85%D9%86%20%D8%A7%D9%84%D8%B9%D8%B1%D8%B6%20%D8%A7%D9%84%D9%85%D9%88%D8%B3%D9%85%D9%8A" target="_blank" class="btn btn-whatsapp btn-sm" style="width: 100%;">
+              <span>💬</span> استفد من العرض عبر واتساب
+            </a>
+          </div>
+        </article>
+        <article class="post-card">
+          <div class="post-card-media">
+            <img src="assets/images/training-hall.jpg" alt="باقات متكاملة لاستضافة الدورات التدريبية وورش عمل المنظمات" loading="lazy">
+            <span class="post-badge">🎓 للمنظمات والشركات</span>
+            <span class="post-date-pill">📅 حجوزات مفتوحة</span>
+          </div>
+          <div class="post-card-body">
+            <div class="post-category">قاعات ومؤتمرات</div>
+            <h3 class="post-title">باقات متكاملة لاستضافة الدورات التدريبية وورش عمل المنظمات</h3>
+            <div class="post-subtitle">قاعة ذكية تتسع لـ 70 مشاركاً + صالة وجبات واستراحات قهوة مستقلة</div>
+            <p class="post-content">جهزنا قاعة التدريب والمؤتمرات الكبرى بأحدث شاشة تفاعلية عملاقة، نظام صوتي لاسلكي محيطي، إنترنت فايبر مخصص لاجتماعات الفيديو، وصالة طعام مستقلة لتقديم وجبات الغداء واستراحات القهوة (Coffee Breaks) بأعلى معايير الضيافة.</p>
+            <a href="https://wa.me/967780000656?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D9%86%D8%B1%D8%BA%D8%A8%20%D9%81%D9%8A%20%D8%B9%D8%B1%D8%B6%20%D8%B3%D8%B9%D8%B1%20%D9%84%D8%AD%D8%AC%D8%B2%20%D9%82%D8%A7%D8%B9%D8%A9%20%D8%A7%D9%84%D8%AA%D8%AF%D8%B1%D9%8A%D8%A8" target="_blank" class="btn btn-whatsapp btn-sm" style="width: 100%;">
+              <span>💬</span> اطلب عرض سعر للقاعة
+            </a>
+          </div>
+        </article>
+        <article class="post-card">
+          <div class="post-card-media">
+            <img src="assets/images/ros2-vip-majlis.jpg" alt="تجربة المجالس اليمنية الفاخرة في طيرمانات روز عدن 2" loading="lazy">
+            <span class="post-badge">👑 طيرمانات VIP</span>
+            <span class="post-date-pill">📅 خدمة يومية</span>
+          </div>
+          <div class="post-card-body">
+            <div class="post-category">مجالس وضيافة</div>
+            <h3 class="post-title">تجربة المجالس اليمنية الفاخرة في طيرمانات روز عدن 2</h3>
+            <div class="post-subtitle">إطلالة علوية ساحرة على بحر أبين وخصوصية تامة لضيوفكم</div>
+            <p class="post-content">سواء كنت تستقبل ضيوفاً من كبار الشخصيات أو تبحث عن مجلس راقٍ وهادئ، تمنحك طيرمانات VIP في فندق روز عدن 2 فرشاً عربياً ملكياً، تكييفاً بارداً على مدار الساعة، وخدمة ضيافة فورية.</p>
+            <a href="https://wa.me/967780000656?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%AD%D8%AC%D8%B2%20%D8%B7%D9%8A%D8%B1%D9%85%D8%A7%D9%86%D8%A9%20VIP" target="_blank" class="btn btn-whatsapp btn-sm" style="width: 100%;">
+              <span>💬</span> احجز طيرمانة VIP الآن
+            </a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Highlights & All 8 Amenities Section -->
+  <section class="section alt-bg">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge" data-page-bind="highlights_badge_ar">لماذا تختار فندق روز عدن 2؟</span>
+        <h2 class="section-title" data-page-bind="highlights_title_ar">فخامة متكاملة وضيافة أصيلة لا مثيل لها</h2>
+        <p class="section-desc" data-page-bind="highlights_desc_ar">موقع استراتيجي يجمع بين هدوء ساحل أبين وقربه من مطار عدن الدولي وكافة الخدمات الحيوية</p>
+      </div>
+
+      <div class="amenities-grid" id="homeAmenitiesGrid">
+        <div class="amenity-card">
+          <div class="amenity-icon">🌐</div>
+          <h3 class="amenity-title">إنترنت فايبر مجاني فائق السرعة</h3>
+          <p class="amenity-desc">تغطية واي فاي فايبر سريعة ومجانية في جميع أرجاء الفندق والغرف والأجنحة وقاعات التدريب.</p>
+        </div>
+        <div class="amenity-card">
+          <div class="amenity-icon">⚡</div>
+          <h3 class="amenity-title">كهرباء وتكييف مستمر 24/7</h3>
+          <p class="amenity-desc">مولدات كهربائية حديثة ومنظومة طاقة احتياطية تعمل على مدار الساعة دون انقطاع لضمان راحتكم التامة.</p>
+        </div>
+        <div class="amenity-card">
+          <div class="amenity-icon">🅿️</div>
+          <h3 class="amenity-title">موقفان فسيحان للسيارات بحراسة</h3>
+          <p class="amenity-desc">موقفان خاصان للسيارات بحراسة أمنية مستمرة وكاميرات مراقبة رقمية حديثة على مدار 24 ساعة.</p>
+        </div>
+        <div class="amenity-card">
+          <div class="amenity-icon">✈️</div>
+          <h3 class="amenity-title">5 دقائق عن المطار وتوصيل مجاني</h3>
+          <p class="amenity-desc">موقع استراتيجي على بُعد 5 دقائق من مطار عدن الدولي مع خدمة استقبال وتوصيل مجانية للنزلاء.</p>
+        </div>
+        <div class="amenity-card">
+          <div class="amenity-icon">🌊</div>
+          <h3 class="amenity-title">إطلالة ساحل أبين الساحرة</h3>
+          <p class="amenity-desc">خطوات معدودة عن شاطئ ساحل أبين للاستمتاع بنسيم البحر العليل والإطلالات البانورامية الهادئة.</p>
+        </div>
+        <div class="amenity-card">
+          <div class="amenity-icon">🛎️</div>
+          <h3 class="amenity-title">خدمة غرف واستقبال 24 ساعة</h3>
+          <p class="amenity-desc">فريق استقبال وضيافة متخصص رهن إشارتكم لتلبية كافة متطلباتكم على مدار الساعة بابتسامة واحترافية.</p>
+        </div>
+        <div class="amenity-card">
+          <div class="amenity-icon">🎓</div>
+          <h3 class="amenity-title">قاعة تدريب ومؤتمرات ذكية وصالة وجبات</h3>
+          <p class="amenity-desc">قاعة كبرى تتسع لـ 70 مشاركاً مجهزة بشاشة تفاعلية عملاقة ونظام صوتي وصالة مستقلة للوجبات والـ Coffee Break.</p>
+        </div>
+        <div class="amenity-card">
+          <div class="amenity-icon">👑</div>
+          <h3 class="amenity-title">طيرمانات ومجالس VIP لكبار الضيوف</h3>
+          <p class="amenity-desc">مجالس عربية ويمنية فاخرة في الطوابق العليا بإطلالة بحرية مفتوحة لاستقبال الوفود واللقاءات الخاصة.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -323,29 +491,7 @@
           <span class="section-badge" style="width: fit-content;">مجهزة بالكامل للمنظمات والشركات</span>
           <h2 class="section-title" id="dynamicHallTitle" style="font-size: 1.8rem; margin: 0.5rem 0 1rem;">قاعة التدريب الحديثة الكبرى والمؤتمرات</h2>
           <p id="dynamicHallCapacity" style="color: var(--luxury-gold); font-weight: 700; margin-bottom: 1.5rem;">👥 تتسع لأكثر من 50 إلى 70 مشاركاً بأريحية تامة</p>
-          <div id="dynamicHallSpecs" data-limit="4" style="margin-bottom: 2rem;">
-            
-            <div class="hall-spec-item">
-              <span class="hall-spec-icon">★</span>
-              <span>شاشة ذكية تفاعلية عملاقة مع أنظمة عرض رقمية فائقة الدقة</span>
-            </div>
-            
-            <div class="hall-spec-item">
-              <span class="hall-spec-icon">★</span>
-              <span>أنظمة صوتية لاسلكية متطورة تضمن وضوح الصوت في كل زوايا القاعة</span>
-            </div>
-            
-            <div class="hall-spec-item">
-              <span class="hall-spec-icon">★</span>
-              <span>تكييف هوائي قوي صامت يضمن بيئة تدريب مريحة طوال ساعات العمل</span>
-            </div>
-            
-            <div class="hall-spec-item">
-              <span class="hall-spec-icon">★</span>
-              <span>قاعة مخصصة ومستقلة للوجبات واستراحات القهوة (Coffee Breaks)</span>
-            </div>
-            
-          </div>
+          <div id="dynamicHallSpecs" data-limit="5" style="margin-bottom: 2rem;"></div>
           <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
             <a href="training-hall.html" class="btn btn-gold">تفاصيل القاعة والتجهيزات</a>
             <a href="https://wa.me/967780000656?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%A3%D9%88%D8%AF%20%D8%AD%D8%AC%D8%B2%20%D9%82%D8%A7%D8%B9%D8%A9%20%D8%A7%D9%84%D8%AA%D8%AF%D8%B1%D9%8A%D8%A8%20%D9%81%D9%8A%20%D9%81%D9%86%D8%AF%D9%82%20%D8%B1%D9%88%D8%B2%20%D8%B9%D8%AF%D9%86%202" class="btn btn-whatsapp" target="_blank">حجز موعد للقاعة</a>
@@ -364,30 +510,7 @@
         <p class="section-desc">فخورون بثقة ضيوفنا الكرام من مختلف المحافظات والمنظمات الدولية</p>
       </div>
 
-      <div class="reviews-grid" id="guestReviewsGrid">
-        
-        <div class="review-card">
-          <div class="review-stars">★★★★★</div>
-          <p class="review-text">"من أفضل وأرقى الفنادق في عدن؛ النظافة استثنائية، والأثاث فاخر وجديد، والخدمة سريعة جداً. موقع الفندق في العريش هادئ وقريب من المطار والساحل."</p>
-          <div class="reviewer-name">المهندس أحمد باحبيب</div>
-          <div class="reviewer-role">نزيل جناح VIP ورجل أعمال</div>
-        </div>
-        
-        <div class="review-card">
-          <div class="review-stars">★★★★★</div>
-          <p class="review-text">"أقمنا ورشة عمل تدريبية في قاعة المؤتمرات بالفندق؛ التجهيزات والشاشة الذكية والصوتيات كانت على أعلى مستوى، وصالة الوجبات ممتازة وفريق العمل متعاون للغاية."</p>
-          <div class="reviewer-name">د. سارة المنصوري</div>
-          <div class="reviewer-role">منسقة برامج تدريبية بمنظمة دولية</div>
-        </div>
-        
-        <div class="review-card">
-          <div class="review-stars">★★★★★</div>
-          <p class="review-text">"تجربة رائعة مع العائلة في الغرف الفسيحة. التكييف ممتاز والكهرباء لم تنقطع نهائياً، والمواقف واسعة وآمنة. أنصح به بشدة لكل زائر لمدينة عدن."</p>
-          <div class="reviewer-name">الأستاذ فؤاد الشميري</div>
-          <div class="reviewer-role">نزيل برفقة العائلة</div>
-        </div>
-        
-      </div>
+      <div class="reviews-grid" id="guestReviewsGrid"></div>
     </div>
   </section>
 
@@ -416,7 +539,7 @@
           <ul>
             <li><a href="index.html">الصفحة الرئيسية</a></li>
             <li><a href="about.html">نبذة عن الفندق</a></li>
-            <li><a href="rooms.html">الغرف والأجنحة</a></li>
+            <li><a href="rooms.html">الغرف والأجنحة (8 فئات)</a></li>
             <li><a href="vip-suites.html">طيرمانات وأجنحة VIP</a></li>
             <li><a href="training-hall.html">قاعة التدريب والمؤتمرات</a></li>
             <li><a href="gallery.html">معرض الصور (21 لقطة)</a></li>
@@ -430,7 +553,7 @@
             <li><span>🌐</span> إنترنت فايبر مجاني</li>
             <li><span>🅿️</span> موقفان بحراسة وكاميرات</li>
             <li><span>✈️</span> 5 دقائق عن مطار عدن</li>
-            <li><span>📺</span> شاشات ذكية متطورة</li>
+            <li><span>👑</span> طيرمانات ومجالس VIP</li>
             <li><span>🍽️</span> صالة وجبات وضيافة</li>
           </ul>
         </div>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>لوحة تحكم فندق روز عدن 2 | Enterprise CMS</title>
+  <title>لوحة تحكم فندق روز عدن 2 | Enterprise CMS v10</title>
   <link rel="icon" type="image/jpeg" href="../assets/images/favicon.jpg">
   
   <!-- Google Fonts: Cairo & Poppins -->
@@ -45,49 +45,45 @@
   </div>
 </div>
 
-<!-- شريط معلومات المستخدم العلوي -->
-<div id="user-session-bar" class="session-bar" style="display: none;">
-  <div class="user-info">
-    <span class="role-badge" id="current-role-badge"></span>
-    <span id="welcome-text"></span>
-  </div>
-  <button type="button" id="btn-logout" class="btn-logout">تسجيل الخروج 🔒</button>
-</div>
-
-
   <!-- Sidebar -->
   <aside class="adm-sidebar">
     <div class="adm-brand">
       <img src="../assets/images/logo.jpg" alt="شعار فندق روز عدن 2" onerror="this.src='../assets/images/favicon.jpg'">
       <div>
         <h2>روز عدن 2</h2>
-        <span>لوحة التحكم الاحترافية</span>
+        <span>لوحة التحكم الشاملة v10</span>
       </div>
     </div>
 
     <nav class="adm-nav">
-      <div class="adm-nav-item active" data-tab="tab-hotel" onclick="switchTab('tab-hotel')">
+      <div class="adm-nav-item active" data-tab="tab-hotel" data-section="tab-hotel" onclick="switchTab('tab-hotel')">
         <span>🏨</span> بيانات الفندق والاتصال
       </div>
-      <div class="adm-nav-item" data-tab="tab-rooms" onclick="switchTab('tab-rooms')">
-        <span>🛏️</span> الغرف، الأجنحة والصور
+      <div class="adm-nav-item" data-tab="tab-pages" data-section="tab-pages" onclick="switchTab('tab-pages')">
+        <span>📄</span> محتوى الصفحات والمنشورات
       </div>
-      <div class="adm-nav-item" data-tab="tab-gallery" onclick="switchTab('tab-gallery')">
-        <span>📸</span> المعرض الذكي وفحص الصور
+      <div class="adm-nav-item" data-tab="tab-rooms" data-section="tab-rooms" onclick="switchTab('tab-rooms')">
+        <span>🛏️</span> الغرف والأجنحة وطيرمانات VIP
       </div>
-      <div class="adm-nav-item" data-tab="tab-theme" onclick="switchTab('tab-theme')">
+      <div class="adm-nav-item" data-tab="tab-gallery" data-section="tab-gallery" onclick="switchTab('tab-gallery')">
+        <span>📸</span> المعرض الشامل وبيانات الصور
+      </div>
+      <div class="adm-nav-item" data-tab="tab-theme" data-section="tab-theme" onclick="switchTab('tab-theme')">
         <span>🎨</span> الهوية، الألوان والعروض
       </div>
-      <div class="adm-nav-item" data-tab="tab-hall" onclick="switchTab('tab-hall')">
+      <div class="adm-nav-item" data-tab="tab-hall" data-section="tab-hall" onclick="switchTab('tab-hall')">
         <span>🎓</span> قاعة التدريب والفعاليات
       </div>
-      <div class="adm-nav-item" data-tab="tab-reviews" onclick="switchTab('tab-reviews')">
+      <div class="adm-nav-item" data-tab="tab-reviews" data-section="tab-reviews" onclick="switchTab('tab-reviews')">
         <span>⭐</span> تقييمات وآراء النزلاء
       </div>
-      <div class="adm-nav-item" data-tab="tab-github" onclick="switchTab('tab-github')">
+      <div class="adm-nav-item" data-tab="tab-users" data-section="tab-users" onclick="switchTab('tab-users')">
+        <span>🔐</span> الحسابات وكلمات المرور
+      </div>
+      <div class="adm-nav-item" data-tab="tab-github" data-section="tab-github" onclick="switchTab('tab-github')">
         <span>⚙️</span> مستودع GitHub والربط
       </div>
-      <div class="adm-nav-item" data-tab="tab-publish" onclick="switchTab('tab-publish')" style="color: var(--adm-gold-light); font-weight: 800;">
+      <div class="adm-nav-item" data-tab="tab-publish" data-section="tab-publish" onclick="switchTab('tab-publish')" style="color: var(--adm-gold-light); font-weight: 800;">
         <span>🚀</span> مركز النشر والنسخ
       </div>
     </nav>
@@ -101,13 +97,27 @@
 
   <!-- Main Content Area -->
   <main class="adm-main">
+    <!-- شريط معلومات المستخدم العلوي وأزرار الوصول السريع -->
+    <div id="user-session-bar" class="session-bar" style="display: none;">
+      <div class="user-info" style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;">
+        <span class="role-badge" id="current-role-badge"></span>
+        <span id="welcome-text" style="font-size: 0.88rem; color: #cbd5e1;"></span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;">
+        <button type="button" id="btn-open-pass-modal" class="adm-btn adm-btn-gold adm-btn-sm" onclick="openPasswordModal()">
+          <span>🔑</span> نافذة تغيير كلمات المرور
+        </button>
+        <button type="button" id="btn-logout" class="btn-logout">تسجيل الخروج 🔒</button>
+      </div>
+    </div>
+
     <div class="adm-topbar">
       <div style="display: flex; align-items: center; gap: 1rem;">
-        <h1 style="font-size: 1.25rem; font-weight: 800; color: #fff;">إدارة محتوى وهوية فندق روز عدن 2</h1>
+        <h1 style="font-size: 1.2rem; font-weight: 800; color: #fff;">إدارة محتوى وصفحات ومعرض فندق روز عدن 2</h1>
       </div>
-      <div style="display: flex; align-items: center; gap: 0.85rem; flex-wrap: wrap;">
+      <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
         <button type="button" class="adm-btn adm-btn-outline adm-btn-sm" onclick="pullLatestDataFromGitHub()" title="قراءة أحدث البيانات المباشرة من مستودع GitHub">
-          <span>🔄</span> تحديث البيانات من GitHub
+          <span>🔄</span> سحب أحدث البيانات من GitHub
         </button>
         <div class="sync-status">
           <span class="status-dot" id="statusDot"></span>
@@ -119,9 +129,8 @@
     <div class="adm-content">
 
       <!-- ================= TAB 1: HOTEL INFO (VIEW & EDIT MODES) ================= -->
-      <section class="tab-pane active" id="tab-hotel">
+      <section class="tab-pane active" id="tab-hotel" data-section="tab-hotel">
         <div class="adm-card">
-          <!-- View Mode -->
           <div id="hotelInfoViewMode">
             <div class="adm-card-header">
               <h2 class="adm-card-title"><span>🏨</span> البيانات الرسمية الحالية للفندق</h2>
@@ -129,12 +138,9 @@
                 <span>✏️</span> تعديل بيانات الفندق
               </button>
             </div>
-            <div id="hotelInfoViewContainer">
-              <!-- Rendered via JS -->
-            </div>
+            <div id="hotelInfoViewContainer"></div>
           </div>
 
-          <!-- Edit Mode -->
           <div id="hotelInfoEditMode" style="display: none;">
             <div class="adm-card-header">
               <h2 class="adm-card-title" style="color: var(--adm-gold-light);"><span>✏️</span> تحرير بيانات ومعلومات الفندق</h2>
@@ -201,39 +207,198 @@
         </div>
       </section>
 
-      <!-- ================= TAB 2: ROOMS & SUITES (CARDS VIEW + MODAL EDIT/ADD) ================= -->
-      <section class="tab-pane" id="tab-rooms">
-        <div class="adm-card">
-          <div class="adm-card-header">
-            <div>
-              <h2 class="adm-card-title"><span>🛏️</span> الغرف والأجنحة الفندقية الحالية</h2>
-              <span style="font-size: 0.85rem; color: var(--adm-muted);">عرض الغرف الحالية، تعديل الأسعار والمميزات، ورفع صور جديدة مباشرة</span>
-            </div>
-            <button type="button" class="adm-btn adm-btn-gold" onclick="openRoomModal(-1)">
-              <span>➕</span> إضافة غرفة أو جناح جديد
-            </button>
-          </div>
+      <!-- ================= TAB 2: PAGES CONTENT, POSTS, VIP PACKAGES & AMENITIES ================= -->
+      <section class="tab-pane" id="tab-pages" data-section="tab-pages">
+        <!-- Sub-navigation inside Pages & Content Tab -->
+        <div class="adm-subtabs">
+          <button type="button" class="adm-btn adm-btn-gold adm-btn-sm" id="subTabBtnPages" onclick="switchPagesSubTab('sub-pages-texts')">📄 نصوص وعناوين الصفحات الـ 8</button>
+          <button type="button" class="adm-btn adm-btn-outline adm-btn-sm" id="subTabBtnPosts" onclick="switchPagesSubTab('sub-posts-manager')">📢 المنشورات والعروض لكل صفحة</button>
+          <button type="button" class="adm-btn adm-btn-outline adm-btn-sm" id="subTabBtnVipPkgs" onclick="switchPagesSubTab('sub-vip-packages')">👑 باقات ضيافة VIP والطيرمانات</button>
+          <button type="button" class="adm-btn adm-btn-outline adm-btn-sm" id="subTabBtnAmenities" onclick="switchPagesSubTab('sub-amenities-manager')">✨ المرافق والخدمات الفندقية</button>
+        </div>
 
-          <!-- Room Cards Grid -->
-          <div id="roomsCardsGrid" class="adm-rooms-grid">
-            <!-- Injected via JS -->
+        <!-- 2A. Page Texts & Hero Editor -->
+        <div id="sub-pages-texts" class="pages-subpane">
+          <div class="adm-card">
+            <div class="adm-card-header">
+              <div>
+                <h2 class="adm-card-title"><span>📄</span> تحرير عناوين ونصوص ومحتويات صفحات الموقع</h2>
+                <span style="font-size: 0.84rem; color: var(--adm-muted);">اختر أي صفحة من صفحات الموقع الثماني لتعديل العناوين الرئيسية والفرعية والفقرات التوضيحية</span>
+              </div>
+              <button type="button" class="adm-btn adm-btn-gold" onclick="saveSelectedPageContentToGitHub()">
+                <span>💾</span> حفظ ونشر محتوى الصفحة على GitHub
+              </button>
+            </div>
+
+            <div id="pageContentSaveStatus" class="alert-box" style="display: none;"></div>
+
+            <div class="form-group" style="background: rgba(0,0,0,0.4); padding: 1.15rem; border-radius: 12px; border: 1px solid var(--adm-border-gold);">
+              <label style="color: var(--adm-gold-light); font-size: 0.95rem;">اختر الصفحة المطلوب تعديل محتواها:</label>
+              <select id="pageSelectorDropdown" class="adm-select" onchange="loadPageIntoEditor(this.value)">
+                <option value="home">🏠 الصفحة الرئيسية (index.html)</option>
+                <option value="rooms">🛏️ صفحة الغرف والأجنحة (rooms.html)</option>
+                <option value="vip-suites">👑 صفحة طيرمانات وأجنحة VIP (vip-suites.html)</option>
+                <option value="about">🏨 صفحة عن الفندق (about.html)</option>
+                <option value="training-hall">🎓 صفحة قاعة التدريب والمؤتمرات (training-hall.html)</option>
+                <option value="gallery">📸 صفحة معرض الصور (gallery.html)</option>
+                <option value="location">📍 صفحة الموقع والخريطة (location.html)</option>
+                <option value="contact">📞 صفحة الحجز والاتصال (contact.html)</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>الشارة العلوية في واجهة الصفحة (Hero Badge)</label>
+                <input type="text" id="pgHeroBadge" class="adm-input">
+              </div>
+              <div class="form-group">
+                <label>العنوان الرئيسي للصفحة (Hero Title)</label>
+                <input type="text" id="pgHeroTitle" class="adm-input">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>الوصف الترحيبي أسفل العنوان الرئيسي (Hero Subtitle)</label>
+              <textarea id="pgHeroSubtitle" class="adm-textarea" rows="2"></textarea>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>شارة القسم التعريفي (Intro Badge)</label>
+                <input type="text" id="pgIntroBadge" class="adm-input">
+              </div>
+              <div class="form-group">
+                <label>عنوان القسم التعريفي داخل الصفحة (Intro Title)</label>
+                <input type="text" id="pgIntroTitle" class="adm-input">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>الفقرة التفصيلية الأولى للصفحة (Intro Description)</label>
+              <textarea id="pgIntroDesc" class="adm-textarea" rows="3"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>الفقرة الإضافية الثانية للصفحة (Extra Content)</label>
+              <textarea id="pgIntroExtra" class="adm-textarea" rows="2"></textarea>
+            </div>
+
+            <!-- Home Page Extra Section Titles & Stats -->
+            <div id="homePageExtraFields" style="background: rgba(0,0,0,0.3); padding: 1.25rem; border-radius: 12px; border: 1px solid var(--adm-border); margin-top: 1rem;">
+              <h4 style="color: var(--adm-gold-light); margin-bottom: 1rem;">🏠 إعدادات إضافية خاصة بالصفحة الرئيسية (شريط الإحصائيات وعناوين الأقسام):</h4>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>عنوان قسم الغرف المميزة بالرئيسية</label>
+                  <input type="text" id="pgHomeRoomsTitle" class="adm-input">
+                </div>
+                <div class="form-group">
+                  <label>وصف قسم الغرف المميزة بالرئيسية</label>
+                  <input type="text" id="pgHomeRoomsDesc" class="adm-input">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>عنوان قسم المنشورات والعروض بالرئيسية</label>
+                  <input type="text" id="pgHomePostsTitle" class="adm-input">
+                </div>
+                <div class="form-group">
+                  <label>وصف قسم المنشورات والعروض بالرئيسية</label>
+                  <input type="text" id="pgHomePostsDesc" class="adm-input">
+                </div>
+              </div>
+              <div id="statsEditorContainer" style="margin-top: 0.75rem;"></div>
+            </div>
+
+            <div style="margin-top: 1.5rem;">
+              <button type="button" class="adm-btn adm-btn-gold" onclick="saveSelectedPageContentToGitHub()">
+                <span>💾</span> حفظ ونشر تعديلات الصفحة على GitHub
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2B. Posts & Promotions Manager -->
+        <div id="sub-posts-manager" class="pages-subpane" style="display: none;">
+          <div class="adm-card">
+            <div class="adm-card-header">
+              <div>
+                <h2 class="adm-card-title"><span>📢</span> إدارة المنشورات والعروض والأقسام المضافة للصفحات</h2>
+                <span style="font-size: 0.84rem; color: var(--adm-muted);">أضف عروضاً أو منشورات أو بطاقات محتوى وحدد في أي صفحة (أو صفحات) تريد إظهارها</span>
+              </div>
+              <button type="button" class="adm-btn adm-btn-gold" onclick="openPostModal(-1)">
+                <span>➕</span> إضافة منشور أو عرض جديد
+              </button>
+            </div>
+
+            <div id="postsCardsGrid" class="adm-rooms-grid"></div>
+          </div>
+        </div>
+
+        <!-- 2C. VIP Packages Manager -->
+        <div id="sub-vip-packages" class="pages-subpane" style="display: none;">
+          <div class="adm-card">
+            <div class="adm-card-header">
+              <div>
+                <h2 class="adm-card-title"><span>👑</span> باقات الضيافة الملكية والعرسان في صفحة طيرمانات VIP</h2>
+                <span style="font-size: 0.84rem; color: var(--adm-muted);">تحرير وإضافة باقات الضيافة المعروضة في صفحة أجنحة وطيرمانات VIP</span>
+              </div>
+              <div style="display: flex; gap: 0.5rem;">
+                <button type="button" class="adm-btn adm-btn-outline adm-btn-sm" onclick="addNewVipPackage()">➕ إضافة باقة VIP</button>
+                <button type="button" class="adm-btn adm-btn-gold adm-btn-sm" onclick="savePagesContentToGitHub('تحديث باقات VIP')">💾 حفظ ونشر باقات VIP</button>
+              </div>
+            </div>
+            <div id="vipPackagesAdminContainer"></div>
+          </div>
+        </div>
+
+        <!-- 2D. Hotel Amenities Manager -->
+        <div id="sub-amenities-manager" class="pages-subpane" style="display: none;">
+          <div class="adm-card">
+            <div class="adm-card-header">
+              <div>
+                <h2 class="adm-card-title"><span>✨</span> إدارة المرافق والخدمات الفندقية (تظهر في الرئيسية وعن الفندق)</h2>
+                <span style="font-size: 0.84rem; color: var(--adm-muted);">تعديل أو إضافة أو حذف كروت المرافق والخدمات الفندقية</span>
+              </div>
+              <div style="display: flex; gap: 0.5rem;">
+                <button type="button" class="adm-btn adm-btn-outline adm-btn-sm" onclick="addNewAmenityItem()">➕ إضافة مرفق/خدمة جديدة</button>
+                <button type="button" class="adm-btn adm-btn-gold adm-btn-sm" onclick="saveAmenitiesToGitHub()">💾 حفظ ونشر المرافق على GitHub</button>
+              </div>
+            </div>
+            <div id="amenitiesAdminContainer"></div>
           </div>
         </div>
       </section>
 
-      <!-- ================= TAB 3: SMART GALLERY & IMAGE PRE-FLIGHT LAB ================= -->
-      <section class="tab-pane" id="tab-gallery">
+      <!-- ================= TAB 3: ROOMS, SUITES & VIP TIRMANAH ================= -->
+      <section class="tab-pane" id="tab-rooms" data-section="tab-rooms">
+        <div class="adm-card">
+          <div class="adm-card-header">
+            <div>
+              <h2 class="adm-card-title"><span>🛏️</span> إدارة الغرف والأجنحة وطيرمانات VIP (<span id="roomsCountBadge">8 فئات</span>)</h2>
+              <span style="font-size: 0.85rem; color: var(--adm-muted);">تعديل الأسعار، المساحة، الطابق، الإطلالة، حالة التوفر، المميزات، الخدمات المشمولة، والصور</span>
+            </div>
+            <button type="button" class="adm-btn adm-btn-gold btn-add-new" onclick="openRoomModal(-1)">
+              <span>➕</span> إضافة غرفة أو جناح أو طيرمانة جديدة
+            </button>
+          </div>
+
+          <div id="roomsCardsGrid" class="adm-rooms-grid"></div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 4: SMART GALLERY & FULL ITEM METADATA EDITOR ================= -->
+      <section class="tab-pane" id="tab-gallery" data-section="tab-gallery">
         <!-- Pre-Flight Image Lab -->
         <div class="adm-card" style="border: 1.5px solid var(--adm-gold); background: linear-gradient(180deg, rgba(28, 10, 18, 0.95) 0%, rgba(16, 6, 11, 0.95) 100%);">
           <div class="adm-card-header">
             <h2 class="adm-card-title" style="color: var(--adm-gold-light);"><span>📸</span> مختبر رفع، فحص، وتحسين صور المعرض آلياً</h2>
           </div>
 
-          <p style="color: var(--adm-text-sub); margin-bottom: 1.5rem; font-size: 0.92rem;">
-            اختر أي صورة من هاتفك أو جهازك؛ ستقوم الأداة فوراً بفحص أبعادها وحجمها ودقتها وتقييم مدى مناسبتها للويب، مع إمكانية تحسينها وضغطها آلياً قبل النشر على GitHub:
+          <p style="color: var(--adm-text-sub); margin-bottom: 1.25rem; font-size: 0.92rem;">
+            اختر أي صورة من جهازك؛ ستقوم الأداة بفحص أبعادها وحجمها وضغطها آلياً، مع إدخال كافة بياناتها (العنوان، الوصف، الشارة، المجموعة، والظهور في الكاروسيل):
           </p>
 
-          <div style="background: rgba(0,0,0,0.4); padding: 1.25rem; border-radius: 12px; border: 1px solid var(--adm-border); margin-bottom: 1.5rem;">
+          <div style="background: rgba(0,0,0,0.4); padding: 1.25rem; border-radius: 12px; border: 1px solid var(--adm-border); margin-bottom: 1.25rem;">
             <label style="display: block; font-weight: 700; margin-bottom: 0.5rem; color: #fff;">1. اختر ملف الصورة من جهازك:</label>
             <input type="file" id="proGalleryFileInput" accept="image/*" class="adm-input" style="padding: 0.45rem;" onchange="inspectSelectedGalleryFile(event)">
           </div>
@@ -242,12 +407,12 @@
           <div id="imagePreflightPanel" class="image-preflight-panel" style="display: none;">
             <div class="image-preview-flex">
               <div style="text-align: center;">
-                <img id="preflightStageThumb" class="preflightStageThumb" src="" alt="معاينة الصورة">
-                <span style="font-size: 0.75rem; color: var(--adm-gold); display: block; margin-top: 0.35rem;">معاينة حية للمظهر بالموقع</span>
+                <img id="preflightStageThumb" class="preflight-stage-thumb" src="" alt="معاينة الصورة">
+                <span style="font-size: 0.75rem; color: var(--adm-gold); display: block; margin-top: 0.35rem;">معاينة حية للصورة</span>
               </div>
 
               <div>
-                <h4 style="font-size: 0.95rem; color: var(--adm-gold-light); margin-bottom: 0.75rem;">📊 نتائج الفحص والتشخيص الفوري للصورة:</h4>
+                <h4 style="font-size: 0.95rem; color: var(--adm-gold-light); margin-bottom: 0.75rem;">📊 نتائج الفحص الفوري للصورة:</h4>
                 <div class="preflight-metrics-grid">
                   <div class="preflight-metric-card">
                     <div class="preflight-metric-title">الأبعاد الفعلية (Resolution)</div>
@@ -270,27 +435,44 @@
                   </button>
                 </div>
 
-                <!-- Title & Category inputs -->
                 <div class="form-row">
                   <div class="form-group" style="margin-bottom: 0.5rem;">
-                    <label>عنوان ووصف اللقطة *</label>
+                    <label>عنوان اللقطة (بالعربية) *</label>
                     <input type="text" id="proGalleryTitle" class="adm-input" placeholder="مثال: إطلالة الطيرمانة الملكية على بحر أبين">
                   </div>
                   <div class="form-group" style="margin-bottom: 0.5rem;">
-                    <label>القسم والتصنيف في المعرض *</label>
-                    <select id="proGalleryCategory" class="adm-select">
-                      <option value="rooms">الغرف والأجنحة الفندقية</option>
-                      <option value="vip">أجنحة وطيرمانات VIP</option>
-                      <option value="halls">قاعات التدريب والفعاليات والوجبات</option>
-                      <option value="lobby">صالة الاستقبال واللوبي</option>
-                      <option value="exterior">الواجهة والمبنى الخارجي</option>
-                    </select>
+                    <label>الشارة المختصرة على الصورة (Badge)</label>
+                    <input type="text" id="proGalleryBadge" class="adm-input" placeholder="مثال: جناح ملكي VIP">
                   </div>
                 </div>
 
-                <div style="margin-top: 1.25rem;">
+                <div class="form-row">
+                  <div class="form-group" style="margin-bottom: 0.5rem;">
+                    <label>القسم والمجموعة في المعرض *</label>
+                    <select id="proGalleryCategory" class="adm-select">
+                      <option value="rooms">🛏️ الغرف والأجنحة الفندقية</option>
+                      <option value="vip">👑 أجنحة وطيرمانات VIP</option>
+                      <option value="halls">🎓 قاعات التدريب والفعاليات والوجبات</option>
+                      <option value="lobby">🛎️ صالة الاستقبال واللوبي</option>
+                      <option value="exterior">🏛️ الواجهة والمبنى الخارجي</option>
+                    </select>
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0.5rem;">
+                    <label>الوصف التفصيلي للصورة</label>
+                    <input type="text" id="proGalleryDesc" class="adm-input" placeholder="وصف يظهر تحت الصورة وفي العارض المكبر">
+                  </div>
+                </div>
+
+                <div style="margin: 0.75rem 0;">
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="proGalleryInCarousel" checked style="width: 18px; height: 18px;">
+                    <span>إدراج هذه الصورة ضمن كاروسيل الصفحة الرئيسية العشوائي</span>
+                  </label>
+                </div>
+
+                <div style="margin-top: 1rem;">
                   <button type="button" id="proGalleryUploadBtn" class="adm-btn adm-btn-gold" style="font-size: 1rem; padding: 0.85rem 2rem;" onclick="uploadAndPublishGalleryPhoto()">
-                    <span>🚀</span> رفع ونشر الصورة فوراً في المعرض على GitHub
+                    <span>🚀</span> رفع ونشر الصورة وكامل بياناتها على GitHub
                   </button>
                 </div>
 
@@ -300,12 +482,12 @@
           </div>
         </div>
 
-        <!-- Existing Photos Grid Organized by Groups -->
+        <!-- Existing Photos Grid Organized by Groups with Full Per-Item Editor -->
         <div class="adm-card">
           <div class="adm-card-header">
             <div>
-              <h2 class="adm-card-title"><span>🖼️</span> إدارة وتصنيف صور المعرض حسب المجموعات (<span id="proGalleryCountBadge">21 صورة</span>)</h2>
-              <span style="font-size: 0.82rem; color: var(--adm-muted);">يمكنك تصفية الصور حسب المجموعة، أو تعديل مسمياتها ونقلها بين المجموعات بضغطة زر</span>
+              <h2 class="adm-card-title"><span>🖼️</span> إدارة عناصر المعرض وتعديل بيانات كل عنصر (<span id="proGalleryCountBadge">21 صورة</span>)</h2>
+              <span style="font-size: 0.82rem; color: var(--adm-muted);">يمكنك تعديل العنوان، الوصف، المجموعة، الترتيب، الظهور في الكاروسيل، أو استبدال الصورة لأي عنصر</span>
             </div>
             <button type="button" class="adm-btn adm-btn-gold adm-btn-sm" onclick="saveGalleryChangesToGitHub()">
               <span>💾</span> حفظ ونشر تعديلات المعرض على GitHub
@@ -321,16 +503,13 @@
             <button type="button" class="adm-btn adm-btn-outline adm-btn-sm adm-gal-filter-btn" data-gfilter="halls" onclick="filterAdminGallery('halls')">🎓 قاعات التدريب والوجبات</button>
           </div>
 
-          <div id="proGalleryGrid" class="adm-gallery-grid">
-            <!-- Dynamic gallery items -->
-          </div>
+          <div id="proGalleryGrid" class="adm-gallery-grid"></div>
         </div>
       </section>
 
-      <!-- ================= TAB 4: THEME, COLORS & ANNOUNCEMENT (VIEW & EDIT) ================= -->
-      <section class="tab-pane" id="tab-theme">
+      <!-- ================= TAB 5: THEME, COLORS & ANNOUNCEMENT ================= -->
+      <section class="tab-pane" id="tab-theme" data-section="tab-theme">
         <div class="adm-card">
-          <!-- View Mode -->
           <div id="themeViewMode">
             <div class="adm-card-header">
               <h2 class="adm-card-title"><span>🎨</span> الهوية البصرية، الألوان وشريط العروض الحالية</h2>
@@ -338,12 +517,9 @@
                 <span>🎨</span> تعديل الألوان وشريط العروض
               </button>
             </div>
-            <div id="themeViewContainer">
-              <!-- Rendered via JS -->
-            </div>
+            <div id="themeViewContainer"></div>
           </div>
 
-          <!-- Edit Mode -->
           <div id="themeEditMode" style="display: none;">
             <div class="adm-card-header">
               <h2 class="adm-card-title" style="color: var(--adm-gold-light);"><span>🎨</span> تحرير الألوان والهوية البصرية</h2>
@@ -394,7 +570,6 @@
               </div>
             </div>
 
-            <!-- Announcement Banner Settings -->
             <div style="background: rgba(0,0,0,0.35); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--adm-border); margin-top: 1.5rem;">
               <h4 style="font-size: 1rem; color: var(--adm-gold); margin-bottom: 0.75rem;">📢 إعدادات شريط العروض الترويجي أعلى الموقع:</h4>
               <div style="margin-bottom: 1rem;">
@@ -433,10 +608,9 @@
         </div>
       </section>
 
-      <!-- ================= TAB 5: TRAINING HALL (VIEW & EDIT) ================= -->
-      <section class="tab-pane" id="tab-hall">
+      <!-- ================= TAB 6: TRAINING HALL ================= -->
+      <section class="tab-pane" id="tab-hall" data-section="tab-hall">
         <div class="adm-card">
-          <!-- View Mode -->
           <div id="hallViewMode">
             <div class="adm-card-header">
               <h2 class="adm-card-title"><span>🎓</span> مواصفات وتجهيزات قاعة التدريب</h2>
@@ -444,12 +618,9 @@
                 <span>✏️</span> تعديل بيانات القاعة
               </button>
             </div>
-            <div id="hallViewContainer">
-              <!-- Rendered via JS -->
-            </div>
+            <div id="hallViewContainer"></div>
           </div>
 
-          <!-- Edit Mode -->
           <div id="hallEditMode" style="display: none;">
             <div class="adm-card-header">
               <h2 class="adm-card-title" style="color: var(--adm-gold-light);"><span>✏️</span> تحرير بيانات قاعة التدريب</h2>
@@ -489,8 +660,8 @@
         </div>
       </section>
 
-      <!-- ================= TAB 6: REVIEWS ================= -->
-      <section class="tab-pane" id="tab-reviews">
+      <!-- ================= TAB 7: REVIEWS ================= -->
+      <section class="tab-pane" id="tab-reviews" data-section="tab-reviews">
         <div class="adm-card">
           <div class="adm-card-header">
             <h2 class="adm-card-title"><span>⭐</span> تقييمات وآراء النزلاء الحالية</h2>
@@ -498,15 +669,31 @@
               <span>➕</span> إضافة تقييم جديد
             </button>
           </div>
-
-          <div id="reviewsContainer">
-            <!-- Rendered via JS -->
-          </div>
+          <div id="reviewsContainer"></div>
         </div>
       </section>
 
-      <!-- ================= TAB 7: GITHUB SYNC SETTINGS ================= -->
-      <section class="tab-pane" id="tab-github">
+      <!-- ================= TAB 8: USERS & PASSWORDS MANAGEMENT ================= -->
+      <section class="tab-pane" id="tab-users" data-section="tab-users">
+        <div class="adm-card">
+          <div class="adm-card-header">
+            <div>
+              <h2 class="adm-card-title"><span>🔐</span> إدارة حسابات لوحة التحكم وتغيير كلمات المرور</h2>
+              <span style="font-size: 0.85rem; color: var(--adm-muted);">قم بتعديل كلمات المرور أو المسميات لأي حساب ثم اضغط على «حفظ ومزامنة مع GitHub» لتطبيقها فوراً</span>
+            </div>
+            <button type="button" class="adm-btn adm-btn-gold" onclick="saveUsersPasswordsToGitHub('usersTabStatus')">
+              <span>💾</span> حفظ ومزامنة كلمات المرور مع GitHub
+            </button>
+          </div>
+
+          <div id="usersTabStatus" class="alert-box" style="display: none;"></div>
+
+          <div id="usersTabCardsGrid" class="user-card-grid"></div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 9: GITHUB SYNC SETTINGS ================= -->
+      <section class="tab-pane" id="tab-github" data-section="tab-github">
         <div class="adm-card">
           <div class="adm-card-header">
             <h2 class="adm-card-title"><span>⚙️</span> إعدادات مستودع GitHub والربط</h2>
@@ -547,15 +734,15 @@
         </div>
       </section>
 
-      <!-- ================= TAB 8: PUBLISH & BACKUP ================= -->
-      <section class="tab-pane" id="tab-publish">
+      <!-- ================= TAB 10: PUBLISH & BACKUP ================= -->
+      <section class="tab-pane" id="tab-publish" data-section="tab-publish">
         <div class="adm-card">
           <div class="adm-card-header">
             <h2 class="adm-card-title"><span>🚀</span> مركز النشر الشامل والنسخ الاحتياطي</h2>
           </div>
 
           <div class="alert-box alert-info">
-            يمكنك نشر جميع التعديلات دفعة واحدة بضغطة زر، أو تحميل نسخة احتياطية من ملفات البيانات بصيغة JSON.
+            يقوم هذا المركز بمزامنة كافة ملفات الموقع الـ 9 (الهوية، الفندق، الصفحات والمنشورات، الغرف والأجنحة، المرافق، القاعة، التقييمات، المعرض، وكلمات المرور) دفعة واحدة مع GitHub.
           </div>
 
           <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
@@ -563,7 +750,7 @@
               <span>🚀</span> نشر وحفظ التعديلات الشاملة على GitHub الآن
             </button>
             <button type="button" class="adm-btn adm-btn-outline" onclick="downloadBackupPackage()">
-              <span>📥</span> تحميل نسخة احتياطية من البيانات (JSON)
+              <span>📥</span> تحميل نسخة احتياطية من جميع البيانات (JSON)
             </button>
           </div>
 
@@ -576,21 +763,41 @@
     </div>
   </main>
 
-  <!-- ================= MODAL: ROOM EDIT / ADD ================= -->
+  <!-- ================= MODAL 1: QUICK PASSWORD CHANGE & GITHUB SYNC ================= -->
+  <div class="adm-modal-backdrop" id="passwordModalBackdrop">
+    <div class="adm-modal-box" style="max-width: 780px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.85rem;">
+        <h3 style="font-size: 1.22rem; font-weight: 800; color: var(--adm-gold-light);">🔑 نافذة تغيير كلمات المرور ومزامنتها تلقائياً مع GitHub</h3>
+        <button type="button" style="background: none; border: none; font-size: 1.6rem; color: #fff; cursor: pointer;" onclick="closePasswordModal()">&times;</button>
+      </div>
+
+      <div id="passwordModalStatus" class="alert-box" style="display: none;"></div>
+
+      <div id="passwordModalCardsGrid" class="user-card-grid" style="margin-bottom: 1.5rem;"></div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 0.75rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
+        <button type="button" class="adm-btn adm-btn-outline" onclick="closePasswordModal()">إغلاق</button>
+        <button type="button" class="adm-btn adm-btn-gold" onclick="saveUsersPasswordsToGitHub('passwordModalStatus')">
+          <span>💾</span> حفظ ومزامنة كلمات المرور مع GitHub الآن
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL 2: ROOM / VIP SUITE / TIRMANAH EDIT & ADD ================= -->
   <div class="adm-modal-backdrop" id="roomModalBackdrop">
-    <div class="adm-modal-box">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.85rem;">
-        <h3 id="roomModalTitle" style="font-size: 1.2rem; font-weight: 800; color: #fff;">تعديل الغرفة</h3>
+    <div class="adm-modal-box" style="max-width: 760px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.85rem;">
+        <h3 id="roomModalTitle" style="font-size: 1.2rem; font-weight: 800; color: #fff;">تعديل الغرفة أو الجناح</h3>
         <button type="button" style="background: none; border: none; font-size: 1.5rem; color: #fff; cursor: pointer;" onclick="closeRoomModal()">&times;</button>
       </div>
 
       <div id="modalRoomStatus" class="alert-box" style="display: none;"></div>
 
-      <!-- Image Section with local file uploader & preview -->
-      <div style="background: rgba(0,0,0,0.35); padding: 1.25rem; border-radius: 12px; border: 1px solid var(--adm-border); margin-bottom: 1.5rem; display: grid; grid-template-columns: 140px 1fr; gap: 1.25rem; align-items: center;">
+      <div style="background: rgba(0,0,0,0.35); padding: 1.15rem; border-radius: 12px; border: 1px solid var(--adm-border); margin-bottom: 1.25rem; display: grid; grid-template-columns: 140px 1fr; gap: 1.25rem; align-items: center;">
         <img id="modalRoomImgPreview" src="../assets/images/suite-vip.jpg" style="width: 140px; height: 100px; object-fit: cover; border-radius: 10px; border: 1.5px solid var(--adm-gold); background: #000;" onerror="this.src='../assets/images/suite-vip.jpg'">
         <div>
-          <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #fff; margin-bottom: 0.4rem;">رفع صورة جديدة للغرفة من جهازك:</label>
+          <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #fff; margin-bottom: 0.4rem;">رفع صورة جديدة للغرفة/الجناح من جهازك:</label>
           <input type="file" id="modalRoomFileInput" accept="image/*" class="adm-input" style="padding: 0.4rem; margin-bottom: 0.5rem;" onchange="handleRoomImageFile(event)">
           <input type="text" id="modalRoomImgPath" class="adm-input" style="font-size: 0.8rem; color: var(--adm-muted); padding: 0.35rem 0.6rem;" placeholder="مسار الصورة في المستودع">
         </div>
@@ -598,47 +805,95 @@
 
       <div class="form-row">
         <div class="form-group">
-          <label>اسم الغرفة (بالعربية) *</label>
+          <label>اسم الغرفة / الجناح / الطيرمانة (بالعربية) *</label>
           <input type="text" id="modalRoomTitleAr" class="adm-input" required>
         </div>
         <div class="form-group">
-          <label>سعر الليلة</label>
-          <input type="text" id="modalRoomPrice" class="adm-input">
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label>الشارة الترويجية (Badge)</label>
-          <input type="text" id="modalRoomBadge" class="adm-input" placeholder="مثال: الأكثر فخامة / عائلي">
-        </div>
-        <div class="form-group">
-          <label>نوع السرير</label>
-          <input type="text" id="modalRoomBeds" class="adm-input" placeholder="مثال: سرير ماستر كينج">
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label>السعة (عدد الأشخاص)</label>
-          <input type="text" id="modalRoomCap" class="adm-input" placeholder="مثال: 2 - 3 أشخاص">
-        </div>
-        <div class="form-group">
-          <label>التصنيف البرمجي</label>
-          <select id="modalRoomCategory" class="adm-select">
-            <option value="vip">أجنحة VIP</option>
-            <option value="family">عائلية</option>
-            <option value="standard">قياسية (سريرين / 3 أسرة)</option>
-          </select>
+          <label>العنوان الفرعي التسويقي (Subtitle)</label>
+          <input type="text" id="modalRoomSubtitleAr" class="adm-input" placeholder="مثال: أعلى درجات الفخامة لكبار الشخصيات">
         </div>
       </div>
 
       <div class="form-group">
-        <label>المميزات (كل ميزة في سطر مستقل)</label>
+        <label>الوصف التفصيلي الكامل للغرفة أو الجناح</label>
+        <textarea id="modalRoomDescAr" class="adm-textarea" rows="2" placeholder="وصف تفصيلي يظهر في صفحة الغرف وصفحة طيرمانات VIP"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>سعر الليلة / الحجز</label>
+          <input type="text" id="modalRoomPrice" class="adm-input price-input">
+        </div>
+        <div class="form-group">
+          <label>الشارة الترويجية (Badge)</label>
+          <input type="text" id="modalRoomBadge" class="adm-input" placeholder="مثال: الأكثر فخامة 👑">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>المساحة التقريبية (Area)</label>
+          <input type="text" id="modalRoomArea" class="adm-input" placeholder="مثال: 65 م²">
+        </div>
+        <div class="form-group">
+          <label>الإطلالة (View)</label>
+          <input type="text" id="modalRoomView" class="adm-input" placeholder="مثال: إطلالة بحرية بانورامية">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>الطابق / الموقع (Floor)</label>
+          <input type="text" id="modalRoomFloor" class="adm-input" placeholder="مثال: طوابق كبار الشخصيات">
+        </div>
+        <div class="form-group">
+          <label>التصنيف البرمجي</label>
+          <select id="modalRoomCategory" class="adm-select">
+            <option value="vip">👑 أجنحة VIP الملكية والرئاسية</option>
+            <option value="tirmanah">🌊 طيرمانات ومجالس الضيافة VIP</option>
+            <option value="family">👨‍👩‍👧‍👦 الأجنحة والغرف العائلية</option>
+            <option value="standard">💼 غرف ديلوكس مزدوجة وثلاثية</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>تجهيز الأسرة / الجلسة</label>
+          <input type="text" id="modalRoomBeds" class="adm-input" placeholder="مثال: سرير ماستر كينج + ركن جلوس">
+        </div>
+        <div class="form-group">
+          <label>السعة الاستيعابية</label>
+          <input type="text" id="modalRoomCap" class="adm-input" placeholder="مثال: 2 - 3 أشخاص">
+        </div>
+      </div>
+
+      <div class="checkbox-grid" style="margin-bottom: 1rem;">
+        <label class="checkbox-label">
+          <input type="checkbox" id="modalRoomAvailable" class="availability-toggle" checked>
+          <span>🟢 متاح للحجز حالياً</span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" id="modalRoomFeaturedHome" checked>
+          <span>🏠 إظهار في الصفحة الرئيسية</span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" id="modalRoomShowVip">
+          <span>👑 إظهار في صفحة طيرمانات VIP</span>
+        </label>
+      </div>
+
+      <div class="form-group">
+        <label>المميزات التفصيلية (كل ميزة في سطر مستقل)</label>
         <textarea id="modalRoomFeatures" class="adm-textarea" rows="4"></textarea>
       </div>
 
-      <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.5rem;">
+      <div class="form-group">
+        <label>الخدمات المجانية المشمولة (مفصولة بفاصلة ،)</label>
+        <input type="text" id="modalRoomServices" class="adm-input" placeholder="توصيل مجاني للمطار، ضيافة VIP ترحيبية، فايبر فائق السرعة">
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.25rem;">
         <button type="button" class="adm-btn adm-btn-outline" onclick="closeRoomModal()">إلغاء</button>
         <button type="button" id="modalRoomSaveBtn" class="adm-btn adm-btn-gold" onclick="saveRoomModalData()">
           <span>💾</span> حفظ ونشر الغرفة على GitHub
@@ -647,7 +902,177 @@
     </div>
   </div>
 
-  
+  <!-- ================= MODAL 3: GALLERY ITEM FULL METADATA & IMAGE EDITOR ================= -->
+  <div class="adm-modal-backdrop" id="galleryItemModalBackdrop">
+    <div class="adm-modal-box" style="max-width: 700px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.85rem;">
+        <h3 id="galModalHeaderTitle" style="font-size: 1.2rem; font-weight: 800; color: var(--adm-gold-light);">🖼️ تحرير بيانات وصورة عنصر المعرض</h3>
+        <button type="button" style="background: none; border: none; font-size: 1.5rem; color: #fff; cursor: pointer;" onclick="closeGalleryItemModal()">&times;</button>
+      </div>
+
+      <div id="galModalStatus" class="alert-box" style="display: none;"></div>
+
+      <div style="background: rgba(0,0,0,0.35); padding: 1.15rem; border-radius: 12px; border: 1px solid var(--adm-border); margin-bottom: 1.25rem; display: grid; grid-template-columns: 160px 1fr; gap: 1.25rem; align-items: center;">
+        <img id="galModalImgPreview" src="../assets/images/building-day.jpg" style="width: 160px; height: 110px; object-fit: cover; border-radius: 10px; border: 1.5px solid var(--adm-gold); background: #000;" onerror="this.src='../assets/images/building-day.jpg'">
+        <div>
+          <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #fff; margin-bottom: 0.4rem;">استبدال الصورة أو رفع صورة جديدة من جهازك (اختياري):</label>
+          <input type="file" id="galModalFileInput" accept="image/*" class="adm-input" style="padding: 0.4rem; margin-bottom: 0.5rem;" onchange="handleGalleryModalImageFile(event)">
+          <input type="text" id="galModalImgPath" class="adm-input" style="font-size: 0.8rem; color: var(--adm-muted); padding: 0.35rem 0.6rem;" placeholder="مسار ملف الصورة">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>عنوان الصورة (بالعربية) *</label>
+          <input type="text" id="galModalTitleAr" class="adm-input" required>
+        </div>
+        <div class="form-group">
+          <label>عنوان الصورة (English)</label>
+          <input type="text" id="galModalTitleEn" class="adm-input">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>الوصف التفصيلي للصورة (يظهر في المعرض والعارض المكبر والكاروسيل)</label>
+        <textarea id="galModalDescAr" class="adm-textarea" rows="2"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>القسم والمجموعة في المعرض</label>
+          <select id="galModalCategory" class="adm-select">
+            <option value="exterior">🏛️ الواجهة والمبنى الخارجي</option>
+            <option value="lobby">🛎️ صالة الاستقبال واللوبي</option>
+            <option value="vip">👑 أجنحة وطيرمانات VIP</option>
+            <option value="rooms">🛏️ الغرف والأجنحة الفندقية</option>
+            <option value="halls">🎓 قاعات التدريب والفعاليات والوجبات</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>الشارة التوضيحية على الصورة (Badge)</label>
+          <input type="text" id="galModalBadgeAr" class="adm-input" placeholder="مثال: جناح ملكي VIP">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>ترتيب الظهور (Order)</label>
+          <input type="number" id="galModalOrder" class="adm-input" min="1" value="1">
+        </div>
+        <div class="form-group">
+          <label>خيارات العرض والظهور</label>
+          <div class="checkbox-grid" style="padding: 0.65rem;">
+            <label class="checkbox-label">
+              <input type="checkbox" id="galModalVisible" checked>
+              <span>👁️ إظهار في المعرض</span>
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" id="galModalCarousel" checked>
+              <span>🎠 إظهار في الكاروسيل</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.25rem;">
+        <button type="button" class="adm-btn adm-btn-outline" onclick="closeGalleryItemModal()">إلغاء</button>
+        <button type="button" id="galModalSaveBtn" class="adm-btn adm-btn-gold" onclick="saveGalleryItemModalData()">
+          <span>💾</span> حفظ ونشر بيانات العنصر على GitHub
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL 4: POST / PROMOTION / PAGE BLOCK EDITOR ================= -->
+  <div class="adm-modal-backdrop" id="postModalBackdrop">
+    <div class="adm-modal-box" style="max-width: 720px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.85rem;">
+        <h3 id="postModalHeaderTitle" style="font-size: 1.2rem; font-weight: 800; color: var(--adm-gold-light);">📢 إضافة / تعديل منشور أو عرض في صفحات الموقع</h3>
+        <button type="button" style="background: none; border: none; font-size: 1.5rem; color: #fff; cursor: pointer;" onclick="closePostModal()">&times;</button>
+      </div>
+
+      <div id="postModalStatus" class="alert-box" style="display: none;"></div>
+
+      <div style="background: rgba(0,0,0,0.35); padding: 1.15rem; border-radius: 12px; border: 1px solid var(--adm-border); margin-bottom: 1.25rem; display: grid; grid-template-columns: 140px 1fr; gap: 1.25rem; align-items: center;">
+        <img id="postModalImgPreview" src="../assets/images/ros2-exterior-night-neon.jpg" style="width: 140px; height: 95px; object-fit: cover; border-radius: 10px; border: 1.5px solid var(--adm-gold); background: #000;" onerror="this.src='../assets/images/building-day.jpg'">
+        <div>
+          <label style="display: block; font-size: 0.85rem; font-weight: 700; color: #fff; margin-bottom: 0.4rem;">رفع صورة للمنشور أو العرض من جهازك:</label>
+          <input type="file" id="postModalFileInput" accept="image/*" class="adm-input" style="padding: 0.4rem; margin-bottom: 0.5rem;" onchange="handlePostModalImageFile(event)">
+          <input type="text" id="postModalImgPath" class="adm-input" style="font-size: 0.8rem; color: var(--adm-muted); padding: 0.35rem 0.6rem;" placeholder="مسار الصورة">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>عنوان المنشور أو العرض *</label>
+          <input type="text" id="postModalTitleAr" class="adm-input" required>
+        </div>
+        <div class="form-group">
+          <label>العنوان الفرعي (Subtitle)</label>
+          <input type="text" id="postModalSubtitleAr" class="adm-input">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>الشارة البارزة (Badge)</label>
+          <input type="text" id="postModalBadgeAr" class="adm-input" placeholder="مثال: 🔥 عرض خاص">
+        </div>
+        <div class="form-group">
+          <label>التصنيف / التاريخ</label>
+          <div style="display: flex; gap: 0.5rem;">
+            <input type="text" id="postModalCategoryAr" class="adm-input" placeholder="عروض الإقامة">
+            <input type="text" id="postModalDateAr" class="adm-input" placeholder="متاح الآن">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>تفاصيل ومحتوى المنشور</label>
+        <textarea id="postModalContentAr" class="adm-textarea" rows="3"></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>نص زر التوجيه (CTA Button Text)</label>
+          <input type="text" id="postModalCtaText" class="adm-input" placeholder="استفد من العرض عبر واتساب">
+        </div>
+        <div class="form-group">
+          <label>رابط الزر (واتساب أو صفحة)</label>
+          <input type="text" id="postModalCtaLink" class="adm-input" placeholder="https://wa.me/967780000656">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label style="color: var(--adm-gold-light);">حدد الصفحات التي يظهر فيها هذا المنشور أو المحتوى:</label>
+        <div class="checkbox-grid">
+          <label class="checkbox-label"><input type="checkbox" class="post-target-page-chk" value="home" checked> 🏠 الرئيسية</label>
+          <label class="checkbox-label"><input type="checkbox" class="post-target-page-chk" value="rooms"> 🛏️ الغرف والأجنحة</label>
+          <label class="checkbox-label"><input type="checkbox" class="post-target-page-chk" value="vip-suites"> 👑 طيرمانات VIP</label>
+          <label class="checkbox-label"><input type="checkbox" class="post-target-page-chk" value="about"> 🏨 عن الفندق</label>
+          <label class="checkbox-label"><input type="checkbox" class="post-target-page-chk" value="training-hall"> 🎓 قاعة التدريب</label>
+          <label class="checkbox-label"><input type="checkbox" class="post-target-page-chk" value="gallery"> 📸 معرض الصور</label>
+          <label class="checkbox-label"><input type="checkbox" class="post-target-page-chk" value="contact"> 📞 الاتصال والحجز</label>
+          <label class="checkbox-label"><input type="checkbox" class="post-target-page-chk" value="all"> 🌐 جميع الصفحات</label>
+        </div>
+      </div>
+
+      <div style="margin-top: 0.75rem;">
+        <label class="checkbox-label">
+          <input type="checkbox" id="postModalVisible" checked style="width: 18px; height: 18px;">
+          <span>🟢 تفعيل وإظهار هذا المنشور في الصفحات المحددة</span>
+        </label>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 1.25rem;">
+        <button type="button" class="adm-btn adm-btn-outline" onclick="closePostModal()">إلغاء</button>
+        <button type="button" id="postModalSaveBtn" class="adm-btn adm-btn-gold" onclick="savePostModalData()">
+          <span>💾</span> حفظ ونشر المنشور على GitHub
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Floating Unsaved Changes Bar -->
   <div id="unsavedNotificationBar" style="display: none; position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%); z-index: 1500; background: linear-gradient(90deg, #1c0a12 0%, #2d101c 100%); border: 2px solid var(--adm-gold); border-radius: 99px; padding: 0.75rem 1.75rem; box-shadow: 0 15px 40px rgba(0,0,0,0.85); align-items: center; gap: 1.25rem;">
     <span style="color: #fff; font-weight: 700; font-size: 0.92rem;">⚡ لديك تعديلات جديدة جاهزة للحفظ والنشر على الموقع</span>

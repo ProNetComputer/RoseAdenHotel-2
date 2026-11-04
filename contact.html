@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="assets/css/components.css">
   <link rel="stylesheet" href="assets/css/responsive.css">
 </head>
-<body>
+<body data-page="contact">
 
   <!-- Top Announcement & Contact Bar -->
   <div class="top-bar">
@@ -74,8 +74,8 @@
 
   <div class="page-hero">
     <div class="container">
-      <h1 class="page-hero-title">الحجز والتواصل المباشر</h1>
-      <p class="page-hero-subtitle">فريق الاستقبال في خدمتكم على مدار 24 ساعة للرد على استفساراتكم وتأكيد حجوزاتكم</p>
+      <h1 class="page-hero-title" data-page-bind="hero_title_ar">الحجز والتواصل المباشر</h1>
+      <p class="page-hero-subtitle" data-page-bind="hero_subtitle_ar">فريق الاستقبال في خدمتكم على مدار 24 ساعة للرد على استفساراتكم وتأكيد حجوزاتكم</p>
       <div class="breadcrumbs">
         <a href="index.html">الرئيسية</a> &gt; <span>الاتصال والحجز</span>
       </div>
@@ -170,6 +170,19 @@
             </form>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+    <!-- Dynamic Page Posts & Promotions Section -->
+  <section class="section" id="pagePostsSection" style="display: none;">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge" data-page-bind="posts_section_badge_ar">أحدث العروض والمنشورات</span>
+        <h2 class="section-title" data-page-bind="posts_section_title_ar">عروض ومنشورات فندق روز عدن 2</h2>
+        <p class="section-desc" data-page-bind="posts_section_desc_ar">تابع أحدث العروض الموسمية والباقات الفندقية المخصصة لضيوفنا</p>
+      </div>
+      <div class="posts-grid" id="pagePostsGrid">
       </div>
     </div>
   </section>

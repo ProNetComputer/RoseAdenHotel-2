@@ -1,0 +1,76 @@
+{
+  "developer": {
+    "role": "developer",
+    "title": "المطور (Developer)",
+    "name_ar": "م. عمار الأسدي - برونت كمبيوتر",
+    "password": "Dev@2026",
+    "allowedSections": [
+      "all"
+    ],
+    "canEditPrices": true,
+    "canDelete": true,
+    "canEditTheme": true,
+    "canManageUsers": true,
+    "availabilityOnly": false,
+    "description": "صلاحية كاملة 100%: إدارة جميع الأقسام، الصفحات، المنشورات، المعرض، الهوية، المستخدمين، والربط البرمجي مع GitHub."
+  },
+  "manager": {
+    "role": "manager",
+    "title": "المدير العام (Manager)",
+    "name_ar": "إدارة فندق روز عدن 2",
+    "password": "Manager@2026",
+    "allowedSections": [
+      "tab-hotel",
+      "tab-pages",
+      "tab-rooms",
+      "tab-gallery",
+      "tab-hall",
+      "tab-reviews",
+      "tab-users",
+      "tab-publish"
+    ],
+    "canEditPrices": true,
+    "canDelete": true,
+    "canEditTheme": false,
+    "canManageUsers": true,
+    "availabilityOnly": false,
+    "description": "إدارة شاملة لبيانات الفندق، محتويات الصفحات والمنشورات، الغرف والأسعار، المعرض، التقييمات، وتغيير كلمات المرور."
+  },
+  "supervisor": {
+    "role": "supervisor",
+    "title": "المشرف الفندقي (Supervisor)",
+    "name_ar": "مشرف الفترة",
+    "password": "Super@2026",
+    "allowedSections": [
+      "tab-pages",
+      "tab-rooms",
+      "tab-gallery",
+      "tab-hall",
+      "tab-reviews",
+      "tab-publish"
+    ],
+    "canEditPrices": false,
+    "canDelete": false,
+    "canEditTheme": false,
+    "canManageUsers": false,
+    "availabilityOnly": false,
+    "description": "إدارة المحتوى، المنشورات، صور المعرض، القاعة، والتقييمات (بدون صلاحية حذف العناصر أو تعديل الأسعار)."
+  },
+  "reception": {
+    "role": "reception",
+    "title": "موظف الاستقبال (Reception)",
+    "name_ar": "قسم الاستقبال والحجوزات",
+    "password": "Rec@2026",
+    "allowedSections": [
+      "tab-rooms",
+      "tab-hall",
+      "tab-publish"
+    ],
+    "canEditPrices": false,
+    "canDelete": false,
+    "canEditTheme": false,
+    "canManageUsers": false,
+    "availabilityOnly": true,
+    "description": "تحديث حالة توفر الغرف والأجنحة والقاعة فقط دون تعديل الأسعار أو حذف البيانات."
+  }
+}
